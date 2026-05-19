@@ -654,6 +654,22 @@
         "wires": [[]]
     },
 
+    { "id": "his-inject-reset-bo",  "type": "inject", "z": "his-flow-main", "name": "Reset bills-office", "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "bills-office", "payloadType": "str", "x": 200, "y": 880, "wires": [["his-fn-grubbs-reset"]] },
+    { "id": "his-inject-reset-mr",  "type": "inject", "z": "his-flow-main", "name": "Reset mud-room",     "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "mud-room",     "payloadType": "str", "x": 200, "y": 920, "wires": [["his-fn-grubbs-reset"]] },
+    { "id": "his-inject-reset-ga",  "type": "inject", "z": "his-flow-main", "name": "Reset garage",       "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "garage",       "payloadType": "str", "x": 200, "y": 960, "wires": [["his-fn-grubbs-reset"]] },
+    { "id": "his-inject-reset-all", "type": "inject", "z": "his-flow-main", "name": "Reset ALL",          "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "ALL",          "payloadType": "str", "x": 200, "y": 1000, "wires": [["his-fn-grubbs-reset"]] },
+    {
+        "id": "his-fn-grubbs-reset",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "reset Grubbs state",
+        "func": "var nodes = ['bills-office','mud-room','garage'];\nif (msg.payload === 'ALL') {\n    nodes.forEach(function(n) { flow.set('grubbs_' + n, null); });\n    flow.set('fault_counts', null);\n    flow.set('p_latest', null);\n    flow.set('p_stats', null);\n    node.warn('Grubbs reset: ALL nodes');\n} else {\n    flow.set('grubbs_' + msg.payload, null);\n    var counts = flow.get('fault_counts') || {};\n    counts[msg.payload] = {P:0, T:0, RH:0};\n    flow.set('fault_counts', counts);\n    node.warn('Grubbs reset: ' + msg.payload);\n}\nreturn null;",
+        "outputs": 0,
+        "noerr": 0,
+        "x": 480, "y": 940,
+        "wires": []
+    },
+
     { "id": "pb-flow-main", "type": "tab", "label": "Photo Booth", "disabled": false, "info": "Photo Booth — MQTT triggered capture" },
 
     { "id": "pb-ui-tab", "type": "ui_tab", "name": "Photo Booth", "icon": "photo_camera", "order": 5, "disabled": false, "hidden": false },
