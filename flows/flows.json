@@ -1,1287 +1,771 @@
 [
-  {
-    "id": "975b5aad49702610",
-    "type": "tab",
-    "label": "Flow 1",
-    "disabled": false,
-    "info": "",
-    "env": []
-  },
-  {
-    "id": "f76cd054d8d6c3fc",
-    "type": "tab",
-    "label": "HIS Main",
-    "disabled": false,
-    "info": "Home Information System \u2014 main flow"
-  },
-  {
-    "id": "a5213f595caa0aa7",
-    "type": "tab",
-    "label": "Photo Booth",
-    "disabled": false,
-    "info": "Photo Booth \u2014 MQTT triggered capture"
-  },
-  {
-    "id": "c64bf44d82954e39",
-    "type": "pwsapikey",
-    "name": "Hondo"
-  },
-  {
-    "id": "d748b5591e098c6c",
-    "type": "ui_base",
-    "theme": {
-      "name": "theme-dark",
-      "lightTheme": {
-        "default": "#0094CE",
-        "baseColor": "#0094CE",
-        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-        "edited": true,
-        "reset": false
-      },
-      "darkTheme": {
-        "default": "#097479",
-        "baseColor": "#097479",
-        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-        "edited": true,
-        "reset": false
-      },
-      "customTheme": {
-        "name": "Untitled Theme 1",
-        "default": "#4B7930",
-        "baseColor": "#4B7930",
-        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-      },
-      "themeState": {
-        "base-color": {
-          "default": "#097479",
-          "value": "#097479",
-          "edited": false
+    {
+        "id": "d748b5591e098c6c",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": { "default": "#0094CE", "baseColor": "#0094CE", "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif", "edited": true, "reset": false },
+            "darkTheme":  { "default": "#097479", "baseColor": "#097479", "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif", "edited": true, "reset": false },
+            "customTheme": { "name": "Untitled Theme 1", "default": "#4B7930", "baseColor": "#4B7930", "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif" },
+            "themeState": {
+                "base-color":                    { "default": "#097479", "value": "#097479", "edited": false },
+                "page-titlebar-backgroundColor": { "value": "#097479", "edited": false },
+                "page-backgroundColor":          { "value": "#111111", "edited": false },
+                "page-sidebar-backgroundColor":  { "value": "#333333", "edited": false },
+                "group-textColor":               { "value": "#0eb8c0", "edited": false },
+                "group-borderColor":             { "value": "#555555", "edited": false },
+                "group-backgroundColor":         { "value": "#333333", "edited": false },
+                "widget-textColor":              { "value": "#eeeeee", "edited": false },
+                "widget-backgroundColor":        { "value": "#097479", "edited": false },
+                "widget-borderColor":            { "value": "#333333", "edited": false },
+                "base-font":                     { "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif" }
+            },
+            "angularTheme": { "primary": "indigo", "accents": "blue", "warn": "red", "background": "grey", "palette": "light" }
         },
-        "page-titlebar-backgroundColor": {
-          "value": "#097479",
-          "edited": false
-        },
-        "page-backgroundColor": {
-          "value": "#111111",
-          "edited": false
-        },
-        "page-sidebar-backgroundColor": {
-          "value": "#333333",
-          "edited": false
-        },
-        "group-textColor": {
-          "value": "#0eb8c0",
-          "edited": false
-        },
-        "group-borderColor": {
-          "value": "#555555",
-          "edited": false
-        },
-        "group-backgroundColor": {
-          "value": "#333333",
-          "edited": false
-        },
-        "widget-textColor": {
-          "value": "#eeeeee",
-          "edited": false
-        },
-        "widget-backgroundColor": {
-          "value": "#097479",
-          "edited": false
-        },
-        "widget-borderColor": {
-          "value": "#333333",
-          "edited": false
-        },
-        "base-font": {
-          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": { "sx": 48, "sy": 48, "gx": 6, "gy": 6, "cx": 7, "cy": 6, "px": 0, "py": 0 }
         }
-      },
-      "angularTheme": {
-        "primary": "indigo",
-        "accents": "blue",
-        "warn": "red",
-        "background": "grey",
-        "palette": "light"
-      }
     },
-    "site": {
-      "name": "Node-RED Dashboard",
-      "hideToolbar": "false",
-      "allowSwipe": "false",
-      "lockMenu": "false",
-      "allowTempTheme": "true",
-      "dateFormat": "DD/MM/YYYY",
-      "sizes": {
-        "sx": 48,
-        "sy": 48,
-        "gx": 6,
-        "gy": 6,
-        "cx": 7,
-        "cy": 6,
-        "px": 0,
-        "py": 0
-      }
+
+    {
+        "id": "his-flow-main",
+        "type": "tab",
+        "label": "HIS Main",
+        "disabled": false,
+        "info": "Home Information System — main flow"
+    },
+    {
+        "id": "his-broker",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "nodered-his-hub",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true
+    },
+
+    {
+        "id": "his-ui-tab-pth",
+        "type": "ui_tab",
+        "name": "PTH Charts",
+        "icon": "show_chart",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "his-ui-grp-pressure",
+        "type": "ui_group",
+        "name": "Pressure (PSI)",
+        "tab": "his-ui-tab-pth",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "his-ui-grp-temp",
+        "type": "ui_group",
+        "name": "Temperature (°F)",
+        "tab": "his-ui-tab-pth",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "his-ui-grp-humidity",
+        "type": "ui_group",
+        "name": "Humidity (%)",
+        "tab": "his-ui-tab-pth",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "his-ui-grp-diffs",
+        "type": "ui_group",
+        "name": "Pressure Differences (PSI)",
+        "tab": "his-ui-tab-pth",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "his-ui-grp-faults",
+        "type": "ui_group",
+        "name": "Sensor Fault Counts",
+        "tab": "his-ui-tab-pth",
+        "order": 5,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+
+    {
+        "id": "his-ui-tab-overview",
+        "type": "ui_tab",
+        "name": "Home Overview",
+        "icon": "home",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "his-ui-grp-doors",
+        "type": "ui_group",
+        "name": "Doors & Windows",
+        "tab": "his-ui-tab-overview",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "his-ui-grp-motion",
+        "type": "ui_group",
+        "name": "Motion",
+        "tab": "his-ui-tab-overview",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+
+    {
+        "id": "his-ui-tab-alarms",
+        "type": "ui_tab",
+        "name": "Alarms",
+        "icon": "warning",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "his-ui-grp-gas",
+        "type": "ui_group",
+        "name": "Smoke / CO",
+        "tab": "his-ui-tab-alarms",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+
+    {
+        "id": "his-ui-tab-frontdoor",
+        "type": "ui_tab",
+        "name": "Front Door",
+        "icon": "camera_alt",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "his-ui-grp-visitor",
+        "type": "ui_group",
+        "name": "Visitor",
+        "tab": "his-ui-tab-frontdoor",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+
+    {
+        "id": "his-mqtt-pth",
+        "type": "mqtt in",
+        "z": "his-flow-main",
+        "name": "home/+/pth",
+        "topic": "home/+/pth",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": false,
+        "x": 160,
+        "y": 120,
+        "wires": [["his-fn-grubbs"]]
+    },
+
+    {
+        "id": "his-fn-grubbs",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "Grubbs filter",
+        "func": "var N=20,N_MIN=16;\nvar G_CRIT={3:1.155,4:1.481,5:1.715,6:1.887,7:2.020,8:2.126,9:2.215,10:2.290,11:2.355,12:2.412,13:2.462,14:2.507,15:2.549,16:2.585,17:2.620,18:2.651,19:2.681,20:2.709,25:2.822,30:2.908};\nfunction gcrit(n){if(G_CRIT[n])return G_CRIT[n];var k=Object.keys(G_CRIT).map(Number).sort(function(a,b){return a-b;});for(var i=0;i<k.length-1;i++){if(n>=k[i]&&n<=k[i+1]){var t=(n-k[i])/(k[i+1]-k[i]);return G_CRIT[k[i]]+t*(G_CRIT[k[i+1]]-G_CRIT[k[i]]);}}return G_CRIT[20];}\nfunction grubbs(win,val){var n=win.length;if(n<N_MIN)return false;var mean=win.reduce(function(a,b){return a+b;},0)/n;var std=Math.sqrt(win.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/(n-1));if(std<1e-10)return false;return(Math.abs(val-mean)/std)>gcrit(n);}\nvar nodeId=msg.topic.split('/')[1];\nvar d=msg.payload;\nvar key='grubbs_'+nodeId;\nvar st=flow.get(key)||{P:{win:[],faults:0},T:{win:[],faults:0},RH:{win:[],faults:0}};\nvar anyFault=false;\nvar result={};\n['P','T','RH'].forEach(function(p){var s=st[p],v=d[p];if(typeof v!=='number'||isNaN(v)){result[p]={outlier:true};s.faults++;anyFault=true;return;}if(grubbs(s.win,v)){result[p]={outlier:true};s.faults++;anyFault=true;}else{s.win.push(v);if(s.win.length>N)s.win.shift();result[p]={outlier:false,value:v};}});\nflow.set(key,st);\nfunction mk(p){var r=result[p];if(r.outlier)return null;return{topic:anyFault?nodeId+'-c':nodeId,payload:r.value,_nodeId:nodeId};}\nreturn[mk('P'),mk('T'),mk('RH'),{payload:{nodeId:nodeId,P:st.P.faults,T:st.T.faults,RH:st.RH.faults}}];",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 380,
+        "y": 120,
+        "wires": [
+            ["his-chart-pressure", "his-fn-p-diffs"],
+            ["his-chart-temp"],
+            ["his-chart-humidity"],
+            ["his-fn-fault-collect"]
+        ]
+    },
+
+    {
+        "id": "his-chart-pressure",
+        "type": "ui_chart",
+        "z": "his-flow-main",
+        "name": "Pressure",
+        "group": "his-ui-grp-pressure",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Pressure (PSI)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 30,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#aec7e8","#ffbb78","#98df8a"],
+        "useOldColors": false,
+        "outputs": 1,
+        "x": 620,
+        "y": 80,
+        "wires": [[]]
+    },
+    {
+        "id": "his-chart-temp",
+        "type": "ui_chart",
+        "z": "his-flow-main",
+        "name": "Temperature",
+        "group": "his-ui-grp-temp",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature (°F)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 30,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#aec7e8","#ffbb78","#98df8a"],
+        "useOldColors": false,
+        "outputs": 1,
+        "x": 620,
+        "y": 120,
+        "wires": [[]]
+    },
+    {
+        "id": "his-chart-humidity",
+        "type": "ui_chart",
+        "z": "his-flow-main",
+        "name": "Humidity",
+        "group": "his-ui-grp-humidity",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity (%)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 30,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#aec7e8","#ffbb78","#98df8a"],
+        "useOldColors": false,
+        "outputs": 1,
+        "x": 620,
+        "y": 160,
+        "wires": [[]]
+    },
+
+    {
+        "id": "his-fn-p-diffs",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "P differences",
+        "func": "var nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]=msg.payload;\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n]!==undefined;}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office']-latest['mud-room'],'BO-GA':latest['bills-office']-latest['garage'],'MR-GA':latest['mud-room']-latest['garage']};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>60)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar chartMsgs=Object.keys(pairs).map(function(k){return{topic:k,payload:pairs[k]};});\nvar lines=Object.keys(stats).map(function(k){var s=stats[k];return k+':  μ='+s.mean.toFixed(4)+'  UCL='+(s.mean+3*s.std).toFixed(4)+'  LCL='+(s.mean-3*s.std).toFixed(4);});\nreturn[chartMsgs,{payload:lines.join('\\n')}];",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 620,
+        "y": 220,
+        "wires": [
+            ["his-chart-p-diffs"],
+            ["his-template-diff-stats"]
+        ]
+    },
+
+    {
+        "id": "his-chart-p-diffs",
+        "type": "ui_chart",
+        "z": "his-flow-main",
+        "name": "Pressure Diffs",
+        "group": "his-ui-grp-diffs",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Pressure Differences (PSI)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 30,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd"],
+        "useOldColors": false,
+        "outputs": 1,
+        "x": 840,
+        "y": 200,
+        "wires": [[]]
+    },
+
+    {
+        "id": "his-template-diff-stats",
+        "type": "ui_template",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-diffs",
+        "order": 2,
+        "width": 0,
+        "height": 2,
+        "name": "Diff Stats",
+        "format": "<pre ng-if=\"msg.payload\" style=\"font-family:monospace;font-size:12px;margin:4px;white-space:pre\">{{msg.payload}}</pre>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 840,
+        "y": 240,
+        "wires": [[]]
+    },
+
+    {
+        "id": "his-fn-fault-collect",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "collect faults",
+        "func": "var d=msg.payload;\nvar counts=flow.get('fault_counts')||{'bills-office':{P:0,T:0,RH:0},'mud-room':{P:0,T:0,RH:0},'garage':{P:0,T:0,RH:0}};\ncounts[d.nodeId]={P:d.P,T:d.T,RH:d.RH};\nflow.set('fault_counts',counts);\nmsg.payload=counts;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 300,
+        "wires": [["his-template-faults"]]
+    },
+
+    {
+        "id": "his-template-faults",
+        "type": "ui_template",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-faults",
+        "order": 1,
+        "width": 0,
+        "height": 3,
+        "name": "Fault Counts",
+        "format": "<style>.fc{font-family:monospace;font-size:13px}.fc table{width:100%;border-collapse:collapse}.fc th,.fc td{padding:4px 10px;border-bottom:1px solid #444}.fc th{text-align:center;color:#aaa}.fc .name{text-align:left}</style><div class=\"fc\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>P faults</th><th>T faults</th><th>RH faults</th></tr><tr><td class=\"name\">Bills Office</td><td ng-style=\"{color:msg.payload['bills-office'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].P}}</td><td ng-style=\"{color:msg.payload['bills-office'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].T}}</td><td ng-style=\"{color:msg.payload['bills-office'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].RH}}</td></tr><tr><td class=\"name\">Mud Room</td><td ng-style=\"{color:msg.payload['mud-room'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].P}}</td><td ng-style=\"{color:msg.payload['mud-room'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].T}}</td><td ng-style=\"{color:msg.payload['mud-room'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].RH}}</td></tr><tr><td class=\"name\">Garage</td><td ng-style=\"{color:msg.payload['garage'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].P}}</td><td ng-style=\"{color:msg.payload['garage'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].T}}</td><td ng-style=\"{color:msg.payload['garage'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].RH}}</td></tr></table></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 840,
+        "y": 300,
+        "wires": [[]]
+    },
+
+    {
+        "id": "his-mqtt-door",
+        "type": "mqtt in",
+        "z": "his-flow-main",
+        "name": "home/+/door",
+        "topic": "home/+/door",
+        "qos": "1",
+        "datatype": "json",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": true,
+        "x": 160,
+        "y": 420,
+        "wires": [["his-fn-door-text"]]
+    },
+    {
+        "id": "his-fn-door-text",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "format door",
+        "func": "var icon = msg.payload.state === 'open' ? '🔓 OPEN' : '🔒 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 420,
+        "wires": [["his-text-door"]]
+    },
+    {
+        "id": "his-text-door",
+        "type": "ui_text",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-doors",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Door Status",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "x": 600,
+        "y": 420,
+        "wires": []
+    },
+
+    {
+        "id": "his-mqtt-motion",
+        "type": "mqtt in",
+        "z": "his-flow-main",
+        "name": "home/+/motion",
+        "topic": "home/+/motion",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": false,
+        "x": 160,
+        "y": 480,
+        "wires": [["his-fn-motion-text"]]
+    },
+    {
+        "id": "his-fn-motion-text",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "format motion",
+        "func": "var icon = msg.payload.state === 'detected' ? '🚨 DETECTED' : '✅ clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 480,
+        "wires": [["his-text-motion"]]
+    },
+    {
+        "id": "his-text-motion",
+        "type": "ui_text",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-motion",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Motion Status",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "x": 600,
+        "y": 480,
+        "wires": []
+    },
+
+    {
+        "id": "his-mqtt-alarm",
+        "type": "mqtt in",
+        "z": "his-flow-main",
+        "name": "home/+/alarm",
+        "topic": "home/+/alarm",
+        "qos": "1",
+        "datatype": "json",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": false,
+        "x": 160,
+        "y": 580,
+        "wires": [["his-fn-alarm-gauge", "his-fn-alarm-check"]]
+    },
+    {
+        "id": "his-fn-alarm-gauge",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "smoke level",
+        "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.smoke;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 560,
+        "wires": [["his-gauge-smoke"]]
+    },
+    {
+        "id": "his-gauge-smoke",
+        "type": "ui_gauge",
+        "z": "his-flow-main",
+        "name": "Smoke Level",
+        "group": "his-ui-grp-gas",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Smoke (ADC)",
+        "label": "ADC counts",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 4095,
+        "colors": ["#00b500","#e6e600","#e60000"],
+        "seg1": 1500,
+        "seg2": 2500,
+        "x": 600,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "his-fn-alarm-check",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "alert if true",
+        "func": "if (msg.payload.alert === true) {\n    msg.payload = '🚨 ALARM: ' + msg.payload.type.toUpperCase() + ' — node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 620,
+        "wires": [["his-text-alarm-banner"]]
+    },
+    {
+        "id": "his-text-alarm-banner",
+        "type": "ui_text",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-gas",
+        "order": 2,
+        "width": 12,
+        "height": 0,
+        "name": "Alarm Banner",
+        "label": "⚠ Alert",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "x": 600,
+        "y": 620,
+        "wires": []
+    },
+
+    {
+        "id": "his-mqtt-visitor",
+        "type": "mqtt in",
+        "z": "his-flow-main",
+        "name": "home/frontdoor/visitor",
+        "topic": "home/frontdoor/visitor",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": false,
+        "x": 180,
+        "y": 720,
+        "wires": [["his-fn-visitor-text"]]
+    },
+    {
+        "id": "his-fn-visitor-text",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "visitor label",
+        "func": "var trig = msg.payload.trigger === 'button' ? '🔔 Doorbell' : '👤 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420,
+        "y": 720,
+        "wires": [["his-text-visitor"]]
+    },
+    {
+        "id": "his-text-visitor",
+        "type": "ui_text",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-visitor",
+        "order": 1,
+        "width": 12,
+        "height": 0,
+        "name": "Last Visitor",
+        "label": "Last event",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "x": 640,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "his-mqtt-image",
+        "type": "mqtt in",
+        "z": "his-flow-main",
+        "name": "home/frontdoor/image",
+        "topic": "home/frontdoor/image",
+        "qos": "0",
+        "datatype": "buffer",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": false,
+        "x": 180,
+        "y": 780,
+        "wires": [["his-fn-image-b64"]]
+    },
+    {
+        "id": "his-fn-image-b64",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "JPEG → base64 img",
+        "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 780,
+        "wires": [["his-template-image"]]
+    },
+    {
+        "id": "his-template-image",
+        "type": "ui_template",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-visitor",
+        "order": 2,
+        "width": 12,
+        "height": 9,
+        "name": "Visitor Snapshot",
+        "format": "<canvas id=\"his-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('his-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 680,
+        "y": 780,
+        "wires": [[]]
+    },
+
+    { "id": "pb-flow-main", "type": "tab", "label": "Photo Booth", "disabled": false, "info": "Photo Booth — MQTT triggered capture" },
+
+    { "id": "pb-ui-tab", "type": "ui_tab", "name": "Photo Booth", "icon": "photo_camera", "order": 5, "disabled": false, "hidden": false },
+    { "id": "pb-ui-grp-cam", "type": "ui_group", "name": "Camera", "tab": "pb-ui-tab", "order": 1, "disp": true, "width": "12", "collapse": false },
+
+    {
+        "id": "pb-btn-capture",
+        "type": "ui_button",
+        "z": "pb-flow-main",
+        "name": "Capture",
+        "group": "pb-ui-grp-cam",
+        "order": 1,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "label": "Capture",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "camera_alt",
+        "payload": "go",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 160,
+        "y": 100,
+        "wires": [["pb-mqtt-trigger"]]
+    },
+    {
+        "id": "pb-mqtt-trigger",
+        "type": "mqtt out",
+        "z": "pb-flow-main",
+        "name": "photobooth/trigger",
+        "topic": "home/photobooth/trigger",
+        "qos": "0",
+        "retain": "false",
+        "broker": "his-broker",
+        "x": 380,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "pb-mqtt-image",
+        "type": "mqtt in",
+        "z": "pb-flow-main",
+        "name": "home/photobooth/image",
+        "topic": "home/photobooth/image",
+        "qos": "0",
+        "datatype": "buffer",
+        "broker": "his-broker",
+        "nl": false,
+        "rap": false,
+        "x": 160,
+        "y": 220,
+        "wires": [["pb-fn-image-b64", "pb-fn-ts"]]
+    },
+    {
+        "id": "pb-fn-image-b64",
+        "type": "function",
+        "z": "pb-flow-main",
+        "name": "JPEG → base64",
+        "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 200,
+        "wires": [["pb-template-image"]]
+    },
+    {
+        "id": "pb-template-image",
+        "type": "ui_template",
+        "z": "pb-flow-main",
+        "group": "pb-ui-grp-cam",
+        "order": 3,
+        "width": 12,
+        "height": 9,
+        "name": "Snapshot",
+        "format": "<canvas id=\"pb-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('pb-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 620,
+        "y": 200,
+        "wires": [[]]
+    },
+    {
+        "id": "pb-fn-ts",
+        "type": "function",
+        "z": "pb-flow-main",
+        "name": "timestamp",
+        "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 260,
+        "wires": [["pb-text-status"]]
+    },
+    {
+        "id": "pb-text-status",
+        "type": "ui_text",
+        "z": "pb-flow-main",
+        "group": "pb-ui-grp-cam",
+        "order": 2,
+        "width": 8,
+        "height": 1,
+        "name": "Capture Status",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "x": 580,
+        "y": 260,
+        "wires": []
     }
-  },
-  {
-    "id": "0d6a60de32284acf",
-    "type": "ui_tab",
-    "name": "Home",
-    "icon": "dashboard",
-    "order": 1,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "a105e68a.f1f57",
-    "type": "ui_tab",
-    "name": "PWS Example",
-    "icon": "wi-wu-partlycloudy",
-    "order": 1,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "e7f7ff66.2de07",
-    "type": "ui_tab",
-    "name": "Restore",
-    "icon": "dashboard"
-  },
-  {
-    "id": "44904efc.96d75",
-    "type": "ui_tab",
-    "name": "Home",
-    "icon": "dashboard"
-  },
-  {
-    "id": "e7c46d5e.a1283",
-    "type": "ui_tab",
-    "name": "Dashboard",
-    "icon": "dashboard"
-  },
-  {
-    "id": "cf1d0873a7cd55bf",
-    "type": "ui_tab",
-    "name": "Home",
-    "icon": "dashboard",
-    "order": 1,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "40940b5d44cd0422",
-    "type": "ui_tab",
-    "name": "PWS Example",
-    "icon": "wi-wu-partlycloudy",
-    "order": 1,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "189b6562e41ad350",
-    "type": "ui_tab",
-    "name": "Restore",
-    "icon": "dashboard"
-  },
-  {
-    "id": "c9ec56e0eb394d42",
-    "type": "ui_tab",
-    "name": "Home",
-    "icon": "dashboard"
-  },
-  {
-    "id": "fae8e7aedcb8ede4",
-    "type": "ui_tab",
-    "name": "Dashboard",
-    "icon": "dashboard"
-  },
-  {
-    "id": "567fb3661424dbf1",
-    "type": "ui_group",
-    "name": "Trends",
-    "tab": "0d6a60de32284acf",
-    "order": 1,
-    "disp": true,
-    "width": "11",
-    "collapse": false,
-    "className": ""
-  },
-  {
-    "id": "3b17408c84626233",
-    "type": "ui_group",
-    "name": "Current Conditions",
-    "tab": "0d6a60de32284acf",
-    "order": 2,
-    "disp": true,
-    "width": "8",
-    "collapse": false,
-    "className": ""
-  },
-  {
-    "id": "a91cd93c.4ca95",
-    "type": "ui_group",
-    "name": "PWS Queries",
-    "tab": "a105e68a.f1f57",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "1bba4345.fa4d15",
-    "type": "ui_group",
-    "name": "Forecast",
-    "tab": "a105e68a.f1f57",
-    "order": 3,
-    "disp": true,
-    "width": "8",
-    "collapse": false
-  },
-  {
-    "id": "ada0ce32.b103c",
-    "type": "ui_group",
-    "name": "PWS Results",
-    "tab": "a105e68a.f1f57",
-    "order": 2,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "212b7f06.b4731",
-    "type": "ui_group",
-    "name": "Gauge",
-    "tab": "e7f7ff66.2de07",
-    "order": 2,
-    "disp": true,
-    "width": "6"
-  },
-  {
-    "id": "5003631.3bc729c",
-    "type": "ui_group",
-    "name": "Default",
-    "tab": "44904efc.96d75",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "61285987.c20328",
-    "type": "ui_group",
-    "name": "Main",
-    "tab": "e7c46d5e.a1283",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "0472cc6cba79e8e3",
-    "type": "ui_group",
-    "name": "Trends",
-    "tab": "0d6a60de32284acf",
-    "order": 1,
-    "disp": true,
-    "width": "11",
-    "collapse": false,
-    "className": ""
-  },
-  {
-    "id": "f3c94cb354f6a9b0",
-    "type": "ui_group",
-    "name": "PWS Queries",
-    "tab": "a105e68a.f1f57",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "291ee70aebefda75",
-    "type": "ui_group",
-    "name": "Forecast",
-    "tab": "a105e68a.f1f57",
-    "order": 3,
-    "disp": true,
-    "width": "8",
-    "collapse": false
-  },
-  {
-    "id": "e2b6765c6ef851a4",
-    "type": "ui_group",
-    "name": "PWS Results",
-    "tab": "a105e68a.f1f57",
-    "order": 2,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "11e9df89f09baa69",
-    "type": "ui_group",
-    "name": "Gauge",
-    "tab": "e7f7ff66.2de07",
-    "order": 2,
-    "disp": true,
-    "width": "6"
-  },
-  {
-    "id": "3b16b4b12e5c0d64",
-    "type": "ui_group",
-    "name": "Default",
-    "tab": "44904efc.96d75",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "74321085670c2ca7",
-    "type": "ui_group",
-    "name": "Main",
-    "tab": "e7c46d5e.a1283",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "d78592bcf4fa46d3",
-    "type": "serial-port",
-    "serialport": "COM3",
-    "serialbaud": "115200",
-    "databits": "8",
-    "parity": "none",
-    "stopbits": "1",
-    "waitfor": "",
-    "dtr": "none",
-    "rts": "none",
-    "cts": "none",
-    "dsr": "none",
-    "newline": "\\n",
-    "bin": "false",
-    "out": "char",
-    "addchar": "",
-    "responsetimeout": "10000"
-  },
-  {
-    "id": "ui-tab",
-    "type": "ui_tab",
-    "name": "PT-RH Hub",
-    "icon": "dashboard",
-    "order": 1
-  },
-  {
-    "id": "ui-group-pressure",
-    "type": "ui_group",
-    "name": "Pressure (PSI)",
-    "tab": "ui-tab",
-    "order": 1,
-    "disp": true,
-    "width": "12"
-  },
-  {
-    "id": "ui-group-temperature",
-    "type": "ui_group",
-    "name": "Temperature (\u00b0F)",
-    "tab": "ui-tab",
-    "order": 2,
-    "disp": true,
-    "width": "12"
-  },
-  {
-    "id": "ui-group-humidity",
-    "type": "ui_group",
-    "name": "Humidity (%)",
-    "tab": "ui-tab",
-    "order": 3,
-    "disp": true,
-    "width": "12"
-  },
-  {
-    "id": "f1e2d3c4b5a60003",
-    "type": "ui_tab",
-    "name": "PT-RH Hub",
-    "icon": "dashboard",
-    "order": 1
-  },
-  {
-    "id": "f1e2d3c4b5a60004",
-    "type": "ui_group",
-    "name": "Pressure (PSI)",
-    "tab": "f1e2d3c4b5a60003",
-    "order": 1,
-    "disp": true,
-    "width": "12"
-  },
-  {
-    "id": "f1e2d3c4b5a60005",
-    "type": "ui_group",
-    "name": "Temperature (\u00b0F)",
-    "tab": "f1e2d3c4b5a60003",
-    "order": 2,
-    "disp": true,
-    "width": "12"
-  },
-  {
-    "id": "f1e2d3c4b5a60006",
-    "type": "ui_group",
-    "name": "Humidity (%)",
-    "tab": "f1e2d3c4b5a60003",
-    "order": 3,
-    "disp": true,
-    "width": "12"
-  },
-  {
-    "id": "f1e2d3c4b5a60002",
-    "type": "mqtt-broker",
-    "name": "Mosquitto Local",
-    "broker": "localhost",
-    "port": "1883",
-    "clientid": "nodered-pth-hub",
-    "autoConnect": true,
-    "usetls": false,
-    "protocolVersion": "4",
-    "keepalive": "60",
-    "cleansession": true,
-    "autoUnsubscribe": true,
-    "birthTopic": "",
-    "birthQos": "0",
-    "birthRetain": "false",
-    "birthPayload": "",
-    "birthMsg": {},
-    "closeTopic": "",
-    "closeQos": "0",
-    "closeRetain": "false",
-    "closePayload": "",
-    "closeMsg": {},
-    "willTopic": "",
-    "willQos": "0",
-    "willRetain": "false",
-    "willPayload": "",
-    "willMsg": {}
-  },
-  {
-    "id": "his-broker",
-    "type": "mqtt-broker",
-    "name": "Mosquitto Local",
-    "broker": "localhost",
-    "port": "1883",
-    "clientid": "nodered-his-hub",
-    "autoConnect": true,
-    "usetls": false,
-    "protocolVersion": "4",
-    "keepalive": "60",
-    "cleansession": true
-  },
-  {
-    "id": "his-ui-tab-pth",
-    "type": "ui_tab",
-    "name": "PTH Charts",
-    "icon": "show_chart",
-    "order": 1,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-pressure",
-    "type": "ui_group",
-    "name": "Pressure (PSI)",
-    "tab": "his-ui-tab-pth",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-grp-temp",
-    "type": "ui_group",
-    "name": "Temperature (\u00b0F)",
-    "tab": "his-ui-tab-pth",
-    "order": 2,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-grp-humidity",
-    "type": "ui_group",
-    "name": "Humidity (%)",
-    "tab": "his-ui-tab-pth",
-    "order": 3,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-tab-overview",
-    "type": "ui_tab",
-    "name": "Home Overview",
-    "icon": "home",
-    "order": 2,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-doors",
-    "type": "ui_group",
-    "name": "Doors & Windows",
-    "tab": "his-ui-tab-overview",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-grp-motion",
-    "type": "ui_group",
-    "name": "Motion",
-    "tab": "his-ui-tab-overview",
-    "order": 2,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-tab-alarms",
-    "type": "ui_tab",
-    "name": "Alarms",
-    "icon": "warning",
-    "order": 3,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-gas",
-    "type": "ui_group",
-    "name": "Smoke / CO",
-    "tab": "his-ui-tab-alarms",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-tab-frontdoor",
-    "type": "ui_tab",
-    "name": "Front Door",
-    "icon": "camera_alt",
-    "order": 4,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-visitor",
-    "type": "ui_group",
-    "name": "Visitor",
-    "tab": "his-ui-tab-frontdoor",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-telegram-config",
-    "type": "telegram bot",
-    "botname": "HIS Alert Bot",
-    "usernames": "",
-    "chatids": ""
-  },
-  {
-    "id": "d6b6fb91caaaea4c",
-    "type": "ui_tab",
-    "name": "Photo Booth",
-    "icon": "photo_camera",
-    "order": 5,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "591d7e2398392937",
-    "type": "ui_group",
-    "name": "Camera",
-    "tab": "d6b6fb91caaaea4c",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "adf1ca27c9965c3a",
-    "type": "mqtt in",
-    "z": "f76cd054d8d6c3fc",
-    "name": "home/+/pth",
-    "topic": "home/+/pth",
-    "qos": "0",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 120,
-    "wires": [
-      [
-        "be75c42b661d9660",
-        "37d79c4e74c95ae6",
-        "45d28667e1b82968"
-      ]
-    ]
-  },
-  {
-    "id": "be75c42b661d9660",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "extract P",
-    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.P;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 80,
-    "wires": [
-      [
-        "bbed3aea4f25290e"
-      ]
-    ]
-  },
-  {
-    "id": "37d79c4e74c95ae6",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "extract T",
-    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.T;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 120,
-    "wires": [
-      [
-        "58108fb07921f7d3"
-      ]
-    ]
-  },
-  {
-    "id": "45d28667e1b82968",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "extract RH",
-    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.RH;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 160,
-    "wires": [
-      [
-        "bf5ff8e3632211a3"
-      ]
-    ]
-  },
-  {
-    "id": "bbed3aea4f25290e",
-    "type": "ui_chart",
-    "z": "f76cd054d8d6c3fc",
-    "name": "Pressure",
-    "group": "his-ui-grp-pressure",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "label": "Pressure (PSI)",
-    "chartType": "line",
-    "legend": "true",
-    "xformat": "HH:mm:ss",
-    "interpolate": "linear",
-    "nodata": "",
-    "dot": false,
-    "ymin": "",
-    "ymax": "",
-    "removeOlder": 30,
-    "removeOlderPoints": "",
-    "removeOlderUnit": "60",
-    "colors": [
-      "#1f77b4",
-      "#ff7f0e",
-      "#2ca02c",
-      "#d62728",
-      "#9467bd"
-    ],
-    "outputs": 1,
-    "x": 600,
-    "y": 80,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "58108fb07921f7d3",
-    "type": "ui_chart",
-    "z": "f76cd054d8d6c3fc",
-    "name": "Temperature",
-    "group": "his-ui-grp-temp",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "label": "Temperature (\u00b0F)",
-    "chartType": "line",
-    "legend": "true",
-    "xformat": "HH:mm:ss",
-    "interpolate": "linear",
-    "nodata": "",
-    "dot": false,
-    "ymin": "",
-    "ymax": "",
-    "removeOlder": 30,
-    "removeOlderPoints": "",
-    "removeOlderUnit": "60",
-    "colors": [
-      "#1f77b4",
-      "#ff7f0e",
-      "#2ca02c",
-      "#d62728",
-      "#9467bd"
-    ],
-    "outputs": 1,
-    "x": 600,
-    "y": 120,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "bf5ff8e3632211a3",
-    "type": "ui_chart",
-    "z": "f76cd054d8d6c3fc",
-    "name": "Humidity",
-    "group": "his-ui-grp-humidity",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "label": "Humidity (%)",
-    "chartType": "line",
-    "legend": "true",
-    "xformat": "HH:mm:ss",
-    "interpolate": "linear",
-    "nodata": "",
-    "dot": false,
-    "ymin": "",
-    "ymax": "",
-    "removeOlder": 30,
-    "removeOlderPoints": "",
-    "removeOlderUnit": "60",
-    "colors": [
-      "#1f77b4",
-      "#ff7f0e",
-      "#2ca02c",
-      "#d62728",
-      "#9467bd"
-    ],
-    "outputs": 1,
-    "x": 600,
-    "y": 160,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "54b24ca7263c839b",
-    "type": "mqtt in",
-    "z": "f76cd054d8d6c3fc",
-    "name": "home/+/door",
-    "topic": "home/+/door",
-    "qos": "1",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": true,
-    "inputs": 0,
-    "x": 160,
-    "y": 280,
-    "wires": [
-      [
-        "482aefa27e6ca461"
-      ]
-    ]
-  },
-  {
-    "id": "482aefa27e6ca461",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "format door",
-    "func": "var icon = msg.payload.state === 'open' ? '\ud83d\udd13 OPEN' : '\ud83d\udd12 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 280,
-    "wires": [
-      [
-        "7e17b5da17f0347d"
-      ]
-    ]
-  },
-  {
-    "id": "7e17b5da17f0347d",
-    "type": "ui_text",
-    "z": "f76cd054d8d6c3fc",
-    "group": "his-ui-grp-doors",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "name": "Door Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 600,
-    "y": 280,
-    "wires": []
-  },
-  {
-    "id": "0b1a8d4f08e85f34",
-    "type": "mqtt in",
-    "z": "f76cd054d8d6c3fc",
-    "name": "home/+/motion",
-    "topic": "home/+/motion",
-    "qos": "0",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 340,
-    "wires": [
-      [
-        "4d462fbdbc9fc597"
-      ]
-    ]
-  },
-  {
-    "id": "4d462fbdbc9fc597",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "format motion",
-    "func": "var icon = msg.payload.state === 'detected' ? '\ud83d\udea8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 340,
-    "wires": [
-      [
-        "a1b139d79e107755"
-      ]
-    ]
-  },
-  {
-    "id": "a1b139d79e107755",
-    "type": "ui_text",
-    "z": "f76cd054d8d6c3fc",
-    "group": "his-ui-grp-motion",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "name": "Motion Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 600,
-    "y": 340,
-    "wires": []
-  },
-  {
-    "id": "87267244ba5c3608",
-    "type": "mqtt in",
-    "z": "f76cd054d8d6c3fc",
-    "name": "home/+/alarm",
-    "topic": "home/+/alarm",
-    "qos": "1",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 460,
-    "wires": [
-      [
-        "2fc7626939638e23",
-        "8327fbabc2d08fab"
-      ]
-    ]
-  },
-  {
-    "id": "2fc7626939638e23",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "smoke level",
-    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.smoke;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 440,
-    "wires": [
-      [
-        "6963e685e0351ae2"
-      ]
-    ]
-  },
-  {
-    "id": "6963e685e0351ae2",
-    "type": "ui_gauge",
-    "z": "f76cd054d8d6c3fc",
-    "name": "Smoke Level",
-    "group": "his-ui-grp-gas",
-    "order": 1,
-    "width": 6,
-    "height": 4,
-    "gtype": "gage",
-    "title": "Smoke (ADC)",
-    "label": "ADC counts",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 4095,
-    "colors": [
-      "#00b500",
-      "#e6e600",
-      "#e60000"
-    ],
-    "seg1": 1500,
-    "seg2": 2500,
-    "x": 600,
-    "y": 440,
-    "wires": []
-  },
-  {
-    "id": "8327fbabc2d08fab",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "alert if true",
-    "func": "if (msg.payload.alert === true) {\n    msg.payload = '\ud83d\udea8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 500,
-    "wires": [
-      [
-        "d8d890887f7dd2ab"
-      ]
-    ]
-  },
-  {
-    "id": "d8d890887f7dd2ab",
-    "type": "ui_text",
-    "z": "f76cd054d8d6c3fc",
-    "group": "his-ui-grp-gas",
-    "order": 2,
-    "width": 12,
-    "height": 0,
-    "name": "Alarm Banner",
-    "label": "\u26a0 Alert",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 600,
-    "y": 500,
-    "wires": []
-  },
-  {
-    "id": "a023749d0b402646",
-    "type": "mqtt in",
-    "z": "f76cd054d8d6c3fc",
-    "name": "home/frontdoor/visitor",
-    "topic": "home/frontdoor/visitor",
-    "qos": "0",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 180,
-    "y": 600,
-    "wires": [
-      [
-        "182817b1af2ddca7"
-      ]
-    ]
-  },
-  {
-    "id": "182817b1af2ddca7",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "visitor label",
-    "func": "var trig = msg.payload.trigger === 'button' ? '\ud83d\udd14 Doorbell' : '\ud83d\udc64 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 420,
-    "y": 600,
-    "wires": [
-      [
-        "618e77f9942f76bb"
-      ]
-    ]
-  },
-  {
-    "id": "618e77f9942f76bb",
-    "type": "ui_text",
-    "z": "f76cd054d8d6c3fc",
-    "group": "his-ui-grp-visitor",
-    "order": 1,
-    "width": 12,
-    "height": 0,
-    "name": "Last Visitor",
-    "label": "Last event",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 640,
-    "y": 600,
-    "wires": []
-  },
-  {
-    "id": "6b9f6d21a9b6ffbd",
-    "type": "mqtt in",
-    "z": "f76cd054d8d6c3fc",
-    "name": "home/frontdoor/image",
-    "topic": "home/frontdoor/image",
-    "qos": "0",
-    "datatype": "buffer",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 180,
-    "y": 660,
-    "wires": [
-      [
-        "64fd053a8efb37eb"
-      ]
-    ]
-  },
-  {
-    "id": "64fd053a8efb37eb",
-    "type": "function",
-    "z": "f76cd054d8d6c3fc",
-    "name": "JPEG \u2192 base64 img",
-    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 440,
-    "y": 660,
-    "wires": [
-      [
-        "b14be6aa89d0d14f"
-      ]
-    ]
-  },
-  {
-    "id": "b14be6aa89d0d14f",
-    "type": "ui_template",
-    "z": "f76cd054d8d6c3fc",
-    "group": "his-ui-grp-visitor",
-    "name": "Visitor Snapshot",
-    "order": 2,
-    "width": 12,
-    "height": 9,
-    "format": "<canvas id=\"his-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('his-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 680,
-    "y": 660,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "541dee64cba21e91",
-    "type": "ui_button",
-    "z": "a5213f595caa0aa7",
-    "name": "Capture",
-    "group": "591d7e2398392937",
-    "order": 1,
-    "width": 4,
-    "height": 1,
-    "passthru": false,
-    "label": "Capture",
-    "tooltip": "",
-    "color": "",
-    "bgcolor": "",
-    "icon": "camera_alt",
-    "payload": "go",
-    "payloadType": "str",
-    "topic": "",
-    "topicType": "str",
-    "x": 160,
-    "y": 100,
-    "wires": [
-      [
-        "23722f5d9a3ccdf3"
-      ]
-    ]
-  },
-  {
-    "id": "23722f5d9a3ccdf3",
-    "type": "mqtt out",
-    "z": "a5213f595caa0aa7",
-    "name": "photobooth/trigger",
-    "topic": "home/photobooth/trigger",
-    "qos": "0",
-    "retain": "false",
-    "broker": "his-broker",
-    "x": 380,
-    "y": 100,
-    "wires": []
-  },
-  {
-    "id": "2a7647cfa616281c",
-    "type": "mqtt in",
-    "z": "a5213f595caa0aa7",
-    "name": "home/photobooth/image",
-    "topic": "home/photobooth/image",
-    "qos": "0",
-    "datatype": "buffer",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 220,
-    "wires": [
-      [
-        "3389c101547e8fb8",
-        "4c3cd626c49947fe"
-      ]
-    ]
-  },
-  {
-    "id": "3389c101547e8fb8",
-    "type": "function",
-    "z": "a5213f595caa0aa7",
-    "name": "JPEG \u2192 base64",
-    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 200,
-    "wires": [
-      [
-        "cb180566729110fb"
-      ]
-    ]
-  },
-  {
-    "id": "cb180566729110fb",
-    "type": "ui_template",
-    "z": "a5213f595caa0aa7",
-    "group": "591d7e2398392937",
-    "name": "Snapshot",
-    "order": 3,
-    "width": 12,
-    "height": 9,
-    "format": "<canvas id=\"pb-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('pb-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 620,
-    "y": 200,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "4c3cd626c49947fe",
-    "type": "function",
-    "z": "a5213f595caa0aa7",
-    "name": "timestamp",
-    "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 360,
-    "y": 260,
-    "wires": [
-      [
-        "72e459202faf584b"
-      ]
-    ]
-  },
-  {
-    "id": "72e459202faf584b",
-    "type": "ui_text",
-    "z": "a5213f595caa0aa7",
-    "group": "591d7e2398392937",
-    "order": 2,
-    "width": 8,
-    "height": 1,
-    "name": "Capture Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 580,
-    "y": 260,
-    "wires": []
-  },
-  {
-    "id": "1203ec8fd6c144f2",
-    "type": "inject",
-    "z": "a5213f595caa0aa7",
-    "name": "",
-    "props": [
-      {
-        "p": "payload"
-      },
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "",
-    "payloadType": "date",
-    "x": 240,
-    "y": 480,
-    "wires": [
-      [
-        "63fe85b1a187dfd1"
-      ]
-    ]
-  },
-  {
-    "id": "63fe85b1a187dfd1",
-    "type": "function",
-    "z": "a5213f595caa0aa7",
-    "name": "hello_world",
-    "func": "// Edit this file in VSCode, then run: python nr_sync.py\n// The node name in Node-RED must be exactly: hello_world\n\nmsg.payload = \"Hello from VSCode! \" + new Date().toLocaleTimeString();\nreturn msg;\n",
-    "outputs": 1,
-    "timeout": 0,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 410,
-    "y": 480,
-    "wires": [
-      [
-        "1ebf77e5ab63c44e"
-      ]
-    ]
-  },
-  {
-    "id": "1ebf77e5ab63c44e",
-    "type": "debug",
-    "z": "a5213f595caa0aa7",
-    "name": "debug 1",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 640,
-    "y": 480,
-    "wires": []
-  }
 ]
