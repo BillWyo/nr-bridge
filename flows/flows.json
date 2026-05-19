@@ -197,7 +197,7 @@
         "rap": false,
         "x": 160,
         "y": 120,
-        "wires": [["his-fn-grubbs"]]
+        "wires": [["his-fn-grubbs", "his-fn-lastseen"]]
     },
 
     {
@@ -651,6 +651,63 @@
         "templateScope": "local",
         "x": 680,
         "y": 780,
+        "wires": [[]]
+    },
+
+    { "id": "his-ui-grp-status", "type": "ui_group", "name": "Node Status", "tab": "his-ui-tab-pth", "order": 6, "disp": true, "width": "12", "collapse": false },
+
+    {
+        "id": "his-fn-lastseen",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "update last seen",
+        "func": "var nodeId = msg.topic.split('/')[1];\nvar ls = flow.get('node_lastseen') || {};\nls[nodeId] = Date.now();\nflow.set('node_lastseen', ls);\nreturn null;",
+        "outputs": 0,
+        "noerr": 0,
+        "x": 380, "y": 160,
+        "wires": []
+    },
+    {
+        "id": "his-inject-watchdog",
+        "type": "inject",
+        "z": "his-flow-main",
+        "name": "watchdog tick",
+        "props": [{"p": "payload"}],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 10,
+        "payload": "",
+        "payloadType": "date",
+        "x": 180, "y": 1060,
+        "wires": [["his-fn-watchdog"]]
+    },
+    {
+        "id": "his-fn-watchdog",
+        "type": "function",
+        "z": "his-flow-main",
+        "name": "check node health",
+        "func": "var STALE_MS = 300000;\nvar nodes = ['bills-office','mud-room','garage'];\nvar labels = {'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};\nvar ls = flow.get('node_lastseen') || {};\nvar now = Date.now();\nvar rows = nodes.map(function(n) {\n    var t = ls[n];\n    if (!t) return {node: labels[n], age: 'never', ok: false};\n    var age = Math.floor((now - t) / 1000);\n    return {node: labels[n], age: age + 's ago', ok: age < (STALE_MS/1000)};\n});\nmsg.payload = rows;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420, "y": 1060,
+        "wires": [["his-template-node-status"]]
+    },
+    {
+        "id": "his-template-node-status",
+        "type": "ui_template",
+        "z": "his-flow-main",
+        "group": "his-ui-grp-status",
+        "order": 1,
+        "width": 12,
+        "height": 2,
+        "name": "Node Status",
+        "format": "<style>.ns{font-family:monospace;font-size:13px}.ns table{width:100%;border-collapse:collapse}.ns th,.ns td{padding:4px 12px;border-bottom:1px solid #444}.ns th{color:#aaa;text-align:left}.ns .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}</style><div class=\"ns\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>Last seen</th><th>Status</th></tr><tr ng-repeat=\"r in msg.payload\"><td>{{r.node}}</td><td>{{r.age}}</td><td><span class=\"dot\" ng-style=\"{background:r.ok?'#2ca02c':'#d62728'}\"></span>{{r.ok?'OK':'DOWN'}}</td></tr></table></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 680, "y": 1060,
         "wires": [[]]
     },
 
