@@ -124,7 +124,7 @@ def cmd_extract(args):
         print(f"No {FLOWS_FILE} found. Run 'python nr_sync.py pull' first.")
         return
 
-    with open(FLOWS_FILE, "r") as f:
+    with open(FLOWS_FILE, "r", encoding="utf-8") as f:
         flows = json.load(f)
 
     os.makedirs(NODES_DIR, exist_ok=True)
@@ -157,7 +157,7 @@ def cmd_push_flows(args):
         print(f"No {FLOWS_FILE} found. Run 'python nr_sync.py pull' first.")
         return
 
-    with open(FLOWS_FILE, "r") as f:
+    with open(FLOWS_FILE, "r", encoding="utf-8") as f:
         flows = json.load(f)
 
     print(f"Pushing {len(flows)} nodes from {FLOWS_FILE} to Node-RED ...")
