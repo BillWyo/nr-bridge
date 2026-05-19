@@ -211,7 +211,7 @@
         "x": 380,
         "y": 120,
         "wires": [
-            ["his-chart-pressure", "his-fn-p-diffs"],
+            ["his-fn-p-diffs"],
             ["his-chart-temp"],
             ["his-chart-humidity"],
             ["his-fn-fault-collect"]
@@ -220,28 +220,18 @@
 
     {
         "id": "his-chart-pressure",
-        "type": "ui_chart",
+        "type": "ui_template",
         "z": "his-flow-main",
-        "name": "Pressure",
         "group": "his-ui-grp-pressure",
         "order": 1,
         "width": 0,
-        "height": 0,
-        "label": "Pressure (PSI)",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "",
-        "ymax": "",
-        "removeOlder": 30,
-        "removeOlderUnit": "60",
-        "removeOlderPoints": "",
-        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#aec7e8","#ffbb78","#98df8a"],
-        "useOldColors": false,
-        "outputs": 1,
+        "height": 4,
+        "name": "Pressure Summary",
+        "format": "<style>.ps{font-family:monospace;padding:10px}.ps-val{font-size:2.2em;font-weight:bold;color:#0eb8c0}.ps-trend{font-size:1.05em;color:#eeeeee;margin-top:6px}.ps-conf{font-size:0.9em;color:#aaaaaa;margin-top:4px}.ps-src{font-size:0.75em;color:#666;margin-top:4px}</style><div class=\"ps\" ng-if=\"msg.payload\"><div class=\"ps-val\">{{msg.payload.pressure}} PSI</div><div class=\"ps-trend\">{{msg.payload.trend}}</div><div class=\"ps-conf\">Confidence: {{msg.payload.conf}}</div><div class=\"ps-src\">Source: {{msg.payload.source}}</div></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
         "x": 620,
         "y": 80,
         "wires": [[]]
@@ -308,14 +298,15 @@
         "type": "function",
         "z": "his-flow-main",
         "name": "P differences",
-        "func": "var nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]=msg.payload;\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n]!==undefined;}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office']-latest['mud-room'],'BO-GA':latest['bills-office']-latest['garage'],'MR-GA':latest['mud-room']-latest['garage']};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>60)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar chartMsgs=Object.keys(pairs).map(function(k){return{topic:k,payload:pairs[k]};});\nvar lines=Object.keys(stats).map(function(k){var s=stats[k];return k+':  μ='+s.mean.toFixed(4)+'  UCL='+(s.mean+3*s.std).toFixed(4)+'  LCL='+(s.mean-3*s.std).toFixed(4);});\nreturn[chartMsgs,{payload:lines.join('\\n')}];",
-        "outputs": 2,
+        "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar chartMsgs=Object.keys(pairs).map(function(k){return{topic:k,payload:pairs[k]};});\nvar lines=Object.keys(stats).map(function(k){var s=stats[k];return k+':  μ='+s.mean.toFixed(4)+'  UCL='+(s.mean+3*s.std).toFixed(4)+'  LCL='+(s.mean-3*s.std).toFixed(4);});\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return[chartMsgs,{payload:lines.join('\\n')},null];\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='→ stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='↑ +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='↓ '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='± '+pct.toFixed(2)+'%';}\nreturn[chartMsgs,{payload:lines.join('\\n')},{payload:{pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr}}];",
+        "outputs": 3,
         "noerr": 0,
         "x": 620,
         "y": 220,
         "wires": [
             ["his-chart-p-diffs"],
-            ["his-template-diff-stats"]
+            ["his-template-diff-stats"],
+            ["his-chart-pressure"]
         ]
     },
 
@@ -720,7 +711,7 @@
         "type": "function",
         "z": "his-flow-main",
         "name": "reset Grubbs state",
-        "func": "var nodes = ['bills-office','mud-room','garage'];\nvar counts = flow.get('fault_counts') || {};\nnodes.forEach(function(n){ if(!counts[n]) counts[n]={P:0,T:0,RH:0}; });\nif (msg.payload === 'ALL') {\n    nodes.forEach(function(n) { flow.set('grubbs_' + n, null); counts[n]={P:0,T:0,RH:0}; });\n    flow.set('p_latest', null);\n    flow.set('p_diff_stats', null);\n    node.warn('Grubbs reset: ALL nodes');\n} else {\n    flow.set('grubbs_' + msg.payload, null);\n    counts[msg.payload] = {P:0, T:0, RH:0};\n    node.warn('Grubbs reset: ' + msg.payload);\n}\nflow.set('fault_counts', counts);\nreturn null;",
+        "func": "var nodes = ['bills-office','mud-room','garage'];\nvar counts = flow.get('fault_counts') || {};\nnodes.forEach(function(n){ if(!counts[n]) counts[n]={P:0,T:0,RH:0}; });\nif (msg.payload === 'ALL') {\n    nodes.forEach(function(n) { flow.set('grubbs_' + n, null); counts[n]={P:0,T:0,RH:0}; });\n    flow.set('p_latest', null);\n    flow.set('p_diff_stats', null);\n    flow.set('p_trend_buf', null);\n    node.warn('Grubbs reset: ALL nodes');\n} else {\n    flow.set('grubbs_' + msg.payload, null);\n    counts[msg.payload] = {P:0, T:0, RH:0};\n    node.warn('Grubbs reset: ' + msg.payload);\n}\nflow.set('fault_counts', counts);\nreturn null;",
         "outputs": 0,
         "noerr": 0,
         "x": 480, "y": 940,
