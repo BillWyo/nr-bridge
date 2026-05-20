@@ -1,10 +1,227 @@
 [
   {
+    "id": "d748b5591e098c6c",
+    "type": "ui_base",
+    "theme": {
+      "name": "theme-dark",
+      "lightTheme": {
+        "default": "#0094CE",
+        "baseColor": "#0094CE",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "darkTheme": {
+        "default": "#097479",
+        "baseColor": "#097479",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "customTheme": {
+        "name": "Untitled Theme 1",
+        "default": "#4B7930",
+        "baseColor": "#4B7930",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+      },
+      "themeState": {
+        "base-color": {
+          "default": "#097479",
+          "value": "#097479",
+          "edited": false
+        },
+        "page-titlebar-backgroundColor": {
+          "value": "#097479",
+          "edited": false
+        },
+        "page-backgroundColor": {
+          "value": "#111111",
+          "edited": false
+        },
+        "page-sidebar-backgroundColor": {
+          "value": "#333333",
+          "edited": false
+        },
+        "group-textColor": {
+          "value": "#0eb8c0",
+          "edited": false
+        },
+        "group-borderColor": {
+          "value": "#555555",
+          "edited": false
+        },
+        "group-backgroundColor": {
+          "value": "#333333",
+          "edited": false
+        },
+        "widget-textColor": {
+          "value": "#eeeeee",
+          "edited": false
+        },
+        "widget-backgroundColor": {
+          "value": "#097479",
+          "edited": false
+        },
+        "widget-borderColor": {
+          "value": "#333333",
+          "edited": false
+        },
+        "base-font": {
+          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+        }
+      },
+      "angularTheme": {
+        "primary": "indigo",
+        "accents": "blue",
+        "warn": "red",
+        "background": "grey",
+        "palette": "light"
+      }
+    },
+    "site": {
+      "name": "Node-RED Dashboard",
+      "hideToolbar": "false",
+      "allowSwipe": "false",
+      "lockMenu": "false",
+      "allowTempTheme": "true",
+      "dateFormat": "DD/MM/YYYY",
+      "sizes": {
+        "sx": 48,
+        "sy": 48,
+        "gx": 6,
+        "gy": 6,
+        "cx": 7,
+        "cy": 6,
+        "px": 0,
+        "py": 0
+      }
+    }
+  },
+  {
     "id": "his-flow-main",
     "type": "tab",
     "label": "HIS Main",
     "disabled": false,
     "info": "Home Information System \u2014 main flow"
+  },
+  {
+    "id": "his-broker",
+    "type": "mqtt-broker",
+    "name": "Mosquitto Local",
+    "broker": "localhost",
+    "port": "1883",
+    "clientid": "nodered-his-hub",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true
+  },
+  {
+    "id": "his-ui-tab-pth",
+    "type": "ui_tab",
+    "name": "PTH Charts",
+    "icon": "show_chart",
+    "order": 1,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "his-ui-grp-pressure",
+    "type": "ui_group",
+    "name": "Pressure (PSI)",
+    "tab": "his-ui-tab-pth",
+    "order": 1,
+    "disp": true,
+    "width": "12",
+    "collapse": false
+  },
+  {
+    "id": "his-ui-grp-temp",
+    "type": "ui_group",
+    "name": "Temperature (\u00b0F)",
+    "tab": "his-ui-tab-pth",
+    "order": 2,
+    "disp": true,
+    "width": "12",
+    "collapse": false
+  },
+  {
+    "id": "his-ui-grp-faults",
+    "type": "ui_group",
+    "name": "Sensor Fault Counts",
+    "tab": "his-ui-tab-pth",
+    "order": 5,
+    "disp": true,
+    "width": "12",
+    "collapse": false
+  },
+  {
+    "id": "his-ui-tab-overview",
+    "type": "ui_tab",
+    "name": "Home Overview",
+    "icon": "home",
+    "order": 2,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "his-ui-grp-doors",
+    "type": "ui_group",
+    "name": "Doors & Windows",
+    "tab": "his-ui-tab-overview",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "his-ui-grp-motion",
+    "type": "ui_group",
+    "name": "Motion",
+    "tab": "his-ui-tab-overview",
+    "order": 2,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "his-ui-tab-alarms",
+    "type": "ui_tab",
+    "name": "Alarms",
+    "icon": "warning",
+    "order": 3,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "his-ui-grp-gas",
+    "type": "ui_group",
+    "name": "Smoke / CO",
+    "tab": "his-ui-tab-alarms",
+    "order": 1,
+    "disp": true,
+    "width": "12",
+    "collapse": false
+  },
+  {
+    "id": "his-ui-tab-frontdoor",
+    "type": "ui_tab",
+    "name": "Front Door",
+    "icon": "camera_alt",
+    "order": 4,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "his-ui-grp-visitor",
+    "type": "ui_group",
+    "name": "Visitor",
+    "tab": "his-ui-tab-frontdoor",
+    "order": 1,
+    "disp": true,
+    "width": "12",
+    "collapse": false
   },
   {
     "id": "his-mqtt-pth",
@@ -501,6 +718,16 @@
     ]
   },
   {
+    "id": "his-ui-grp-status",
+    "type": "ui_group",
+    "name": "Node Status",
+    "tab": "his-ui-tab-pth",
+    "order": 6,
+    "disp": true,
+    "width": "12",
+    "collapse": false
+  },
+  {
     "id": "his-fn-lastseen",
     "type": "function",
     "z": "his-flow-main",
@@ -674,6 +901,160 @@
     "noerr": 0,
     "x": 480,
     "y": 940,
+    "wires": []
+  },
+  {
+    "id": "pb-flow-main",
+    "type": "tab",
+    "label": "Photo Booth",
+    "disabled": false,
+    "info": "Photo Booth \u2014 MQTT triggered capture"
+  },
+  {
+    "id": "pb-ui-tab",
+    "type": "ui_tab",
+    "name": "Photo Booth",
+    "icon": "photo_camera",
+    "order": 5,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "pb-ui-grp-cam",
+    "type": "ui_group",
+    "name": "Camera",
+    "tab": "pb-ui-tab",
+    "order": 1,
+    "disp": true,
+    "width": "12",
+    "collapse": false
+  },
+  {
+    "id": "pb-btn-capture",
+    "type": "ui_button",
+    "z": "pb-flow-main",
+    "name": "Capture",
+    "group": "pb-ui-grp-cam",
+    "order": 1,
+    "width": 4,
+    "height": 1,
+    "passthru": false,
+    "label": "Capture",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "icon": "camera_alt",
+    "payload": "go",
+    "payloadType": "str",
+    "topic": "",
+    "topicType": "str",
+    "x": 160,
+    "y": 100,
+    "wires": [
+      [
+        "pb-mqtt-trigger"
+      ]
+    ]
+  },
+  {
+    "id": "pb-mqtt-trigger",
+    "type": "mqtt out",
+    "z": "pb-flow-main",
+    "name": "photobooth/trigger",
+    "topic": "home/photobooth/trigger",
+    "qos": "0",
+    "retain": "false",
+    "broker": "his-broker",
+    "x": 380,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "pb-mqtt-image",
+    "type": "mqtt in",
+    "z": "pb-flow-main",
+    "name": "home/photobooth/image",
+    "topic": "home/photobooth/image",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 160,
+    "y": 220,
+    "wires": [
+      [
+        "pb-fn-image-b64",
+        "pb-fn-ts"
+      ]
+    ]
+  },
+  {
+    "id": "pb-fn-image-b64",
+    "type": "function",
+    "z": "pb-flow-main",
+    "name": "JPEG \u2192 base64",
+    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 200,
+    "wires": [
+      [
+        "pb-template-image"
+      ]
+    ]
+  },
+  {
+    "id": "pb-template-image",
+    "type": "ui_template",
+    "z": "pb-flow-main",
+    "group": "pb-ui-grp-cam",
+    "order": 3,
+    "width": 12,
+    "height": 9,
+    "name": "Snapshot",
+    "format": "<canvas id=\"pb-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('pb-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 620,
+    "y": 200,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "pb-fn-ts",
+    "type": "function",
+    "z": "pb-flow-main",
+    "name": "timestamp",
+    "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 360,
+    "y": 260,
+    "wires": [
+      [
+        "pb-text-status"
+      ]
+    ]
+  },
+  {
+    "id": "pb-text-status",
+    "type": "ui_text",
+    "z": "pb-flow-main",
+    "group": "pb-ui-grp-cam",
+    "order": 2,
+    "width": 8,
+    "height": 1,
+    "name": "Capture Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "x": 580,
+    "y": 260,
     "wires": []
   }
 ]
