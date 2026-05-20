@@ -1,765 +1,679 @@
 [
-    {
-        "id": "d748b5591e098c6c",
-        "type": "ui_base",
-        "theme": {
-            "name": "theme-dark",
-            "lightTheme": { "default": "#0094CE", "baseColor": "#0094CE", "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif", "edited": true, "reset": false },
-            "darkTheme":  { "default": "#097479", "baseColor": "#097479", "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif", "edited": true, "reset": false },
-            "customTheme": { "name": "Untitled Theme 1", "default": "#4B7930", "baseColor": "#4B7930", "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif" },
-            "themeState": {
-                "base-color":                    { "default": "#097479", "value": "#097479", "edited": false },
-                "page-titlebar-backgroundColor": { "value": "#097479", "edited": false },
-                "page-backgroundColor":          { "value": "#111111", "edited": false },
-                "page-sidebar-backgroundColor":  { "value": "#333333", "edited": false },
-                "group-textColor":               { "value": "#0eb8c0", "edited": false },
-                "group-borderColor":             { "value": "#555555", "edited": false },
-                "group-backgroundColor":         { "value": "#333333", "edited": false },
-                "widget-textColor":              { "value": "#eeeeee", "edited": false },
-                "widget-backgroundColor":        { "value": "#097479", "edited": false },
-                "widget-borderColor":            { "value": "#333333", "edited": false },
-                "base-font":                     { "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif" }
-            },
-            "angularTheme": { "primary": "indigo", "accents": "blue", "warn": "red", "background": "grey", "palette": "light" }
-        },
-        "site": {
-            "name": "Node-RED Dashboard",
-            "hideToolbar": "false",
-            "allowSwipe": "false",
-            "lockMenu": "false",
-            "allowTempTheme": "true",
-            "dateFormat": "DD/MM/YYYY",
-            "sizes": { "sx": 48, "sy": 48, "gx": 6, "gy": 6, "cx": 7, "cy": 6, "px": 0, "py": 0 }
-        }
-    },
-
-    {
-        "id": "his-flow-main",
-        "type": "tab",
-        "label": "HIS Main",
-        "disabled": false,
-        "info": "Home Information System \u2014 main flow"
-    },
-    {
-        "id": "his-broker",
-        "type": "mqtt-broker",
-        "name": "Mosquitto Local",
-        "broker": "localhost",
-        "port": "1883",
-        "clientid": "nodered-his-hub",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true
-    },
-
-    {
-        "id": "his-ui-tab-pth",
-        "type": "ui_tab",
-        "name": "PTH Charts",
-        "icon": "show_chart",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "his-ui-grp-pressure",
-        "type": "ui_group",
-        "name": "Pressure (PSI)",
-        "tab": "his-ui-tab-pth",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "his-ui-grp-temp",
-        "type": "ui_group",
-        "name": "Temperature (\u00b0F)",
-        "tab": "his-ui-tab-pth",
-        "order": 2,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "his-ui-grp-faults",
-        "type": "ui_group",
-        "name": "Sensor Fault Counts",
-        "tab": "his-ui-tab-pth",
-        "order": 5,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-
-    {
-        "id": "his-ui-tab-overview",
-        "type": "ui_tab",
-        "name": "Home Overview",
-        "icon": "home",
-        "order": 2,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "his-ui-grp-doors",
-        "type": "ui_group",
-        "name": "Doors & Windows",
-        "tab": "his-ui-tab-overview",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "his-ui-grp-motion",
-        "type": "ui_group",
-        "name": "Motion",
-        "tab": "his-ui-tab-overview",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-
-    {
-        "id": "his-ui-tab-alarms",
-        "type": "ui_tab",
-        "name": "Alarms",
-        "icon": "warning",
-        "order": 3,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "his-ui-grp-gas",
-        "type": "ui_group",
-        "name": "Smoke / CO",
-        "tab": "his-ui-tab-alarms",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-
-    {
-        "id": "his-ui-tab-frontdoor",
-        "type": "ui_tab",
-        "name": "Front Door",
-        "icon": "camera_alt",
-        "order": 4,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "his-ui-grp-visitor",
-        "type": "ui_group",
-        "name": "Visitor",
-        "tab": "his-ui-tab-frontdoor",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-
-    {
-        "id": "his-mqtt-pth",
-        "type": "mqtt in",
-        "z": "his-flow-main",
-        "name": "home/+/pth",
-        "topic": "home/+/pth",
-        "qos": "0",
-        "datatype": "json",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": false,
-        "x": 160,
-        "y": 120,
-        "wires": [["his-fn-grubbs", "his-fn-lastseen"]]
-    },
-
-    {
-        "id": "his-fn-grubbs",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "Grubbs filter",
-        "func": "var N=20,N_MIN=16;\nvar G_CRIT={3:1.155,4:1.481,5:1.715,6:1.887,7:2.020,8:2.126,9:2.215,10:2.290,11:2.355,12:2.412,13:2.462,14:2.507,15:2.549,16:2.585,17:2.620,18:2.651,19:2.681,20:2.709,25:2.822,30:2.908};\nfunction gcrit(n){if(G_CRIT[n])return G_CRIT[n];var k=Object.keys(G_CRIT).map(Number).sort(function(a,b){return a-b;});for(var i=0;i<k.length-1;i++){if(n>=k[i]&&n<=k[i+1]){var t=(n-k[i])/(k[i+1]-k[i]);return G_CRIT[k[i]]+t*(G_CRIT[k[i+1]]-G_CRIT[k[i]]);}}return G_CRIT[20];}\nfunction grubbs(win,val){var n=win.length;if(n<N_MIN)return false;var mean=win.reduce(function(a,b){return a+b;},0)/n;var std=Math.sqrt(win.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/(n-1));if(std<1e-10)return false;return(Math.abs(val-mean)/std)>gcrit(n);}\nvar nodeId=msg.topic.split('/')[1];\nvar d=msg.payload;\nvar key='grubbs_'+nodeId;\nvar st=flow.get(key)||{P:{win:[],faults:0},T:{win:[],faults:0},RH:{win:[],faults:0}};\nvar anyFault=false;\nvar result={};\n['P','T','RH'].forEach(function(p){var s=st[p],v=d[p];if(typeof v!=='number'||isNaN(v)){result[p]={outlier:true};s.faults++;anyFault=true;return;}if(grubbs(s.win,v)){result[p]={outlier:true};s.faults++;anyFault=true;}else{s.win.push(v);if(s.win.length>N)s.win.shift();result[p]={outlier:false,value:v};}});\nflow.set(key,st);\nfunction mk(p){var r=result[p];if(r.outlier)return null;return{topic:anyFault?nodeId+'-c':nodeId,payload:r.value,_nodeId:nodeId};}\nreturn[mk('P'),mk('T'),mk('RH'),{payload:{nodeId:nodeId,P:st.P.faults,T:st.T.faults,RH:st.RH.faults}}];",
-        "outputs": 4,
-        "noerr": 0,
-        "x": 380,
-        "y": 120,
-        "wires": [
-            ["his-fn-p-diffs"],
-            ["his-chart-temp"],
-            ["his-fn-rh-summary"],
-            ["his-fn-fault-collect"]
-        ]
-    },
-
-    {
-        "id": "his-chart-pressure",
-        "type": "ui_template",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-pressure",
-        "order": 1,
-        "width": 0,
-        "height": 7,
-        "name": "Pressure Summary",
-        "format": "<style>.ps{font-family:monospace;padding:10px}.ps-val{font-size:4.4em;font-weight:bold;color:#0eb8c0}.ps-trend{font-size:2.1em;color:#eeeeee;margin-top:6px}.ps-conf{font-size:1.8em;color:#aaaaaa;margin-top:4px}.ps-src{font-size:1.5em;color:#666;margin-top:4px}</style><div class=\"ps\" ng-if=\"msg.payload\"><div class=\"ps-val\">{{msg.payload.pressure}} PSI</div><div class=\"ps-trend\">{{msg.payload.trend}}</div><div class=\"ps-conf\">Confidence: {{msg.payload.conf}}</div><div class=\"ps-src\">Source: {{msg.payload.source}}</div></div>",
-        "storeOutMessages": true,
-        "fwdInMessages": false,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "x": 620,
-        "y": 80,
-        "wires": [[]]
-    },
-    {
-        "id": "his-chart-temp",
-        "type": "ui_chart",
-        "z": "his-flow-main",
-        "name": "Temperature",
-        "group": "his-ui-grp-temp",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "label": "Temperature (\u00b0F)",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "55",
-        "ymax": "75",
-        "removeOlder": 30,
-        "removeOlderUnit": "60",
-        "removeOlderPoints": "",
-        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#aec7e8","#ffbb78","#98df8a"],
-        "useOldColors": false,
-        "outputs": 1,
-        "x": 620,
-        "y": 120,
-        "wires": [[]]
-    },
-    {
-        "id": "his-fn-rh-summary",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "RH summary",
-        "func": "var nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');var latest=flow.get('rh_latest')||{};latest[nodeId]=msg.payload;flow.set('rh_latest',latest);var nodes=['bills-office','mud-room','garage'];var labels={'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};var readings=nodes.map(function(n){return{label:labels[n],value:latest[n]!==undefined?latest[n].toFixed(1)+'%':'--'};});msg.payload=readings;return msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 620,
-        "y": 160,
-        "wires": [["his-template-rh"]]
-    },
-    {
-        "id": "his-template-rh",
-        "type": "ui_template",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-pressure",
-        "order": 2,
-        "width": 0,
-        "height": 3,
-        "name": "Humidity Summary",
-        "format": "<style>.rhs{font-family:monospace;padding:10px}.rhs-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #333}.rhs-node{font-size:1.6em;color:#aaaaaa}.rhs-val{font-size:1.8em;font-weight:bold;color:#0eb8c0}</style><div class=\"rhs\" ng-if=\"msg.payload\"><div class=\"rhs-row\" ng-repeat=\"r in msg.payload\"><span class=\"rhs-node\">{{r.label}}</span><span class=\"rhs-val\">{{r.value}}</span></div></div>",
-        "storeOutMessages": true,
-        "fwdInMessages": false,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "x": 840,
-        "y": 160,
-        "wires": [[]]
-    },
-
-    {
-        "id": "his-fn-p-diffs",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "P differences",
-        "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='\u2192 stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='\u2191 +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='\u2193 '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='\u00b1 '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 620,
-        "y": 220,
-        "wires": [["his-chart-pressure"]]
-    },
-
-    {
-        "id": "his-fn-fault-collect",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "collect faults",
-        "func": "var d=msg.payload;\nvar counts=flow.get('fault_counts')||{};\n['bills-office','mud-room','garage'].forEach(function(n){if(!counts[n])counts[n]={P:0,T:0,RH:0};});\ncounts[d.nodeId]={P:d.P,T:d.T,RH:d.RH};\nflow.set('fault_counts',counts);\nmsg.payload=counts;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 620,
-        "y": 300,
-        "wires": [["his-template-faults"]]
-    },
-
-    {
-        "id": "his-template-faults",
-        "type": "ui_template",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-faults",
-        "order": 1,
-        "width": 0,
-        "height": 3,
-        "name": "Fault Counts",
-        "format": "<style>.fc{font-family:monospace;font-size:13px}.fc table{width:100%;border-collapse:collapse}.fc th,.fc td{padding:4px 10px;border-bottom:1px solid #444}.fc th{text-align:center;color:#aaa}.fc .name{text-align:left}</style><div class=\"fc\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>P faults</th><th>T faults</th><th>RH faults</th></tr><tr><td class=\"name\">Bills Office</td><td ng-style=\"{color:msg.payload['bills-office'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].P}}</td><td ng-style=\"{color:msg.payload['bills-office'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].T}}</td><td ng-style=\"{color:msg.payload['bills-office'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].RH}}</td></tr><tr><td class=\"name\">Mud Room</td><td ng-style=\"{color:msg.payload['mud-room'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].P}}</td><td ng-style=\"{color:msg.payload['mud-room'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].T}}</td><td ng-style=\"{color:msg.payload['mud-room'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].RH}}</td></tr><tr><td class=\"name\">Garage</td><td ng-style=\"{color:msg.payload['garage'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].P}}</td><td ng-style=\"{color:msg.payload['garage'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].T}}</td><td ng-style=\"{color:msg.payload['garage'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].RH}}</td></tr></table></div>",
-        "storeOutMessages": true,
-        "fwdInMessages": false,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "x": 840,
-        "y": 300,
-        "wires": [[]]
-    },
-
-    {
-        "id": "his-mqtt-door",
-        "type": "mqtt in",
-        "z": "his-flow-main",
-        "name": "home/+/door",
-        "topic": "home/+/door",
-        "qos": "1",
-        "datatype": "json",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": true,
-        "x": 160,
-        "y": 420,
-        "wires": [["his-fn-door-text"]]
-    },
-    {
-        "id": "his-fn-door-text",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "format door",
-        "func": "var icon = msg.payload.state === 'open' ? '\u1f513 OPEN' : '\u1f512 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 380,
-        "y": 420,
-        "wires": [["his-text-door"]]
-    },
-    {
-        "id": "his-text-door",
-        "type": "ui_text",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-doors",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "name": "Door Status",
-        "label": "",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "x": 600,
-        "y": 420,
-        "wires": []
-    },
-
-    {
-        "id": "his-mqtt-motion",
-        "type": "mqtt in",
-        "z": "his-flow-main",
-        "name": "home/+/motion",
-        "topic": "home/+/motion",
-        "qos": "0",
-        "datatype": "json",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": false,
-        "x": 160,
-        "y": 480,
-        "wires": [["his-fn-motion-text"]]
-    },
-    {
-        "id": "his-fn-motion-text",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "format motion",
-        "func": "var icon = msg.payload.state === 'detected' ? '\u1f6a8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 380,
-        "y": 480,
-        "wires": [["his-text-motion"]]
-    },
-    {
-        "id": "his-text-motion",
-        "type": "ui_text",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-motion",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "name": "Motion Status",
-        "label": "",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "x": 600,
-        "y": 480,
-        "wires": []
-    },
-
-    {
-        "id": "his-mqtt-alarm",
-        "type": "mqtt in",
-        "z": "his-flow-main",
-        "name": "home/+/alarm",
-        "topic": "home/+/alarm",
-        "qos": "1",
-        "datatype": "json",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": false,
-        "x": 160,
-        "y": 580,
-        "wires": [["his-fn-alarm-gauge", "his-fn-alarm-check"]]
-    },
-    {
-        "id": "his-fn-alarm-gauge",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "smoke level",
-        "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.smoke;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 380,
-        "y": 560,
-        "wires": [["his-gauge-smoke"]]
-    },
-    {
-        "id": "his-gauge-smoke",
-        "type": "ui_gauge",
-        "z": "his-flow-main",
-        "name": "Smoke Level",
-        "group": "his-ui-grp-gas",
-        "order": 1,
-        "width": 6,
-        "height": 4,
-        "gtype": "gage",
-        "title": "Smoke (ADC)",
-        "label": "ADC counts",
-        "format": "{{value}}",
-        "min": 0,
-        "max": 4095,
-        "colors": ["#00b500","#e6e600","#e60000"],
-        "seg1": 1500,
-        "seg2": 2500,
-        "x": 600,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "his-fn-alarm-check",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "alert if true",
-        "func": "if (msg.payload.alert === true) {\n    msg.payload = '\u1f6a8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 380,
-        "y": 620,
-        "wires": [["his-text-alarm-banner"]]
-    },
-    {
-        "id": "his-text-alarm-banner",
-        "type": "ui_text",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-gas",
-        "order": 2,
-        "width": 12,
-        "height": 0,
-        "name": "Alarm Banner",
-        "label": "\u26a0 Alert",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "x": 600,
-        "y": 620,
-        "wires": []
-    },
-
-    {
-        "id": "his-mqtt-visitor",
-        "type": "mqtt in",
-        "z": "his-flow-main",
-        "name": "home/frontdoor/visitor",
-        "topic": "home/frontdoor/visitor",
-        "qos": "0",
-        "datatype": "json",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": false,
-        "x": 180,
-        "y": 720,
-        "wires": [["his-fn-visitor-text"]]
-    },
-    {
-        "id": "his-fn-visitor-text",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "visitor label",
-        "func": "var trig = msg.payload.trigger === 'button' ? '\u1f514 Doorbell' : '\u1f464 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 420,
-        "y": 720,
-        "wires": [["his-text-visitor"]]
-    },
-    {
-        "id": "his-text-visitor",
-        "type": "ui_text",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-visitor",
-        "order": 1,
-        "width": 12,
-        "height": 0,
-        "name": "Last Visitor",
-        "label": "Last event",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "x": 640,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "his-mqtt-image",
-        "type": "mqtt in",
-        "z": "his-flow-main",
-        "name": "home/frontdoor/image",
-        "topic": "home/frontdoor/image",
-        "qos": "0",
-        "datatype": "buffer",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": false,
-        "x": 180,
-        "y": 780,
-        "wires": [["his-fn-image-b64"]]
-    },
-    {
-        "id": "his-fn-image-b64",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "JPEG \u2192 base64 img",
-        "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 440,
-        "y": 780,
-        "wires": [["his-template-image"]]
-    },
-    {
-        "id": "his-template-image",
-        "type": "ui_template",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-visitor",
-        "order": 2,
-        "width": 12,
-        "height": 9,
-        "name": "Visitor Snapshot",
-        "format": "<canvas id=\"his-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('his-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
-        "storeOutMessages": true,
-        "fwdInMessages": false,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "x": 680,
-        "y": 780,
-        "wires": [[]]
-    },
-
-    { "id": "his-ui-grp-status", "type": "ui_group", "name": "Node Status", "tab": "his-ui-tab-pth", "order": 6, "disp": true, "width": "12", "collapse": false },
-
-    {
-        "id": "his-fn-lastseen",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "update last seen",
-        "func": "var nodeId = msg.topic.split('/')[1];\nvar ls = flow.get('node_lastseen') || {};\nls[nodeId] = Date.now();\nflow.set('node_lastseen', ls);\nreturn null;",
-        "outputs": 0,
-        "noerr": 0,
-        "x": 380, "y": 160,
-        "wires": []
-    },
-    {
-        "id": "his-inject-watchdog",
-        "type": "inject",
-        "z": "his-flow-main",
-        "name": "watchdog tick",
-        "props": [{"p": "payload"}],
-        "repeat": "60",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 10,
-        "payload": "",
-        "payloadType": "date",
-        "x": 180, "y": 1060,
-        "wires": [["his-fn-watchdog"]]
-    },
-    {
-        "id": "his-fn-watchdog",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "check node health",
-        "func": "var STALE_MS = 300000;\nvar nodes = ['bills-office','mud-room','garage'];\nvar labels = {'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};\nvar ls = flow.get('node_lastseen') || {};\nvar now = Date.now();\nvar rows = nodes.map(function(n) {\n    var t = ls[n];\n    if (!t) return {node: labels[n], age: 'never', ok: false};\n    var age = Math.floor((now - t) / 1000);\n    return {node: labels[n], age: age + 's ago', ok: age < (STALE_MS/1000)};\n});\nmsg.payload = rows;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 420, "y": 1060,
-        "wires": [["his-template-node-status"]]
-    },
-    {
-        "id": "his-template-node-status",
-        "type": "ui_template",
-        "z": "his-flow-main",
-        "group": "his-ui-grp-status",
-        "order": 1,
-        "width": 12,
-        "height": 2,
-        "name": "Node Status",
-        "format": "<style>.ns{font-family:monospace;font-size:13px}.ns table{width:100%;border-collapse:collapse}.ns th,.ns td{padding:4px 12px;border-bottom:1px solid #444}.ns th{color:#aaa;text-align:left}.ns .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}</style><div class=\"ns\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>Last seen</th><th>Status</th></tr><tr ng-repeat=\"r in msg.payload\"><td>{{r.node}}</td><td>{{r.age}}</td><td><span class=\"dot\" ng-style=\"{background:r.ok?'#2ca02c':'#d62728'}\"></span>{{r.ok?'OK':'DOWN'}}</td></tr></table></div>",
-        "storeOutMessages": true,
-        "fwdInMessages": false,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "x": 680, "y": 1060,
-        "wires": [[]]
-    },
-
-    { "id": "his-inject-reset-bo",  "type": "inject", "z": "his-flow-main", "name": "Reset bills-office", "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "bills-office", "payloadType": "str", "x": 200, "y": 880, "wires": [["his-fn-grubbs-reset"]] },
-    { "id": "his-inject-reset-mr",  "type": "inject", "z": "his-flow-main", "name": "Reset mud-room",     "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "mud-room",     "payloadType": "str", "x": 200, "y": 920, "wires": [["his-fn-grubbs-reset"]] },
-    { "id": "his-inject-reset-ga",  "type": "inject", "z": "his-flow-main", "name": "Reset garage",       "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "garage",       "payloadType": "str", "x": 200, "y": 960, "wires": [["his-fn-grubbs-reset"]] },
-    { "id": "his-inject-reset-all", "type": "inject", "z": "his-flow-main", "name": "Reset ALL",          "props": [{"p":"payload"}], "repeat": "", "crontab": "", "once": false, "payload": "ALL",          "payloadType": "str", "x": 200, "y": 1000, "wires": [["his-fn-grubbs-reset"]] },
-    {
-        "id": "his-fn-grubbs-reset",
-        "type": "function",
-        "z": "his-flow-main",
-        "name": "reset Grubbs state",
-        "func": "var nodes = ['bills-office','mud-room','garage'];\nvar counts = flow.get('fault_counts') || {};\nnodes.forEach(function(n){ if(!counts[n]) counts[n]={P:0,T:0,RH:0}; });\nif (msg.payload === 'ALL') {\n    nodes.forEach(function(n) { flow.set('grubbs_' + n, null); counts[n]={P:0,T:0,RH:0}; });\n    flow.set('p_latest', null);\n    flow.set('p_diff_stats', null);\n    flow.set('p_trend_buf', null);\n    node.warn('Grubbs reset: ALL nodes');\n} else {\n    flow.set('grubbs_' + msg.payload, null);\n    counts[msg.payload] = {P:0, T:0, RH:0};\n    node.warn('Grubbs reset: ' + msg.payload);\n}\nflow.set('fault_counts', counts);\nreturn null;",
-        "outputs": 0,
-        "noerr": 0,
-        "x": 480, "y": 940,
-        "wires": []
-    },
-
-    { "id": "pb-flow-main", "type": "tab", "label": "Photo Booth", "disabled": false, "info": "Photo Booth \u2014 MQTT triggered capture" },
-
-    { "id": "pb-ui-tab", "type": "ui_tab", "name": "Photo Booth", "icon": "photo_camera", "order": 5, "disabled": false, "hidden": false },
-    { "id": "pb-ui-grp-cam", "type": "ui_group", "name": "Camera", "tab": "pb-ui-tab", "order": 1, "disp": true, "width": "12", "collapse": false },
-
-    {
-        "id": "pb-btn-capture",
-        "type": "ui_button",
-        "z": "pb-flow-main",
-        "name": "Capture",
-        "group": "pb-ui-grp-cam",
-        "order": 1,
-        "width": 4,
-        "height": 1,
-        "passthru": false,
-        "label": "Capture",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "icon": "camera_alt",
-        "payload": "go",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 160,
-        "y": 100,
-        "wires": [["pb-mqtt-trigger"]]
-    },
-    {
-        "id": "pb-mqtt-trigger",
-        "type": "mqtt out",
-        "z": "pb-flow-main",
-        "name": "photobooth/trigger",
-        "topic": "home/photobooth/trigger",
-        "qos": "0",
-        "retain": "false",
-        "broker": "his-broker",
-        "x": 380,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "pb-mqtt-image",
-        "type": "mqtt in",
-        "z": "pb-flow-main",
-        "name": "home/photobooth/image",
-        "topic": "home/photobooth/image",
-        "qos": "0",
-        "datatype": "buffer",
-        "broker": "his-broker",
-        "nl": false,
-        "rap": false,
-        "x": 160,
-        "y": 220,
-        "wires": [["pb-fn-image-b64", "pb-fn-ts"]]
-    },
-    {
-        "id": "pb-fn-image-b64",
-        "type": "function",
-        "z": "pb-flow-main",
-        "name": "JPEG \u2192 base64",
-        "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 380,
-        "y": 200,
-        "wires": [["pb-template-image"]]
-    },
-    {
-        "id": "pb-template-image",
-        "type": "ui_template",
-        "z": "pb-flow-main",
-        "group": "pb-ui-grp-cam",
-        "order": 3,
-        "width": 12,
-        "height": 9,
-        "name": "Snapshot",
-        "format": "<canvas id=\"pb-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('pb-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
-        "storeOutMessages": true,
-        "fwdInMessages": false,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "x": 620,
-        "y": 200,
-        "wires": [[]]
-    },
-    {
-        "id": "pb-fn-ts",
-        "type": "function",
-        "z": "pb-flow-main",
-        "name": "timestamp",
-        "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 360,
-        "y": 260,
-        "wires": [["pb-text-status"]]
-    },
-    {
-        "id": "pb-text-status",
-        "type": "ui_text",
-        "z": "pb-flow-main",
-        "group": "pb-ui-grp-cam",
-        "order": 2,
-        "width": 8,
-        "height": 1,
-        "name": "Capture Status",
-        "label": "",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "x": 580,
-        "y": 260,
-        "wires": []
-    }
+  {
+    "id": "his-flow-main",
+    "type": "tab",
+    "label": "HIS Main",
+    "disabled": false,
+    "info": "Home Information System \u2014 main flow"
+  },
+  {
+    "id": "his-mqtt-pth",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/pth",
+    "topic": "home/+/pth",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 160,
+    "y": 120,
+    "wires": [
+      [
+        "his-fn-grubbs",
+        "his-fn-lastseen"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-grubbs",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "Grubbs filter",
+    "func": "var N=20,N_MIN=16;\nvar G_CRIT={3:1.155,4:1.481,5:1.715,6:1.887,7:2.020,8:2.126,9:2.215,10:2.290,11:2.355,12:2.412,13:2.462,14:2.507,15:2.549,16:2.585,17:2.620,18:2.651,19:2.681,20:2.709,25:2.822,30:2.908};\nfunction gcrit(n){if(G_CRIT[n])return G_CRIT[n];var k=Object.keys(G_CRIT).map(Number).sort(function(a,b){return a-b;});for(var i=0;i<k.length-1;i++){if(n>=k[i]&&n<=k[i+1]){var t=(n-k[i])/(k[i+1]-k[i]);return G_CRIT[k[i]]+t*(G_CRIT[k[i+1]]-G_CRIT[k[i]]);}}return G_CRIT[20];}\nfunction grubbs(win,val){var n=win.length;if(n<N_MIN)return false;var mean=win.reduce(function(a,b){return a+b;},0)/n;var std=Math.sqrt(win.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/(n-1));if(std<1e-10)return false;return(Math.abs(val-mean)/std)>gcrit(n);}\nvar nodeId=msg.topic.split('/')[1];\nvar d=msg.payload;\nvar key='grubbs_'+nodeId;\nvar st=flow.get(key)||{P:{win:[],faults:0},T:{win:[],faults:0},RH:{win:[],faults:0}};\nvar anyFault=false;\nvar result={};\n['P','T','RH'].forEach(function(p){var s=st[p],v=d[p];if(typeof v!=='number'||isNaN(v)){result[p]={outlier:true};s.faults++;anyFault=true;return;}if(grubbs(s.win,v)){result[p]={outlier:true};s.faults++;anyFault=true;}else{s.win.push(v);if(s.win.length>N)s.win.shift();result[p]={outlier:false,value:v};}});\nflow.set(key,st);\nfunction mk(p){var r=result[p];if(r.outlier)return null;return{topic:anyFault?nodeId+'-c':nodeId,payload:r.value,_nodeId:nodeId};}\nreturn[mk('P'),mk('T'),mk('RH'),{payload:{nodeId:nodeId,P:st.P.faults,T:st.T.faults,RH:st.RH.faults}}];",
+    "outputs": 4,
+    "noerr": 0,
+    "x": 380,
+    "y": 120,
+    "wires": [
+      [
+        "his-fn-p-diffs"
+      ],
+      [
+        "his-chart-temp"
+      ],
+      [
+        "his-fn-rh-summary"
+      ],
+      [
+        "his-fn-fault-collect"
+      ]
+    ]
+  },
+  {
+    "id": "his-chart-pressure",
+    "type": "ui_template",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-pressure",
+    "order": 1,
+    "width": 0,
+    "height": 7,
+    "name": "Pressure Summary",
+    "format": "<style>.ps{font-family:monospace;padding:10px}.ps-val{font-size:4.4em;font-weight:bold;color:#0eb8c0}.ps-trend{font-size:2.1em;color:#eeeeee;margin-top:6px}.ps-conf{font-size:1.8em;color:#aaaaaa;margin-top:4px}.ps-src{font-size:1.5em;color:#666;margin-top:4px}</style><div class=\"ps\" ng-if=\"msg.payload\"><div class=\"ps-val\">{{msg.payload.pressure}} PSI</div><div class=\"ps-trend\">{{msg.payload.trend}}</div><div class=\"ps-conf\">Confidence: {{msg.payload.conf}}</div><div class=\"ps-src\">Source: {{msg.payload.source}}</div></div>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 620,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-chart-temp",
+    "type": "ui_chart",
+    "z": "his-flow-main",
+    "name": "Temperature",
+    "group": "his-ui-grp-temp",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "label": "Temperature (\u00b0F)",
+    "chartType": "line",
+    "legend": "true",
+    "xformat": "HH:mm:ss",
+    "interpolate": "linear",
+    "nodata": "",
+    "dot": false,
+    "ymin": "55",
+    "ymax": "75",
+    "removeOlder": 30,
+    "removeOlderUnit": "60",
+    "removeOlderPoints": "",
+    "colors": [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd",
+      "#aec7e8",
+      "#ffbb78",
+      "#98df8a"
+    ],
+    "useOldColors": false,
+    "outputs": 1,
+    "x": 620,
+    "y": 120,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-fn-rh-summary",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "RH summary",
+    "func": "var nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');var latest=flow.get('rh_latest')||{};latest[nodeId]=msg.payload;flow.set('rh_latest',latest);var nodes=['bills-office','mud-room','garage'];var labels={'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};var readings=nodes.map(function(n){return{label:labels[n],value:latest[n]!==undefined?latest[n].toFixed(1)+'%':'--'};});msg.payload=readings;return msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 160,
+    "wires": [
+      [
+        "his-template-rh"
+      ]
+    ]
+  },
+  {
+    "id": "his-template-rh",
+    "type": "ui_template",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-pressure",
+    "order": 2,
+    "width": 0,
+    "height": 3,
+    "name": "Humidity Summary",
+    "format": "<style>.rhs{font-family:monospace;padding:10px}.rhs-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #333}.rhs-node{font-size:1.6em;color:#aaaaaa}.rhs-val{font-size:1.8em;font-weight:bold;color:#0eb8c0}</style><div class=\"rhs\" ng-if=\"msg.payload\"><div class=\"rhs-row\" ng-repeat=\"r in msg.payload\"><span class=\"rhs-node\">{{r.label}}</span><span class=\"rhs-val\">{{r.value}}</span></div></div>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 840,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-fn-p-diffs",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "P differences",
+    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='\u2192 stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='\u2191 +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='\u2193 '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='\u00b1 '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 220,
+    "wires": [
+      [
+        "his-chart-pressure"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-fault-collect",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "collect faults",
+    "func": "var d=msg.payload;\nvar counts=flow.get('fault_counts')||{};\n['bills-office','mud-room','garage'].forEach(function(n){if(!counts[n])counts[n]={P:0,T:0,RH:0};});\ncounts[d.nodeId]={P:d.P,T:d.T,RH:d.RH};\nflow.set('fault_counts',counts);\nmsg.payload=counts;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 300,
+    "wires": [
+      [
+        "his-template-faults"
+      ]
+    ]
+  },
+  {
+    "id": "his-template-faults",
+    "type": "ui_template",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-faults",
+    "order": 1,
+    "width": 0,
+    "height": 3,
+    "name": "Fault Counts",
+    "format": "<style>.fc{font-family:monospace;font-size:13px}.fc table{width:100%;border-collapse:collapse}.fc th,.fc td{padding:4px 10px;border-bottom:1px solid #444}.fc th{text-align:center;color:#aaa}.fc .name{text-align:left}</style><div class=\"fc\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>P faults</th><th>T faults</th><th>RH faults</th></tr><tr><td class=\"name\">Bills Office</td><td ng-style=\"{color:msg.payload['bills-office'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].P}}</td><td ng-style=\"{color:msg.payload['bills-office'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].T}}</td><td ng-style=\"{color:msg.payload['bills-office'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].RH}}</td></tr><tr><td class=\"name\">Mud Room</td><td ng-style=\"{color:msg.payload['mud-room'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].P}}</td><td ng-style=\"{color:msg.payload['mud-room'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].T}}</td><td ng-style=\"{color:msg.payload['mud-room'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].RH}}</td></tr><tr><td class=\"name\">Garage</td><td ng-style=\"{color:msg.payload['garage'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].P}}</td><td ng-style=\"{color:msg.payload['garage'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].T}}</td><td ng-style=\"{color:msg.payload['garage'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].RH}}</td></tr></table></div>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 840,
+    "y": 300,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-mqtt-door",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/door",
+    "topic": "home/+/door",
+    "qos": "1",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": true,
+    "x": 160,
+    "y": 420,
+    "wires": [
+      [
+        "his-fn-door-text"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-door-text",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "format door",
+    "func": "var icon = msg.payload.state === 'open' ? '\u1f513 OPEN' : '\u1f512 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 420,
+    "wires": [
+      [
+        "his-text-door"
+      ]
+    ]
+  },
+  {
+    "id": "his-text-door",
+    "type": "ui_text",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-doors",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "name": "Door Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "x": 600,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "his-mqtt-motion",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/motion",
+    "topic": "home/+/motion",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 160,
+    "y": 480,
+    "wires": [
+      [
+        "his-fn-motion-text"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-motion-text",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "format motion",
+    "func": "var icon = msg.payload.state === 'detected' ? '\u1f6a8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 480,
+    "wires": [
+      [
+        "his-text-motion"
+      ]
+    ]
+  },
+  {
+    "id": "his-text-motion",
+    "type": "ui_text",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-motion",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "name": "Motion Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "x": 600,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "his-mqtt-alarm",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/alarm",
+    "topic": "home/+/alarm",
+    "qos": "1",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 160,
+    "y": 580,
+    "wires": [
+      [
+        "his-fn-alarm-gauge",
+        "his-fn-alarm-check"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-alarm-gauge",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "smoke level",
+    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.smoke;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 560,
+    "wires": [
+      [
+        "his-gauge-smoke"
+      ]
+    ]
+  },
+  {
+    "id": "his-gauge-smoke",
+    "type": "ui_gauge",
+    "z": "his-flow-main",
+    "name": "Smoke Level",
+    "group": "his-ui-grp-gas",
+    "order": 1,
+    "width": 6,
+    "height": 4,
+    "gtype": "gage",
+    "title": "Smoke (ADC)",
+    "label": "ADC counts",
+    "format": "{{value}}",
+    "min": 0,
+    "max": 4095,
+    "colors": [
+      "#00b500",
+      "#e6e600",
+      "#e60000"
+    ],
+    "seg1": 1500,
+    "seg2": 2500,
+    "x": 600,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "his-fn-alarm-check",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "alert if true",
+    "func": "if (msg.payload.alert === true) {\n    msg.payload = '\u1f6a8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 620,
+    "wires": [
+      [
+        "his-text-alarm-banner"
+      ]
+    ]
+  },
+  {
+    "id": "his-text-alarm-banner",
+    "type": "ui_text",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-gas",
+    "order": 2,
+    "width": 12,
+    "height": 0,
+    "name": "Alarm Banner",
+    "label": "\u26a0 Alert",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "x": 600,
+    "y": 620,
+    "wires": []
+  },
+  {
+    "id": "his-mqtt-visitor",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/frontdoor/visitor",
+    "topic": "home/frontdoor/visitor",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 180,
+    "y": 720,
+    "wires": [
+      [
+        "his-fn-visitor-text"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-visitor-text",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "visitor label",
+    "func": "var trig = msg.payload.trigger === 'button' ? '\u1f514 Doorbell' : '\u1f464 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 420,
+    "y": 720,
+    "wires": [
+      [
+        "his-text-visitor"
+      ]
+    ]
+  },
+  {
+    "id": "his-text-visitor",
+    "type": "ui_text",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-visitor",
+    "order": 1,
+    "width": 12,
+    "height": 0,
+    "name": "Last Visitor",
+    "label": "Last event",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "x": 640,
+    "y": 720,
+    "wires": []
+  },
+  {
+    "id": "his-mqtt-image",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/frontdoor/image",
+    "topic": "home/frontdoor/image",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 180,
+    "y": 780,
+    "wires": [
+      [
+        "his-fn-image-b64"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-image-b64",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "JPEG \u2192 base64 img",
+    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 440,
+    "y": 780,
+    "wires": [
+      [
+        "his-template-image"
+      ]
+    ]
+  },
+  {
+    "id": "his-template-image",
+    "type": "ui_template",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-visitor",
+    "order": 2,
+    "width": 12,
+    "height": 9,
+    "name": "Visitor Snapshot",
+    "format": "<canvas id=\"his-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('his-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 680,
+    "y": 780,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-fn-lastseen",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "update last seen",
+    "func": "var nodeId = msg.topic.split('/')[1];\nvar ls = flow.get('node_lastseen') || {};\nls[nodeId] = Date.now();\nflow.set('node_lastseen', ls);\nreturn null;",
+    "outputs": 0,
+    "noerr": 0,
+    "x": 380,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "his-inject-watchdog",
+    "type": "inject",
+    "z": "his-flow-main",
+    "name": "watchdog tick",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "60",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 10,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 1060,
+    "wires": [
+      [
+        "his-fn-watchdog"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-watchdog",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "check node health",
+    "func": "var STALE_MS = 300000;\nvar nodes = ['bills-office','mud-room','garage'];\nvar labels = {'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};\nvar ls = flow.get('node_lastseen') || {};\nvar now = Date.now();\nvar rows = nodes.map(function(n) {\n    var t = ls[n];\n    if (!t) return {node: labels[n], age: 'never', ok: false};\n    var age = Math.floor((now - t) / 1000);\n    return {node: labels[n], age: age + 's ago', ok: age < (STALE_MS/1000)};\n});\nmsg.payload = rows;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 420,
+    "y": 1060,
+    "wires": [
+      [
+        "his-template-node-status"
+      ]
+    ]
+  },
+  {
+    "id": "his-template-node-status",
+    "type": "ui_template",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-status",
+    "order": 1,
+    "width": 12,
+    "height": 2,
+    "name": "Node Status",
+    "format": "<style>.ns{font-family:monospace;font-size:13px}.ns table{width:100%;border-collapse:collapse}.ns th,.ns td{padding:4px 12px;border-bottom:1px solid #444}.ns th{color:#aaa;text-align:left}.ns .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}</style><div class=\"ns\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>Last seen</th><th>Status</th></tr><tr ng-repeat=\"r in msg.payload\"><td>{{r.node}}</td><td>{{r.age}}</td><td><span class=\"dot\" ng-style=\"{background:r.ok?'#2ca02c':'#d62728'}\"></span>{{r.ok?'OK':'DOWN'}}</td></tr></table></div>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 680,
+    "y": 1060,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-inject-reset-bo",
+    "type": "inject",
+    "z": "his-flow-main",
+    "name": "Reset bills-office",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "bills-office",
+    "payloadType": "str",
+    "x": 200,
+    "y": 880,
+    "wires": [
+      [
+        "his-fn-grubbs-reset"
+      ]
+    ]
+  },
+  {
+    "id": "his-inject-reset-mr",
+    "type": "inject",
+    "z": "his-flow-main",
+    "name": "Reset mud-room",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "mud-room",
+    "payloadType": "str",
+    "x": 200,
+    "y": 920,
+    "wires": [
+      [
+        "his-fn-grubbs-reset"
+      ]
+    ]
+  },
+  {
+    "id": "his-inject-reset-ga",
+    "type": "inject",
+    "z": "his-flow-main",
+    "name": "Reset garage",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "garage",
+    "payloadType": "str",
+    "x": 200,
+    "y": 960,
+    "wires": [
+      [
+        "his-fn-grubbs-reset"
+      ]
+    ]
+  },
+  {
+    "id": "his-inject-reset-all",
+    "type": "inject",
+    "z": "his-flow-main",
+    "name": "Reset ALL",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "ALL",
+    "payloadType": "str",
+    "x": 200,
+    "y": 1000,
+    "wires": [
+      [
+        "his-fn-grubbs-reset"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-grubbs-reset",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "reset Grubbs state",
+    "func": "var nodes = ['bills-office','mud-room','garage'];\nvar counts = flow.get('fault_counts') || {};\nnodes.forEach(function(n){ if(!counts[n]) counts[n]={P:0,T:0,RH:0}; });\nif (msg.payload === 'ALL') {\n    nodes.forEach(function(n) { flow.set('grubbs_' + n, null); counts[n]={P:0,T:0,RH:0}; });\n    flow.set('p_latest', null);\n    flow.set('p_diff_stats', null);\n    flow.set('p_trend_buf', null);\n    node.warn('Grubbs reset: ALL nodes');\n} else {\n    flow.set('grubbs_' + msg.payload, null);\n    counts[msg.payload] = {P:0, T:0, RH:0};\n    node.warn('Grubbs reset: ' + msg.payload);\n}\nflow.set('fault_counts', counts);\nreturn null;",
+    "outputs": 0,
+    "noerr": 0,
+    "x": 480,
+    "y": 940,
+    "wires": []
+  }
 ]
