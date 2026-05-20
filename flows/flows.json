@@ -1,16 +1,37 @@
 [
   {
+    "id": "his-flow-main",
+    "type": "tab",
+    "label": "HIS Main",
+    "disabled": false,
+    "info": "Home Information System \u2014 main flow"
+  },
+  {
+    "id": "pb-flow-main",
+    "type": "tab",
+    "label": "Photo Booth",
+    "disabled": false,
+    "info": "Photo Booth \u2014 MQTT triggered capture"
+  },
+  {
     "id": "v2-ui-base",
     "type": "ui-base",
     "name": "HIS Dashboard",
     "path": "/dashboard",
+    "appIcon": "",
     "includeClientData": true,
     "acceptsClientConfig": [
       "ui-notification",
       "ui-control"
     ],
+    "showPathInSidebar": false,
+    "headerContent": "page",
     "navigationStyle": "default",
-    "showPathInSidebar": false
+    "titleBarStyle": "default",
+    "showReconnectNotification": true,
+    "notificationDisplayTime": 5,
+    "showDisconnectNotification": true,
+    "allowInstall": true
   },
   {
     "id": "v2-page-pth",
@@ -20,9 +41,33 @@
     "path": "/pth",
     "icon": "show_chart",
     "layout": "notebook",
-    "theme": "",
+    "theme": "8caffb684107c6b6",
+    "breakpoints": [
+      {
+        "name": "Default",
+        "px": "0",
+        "cols": "3"
+      },
+      {
+        "name": "Tablet",
+        "px": "576",
+        "cols": "6"
+      },
+      {
+        "name": "Small Desktop",
+        "px": "768",
+        "cols": "9"
+      },
+      {
+        "name": "Desktop",
+        "px": "1024",
+        "cols": "12"
+      }
+    ],
     "order": 1,
-    "groups": []
+    "className": "",
+    "visible": true,
+    "disabled": false
   },
   {
     "id": "v2-page-overview",
@@ -33,8 +78,7 @@
     "icon": "home",
     "layout": "notebook",
     "theme": "",
-    "order": 2,
-    "groups": []
+    "order": 2
   },
   {
     "id": "v2-page-alarms",
@@ -45,8 +89,7 @@
     "icon": "warning",
     "layout": "notebook",
     "theme": "",
-    "order": 3,
-    "groups": []
+    "order": 3
   },
   {
     "id": "v2-page-frontdoor",
@@ -57,8 +100,7 @@
     "icon": "camera_alt",
     "layout": "notebook",
     "theme": "",
-    "order": 4,
-    "groups": []
+    "order": 4
   },
   {
     "id": "v2-page-pb",
@@ -69,8 +111,7 @@
     "icon": "photo_camera",
     "layout": "notebook",
     "theme": "",
-    "order": 5,
-    "groups": []
+    "order": 5
   },
   {
     "id": "v2-grp-pressure",
@@ -82,12 +123,13 @@
     "order": 1,
     "showTitle": true,
     "className": "",
-    "visible": "true"
+    "visible": "true",
+    "disabled": false
   },
   {
     "id": "v2-grp-temp",
     "type": "ui-group",
-    "name": "Temperature (°F)",
+    "name": "Temperature (\u00b0F)",
     "page": "v2-page-pth",
     "width": "12",
     "height": "1",
@@ -106,7 +148,8 @@
     "order": 3,
     "showTitle": true,
     "className": "",
-    "visible": "true"
+    "visible": "true",
+    "disabled": false
   },
   {
     "id": "v2-grp-status",
@@ -118,7 +161,8 @@
     "order": 4,
     "showTitle": true,
     "className": "",
-    "visible": "true"
+    "visible": true,
+    "disabled": false
   },
   {
     "id": "v2-grp-doors",
@@ -193,13 +237,6 @@
     "visible": "true"
   },
   {
-    "id": "his-flow-main",
-    "type": "tab",
-    "label": "HIS Main",
-    "disabled": false,
-    "info": "Home Information System — main flow"
-  },
-  {
     "id": "his-broker",
     "type": "mqtt-broker",
     "name": "Mosquitto Local",
@@ -213,6 +250,25 @@
     "cleansession": true
   },
   {
+    "id": "8caffb684107c6b6",
+    "type": "ui-theme",
+    "name": "Scheme_Theme",
+    "colors": {
+      "surface": "#135058",
+      "primary": "#bee4f4",
+      "bgPage": "#4a7b82",
+      "groupBg": "#b5bbc9",
+      "groupOutline": "#cccccc"
+    },
+    "sizes": {
+      "density": "default",
+      "pagePadding": "12px",
+      "groupGap": "12px",
+      "groupBorderRadius": "4px",
+      "widgetGap": "12px"
+    }
+  },
+  {
     "id": "his-mqtt-pth",
     "type": "mqtt in",
     "z": "his-flow-main",
@@ -223,6 +279,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": false,
+    "inputs": 0,
     "x": 160,
     "y": 120,
     "wires": [
@@ -278,7 +335,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "P differences",
-    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='→ stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='↑ +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='↓ '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='± '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
+    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='\u2192 stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='\u2191 +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='\u2193 '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='\u00b1 '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 620,
@@ -316,6 +373,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": true,
+    "inputs": 0,
     "x": 160,
     "y": 420,
     "wires": [
@@ -329,7 +387,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "format door",
-    "func": "var icon = msg.payload.state === 'open' ? 'ὑ3 OPEN' : 'ὑ2 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "func": "var icon = msg.payload.state === 'open' ? '\u1f513 OPEN' : '\u1f512 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
@@ -351,6 +409,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": false,
+    "inputs": 0,
     "x": 160,
     "y": 480,
     "wires": [
@@ -364,7 +423,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "format motion",
-    "func": "var icon = msg.payload.state === 'detected' ? 'Ὢ8 DETECTED' : '✅ clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "func": "var icon = msg.payload.state === 'detected' ? '\u1f6a8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
@@ -386,6 +445,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": false,
+    "inputs": 0,
     "x": 160,
     "y": 580,
     "wires": [
@@ -416,7 +476,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "alert if true",
-    "func": "if (msg.payload.alert === true) {\n    msg.payload = 'Ὢ8 ALARM: ' + msg.payload.type.toUpperCase() + ' — node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
+    "func": "if (msg.payload.alert === true) {\n    msg.payload = '\u1f6a8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
@@ -438,6 +498,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": false,
+    "inputs": 0,
     "x": 180,
     "y": 720,
     "wires": [
@@ -451,7 +512,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "visitor label",
-    "func": "var trig = msg.payload.trigger === 'button' ? 'ὑ4 Doorbell' : '὆4 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+    "func": "var trig = msg.payload.trigger === 'button' ? '\u1f514 Doorbell' : '\u1f464 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 420,
@@ -473,6 +534,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": false,
+    "inputs": 0,
     "x": 180,
     "y": 780,
     "wires": [
@@ -485,7 +547,7 @@
     "id": "his-fn-image-b64",
     "type": "function",
     "z": "his-flow-main",
-    "name": "JPEG → base64 img",
+    "name": "JPEG \u2192 base64 img",
     "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -654,78 +716,6 @@
     "wires": []
   },
   {
-    "id": "pb-flow-main",
-    "type": "tab",
-    "label": "Photo Booth",
-    "disabled": false,
-    "info": "Photo Booth — MQTT triggered capture"
-  },
-  {
-    "id": "pb-mqtt-trigger",
-    "type": "mqtt out",
-    "z": "pb-flow-main",
-    "name": "photobooth/trigger",
-    "topic": "home/photobooth/trigger",
-    "qos": "0",
-    "retain": "false",
-    "broker": "his-broker",
-    "x": 380,
-    "y": 100,
-    "wires": []
-  },
-  {
-    "id": "pb-mqtt-image",
-    "type": "mqtt in",
-    "z": "pb-flow-main",
-    "name": "home/photobooth/image",
-    "topic": "home/photobooth/image",
-    "qos": "0",
-    "datatype": "buffer",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "x": 160,
-    "y": 220,
-    "wires": [
-      [
-        "pb-fn-image-b64",
-        "pb-fn-ts"
-      ]
-    ]
-  },
-  {
-    "id": "pb-fn-image-b64",
-    "type": "function",
-    "z": "pb-flow-main",
-    "name": "JPEG → base64",
-    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 200,
-    "wires": [
-      [
-        "v2-tmpl-pb"
-      ]
-    ]
-  },
-  {
-    "id": "pb-fn-ts",
-    "type": "function",
-    "z": "pb-flow-main",
-    "name": "timestamp",
-    "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 360,
-    "y": 260,
-    "wires": [
-      [
-        "v2-text-pb-status"
-      ]
-    ]
-  },
-  {
     "id": "his-mqtt-display-photo",
     "type": "mqtt in",
     "z": "his-flow-main",
@@ -736,6 +726,7 @@
     "broker": "his-broker",
     "nl": false,
     "rap": false,
+    "inputs": 0,
     "x": 180,
     "y": 840,
     "wires": [
@@ -813,18 +804,20 @@
     "type": "ui-template",
     "z": "his-flow-main",
     "group": "v2-grp-pressure",
+    "page": "",
+    "ui": "",
     "name": "Pressure Summary",
     "order": 1,
     "width": "12",
     "height": "7",
-    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ps\">\n    <div class=\"ps-val\">{{ msg.payload.pressure }} PSI</div>\n    <div class=\"ps-trend\">{{ msg.payload.trend }}</div>\n    <div class=\"ps-conf\">Confidence: {{ msg.payload.conf }}</div>\n    <div class=\"ps-src\">Source: {{ msg.payload.source }}</div>\n  </div>\n</template>\n<style scoped>\n.ps { font-family: monospace; padding: 10px }\n.ps-val { font-size: 2.8em; font-weight: bold; color: #0eb8c0 }\n.ps-trend { font-size: 1.6em; color: #eeeeee; margin-top: 6px }\n.ps-conf { font-size: 1.4em; color: #aaaaaa; margin-top: 4px }\n.ps-src { font-size: 1.2em; color: #666; margin-top: 4px }\n</style>",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ps\">\n    <div class=\"ps-val\">{{ msg.payload.pressure }} PSI</div>\n    <div class=\"ps-trend\">{{ msg.payload.trend }}</div>\n    <div class=\"ps-conf\">Confidence: {{ msg.payload.conf }}</div>\n    <div class=\"ps-src\">Source: {{ msg.payload.source }}</div>\n  </div>\n</template>\n<style scoped>\n.ps { font-family: monospace; padding: 10px }\n.ps-val { font-size: 2.8em; font-weight: bold; color: #0d162b }\n.ps-trend { font-size: 1.6em; color: #0d162b; margin-top: 6px }\n.ps-conf { font-size: 1.4em; color: #0d162b; margin-top: 4px }\n.ps-src { font-size: 1.2em; color: #0d162b; margin-top: 4px }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
     "templateScope": "local",
     "className": "",
-    "x": 620,
-    "y": 80,
+    "x": 850,
+    "y": 220,
     "wires": [
       []
     ]
@@ -834,11 +827,13 @@
     "type": "ui-template",
     "z": "his-flow-main",
     "group": "v2-grp-pressure",
+    "page": "",
+    "ui": "",
     "name": "Humidity Summary",
     "order": 2,
     "width": "12",
     "height": "3",
-    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"rhs\">\n    <div v-for=\"r in msg.payload\" :key=\"r.label\" class=\"rhs-row\">\n      <span class=\"rhs-node\">{{ r.label }}</span>\n      <span class=\"rhs-val\">{{ r.value }}</span>\n    </div>\n  </div>\n</template>\n<style scoped>\n.rhs { font-family: monospace; padding: 10px }\n.rhs-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #333 }\n.rhs-node { font-size: 1.4em; color: #aaaaaa }\n.rhs-val { font-size: 1.6em; font-weight: bold; color: #0eb8c0 }\n</style>",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"rhs\">\n    <div v-for=\"r in msg.payload\" :key=\"r.label\" class=\"rhs-row\">\n      <span class=\"rhs-node\">{{ r.label }}</span>\n      <span class=\"rhs-val\">{{ r.value }}</span>\n    </div>\n  </div>\n</template>\n<style scoped>\n.rhs { font-family: monospace; padding: 10px }\n.rhs-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #0d162b }\n.rhs-node { font-size: 1.4em; color: #0d162b }\n.rhs-val { font-size: 1.6em; font-weight: bold; color: #0d162b }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
@@ -856,15 +851,17 @@
     "z": "his-flow-main",
     "group": "v2-grp-temp",
     "name": "Temperature",
-    "label": "Temperature (°F)",
+    "label": "Temperature (\u00b0F)",
     "order": 1,
-    "width": "12",
-    "height": "6",
     "chartType": "line",
     "category": "topic",
     "categoryType": "msg",
     "xAxisType": "time",
     "xAxisFormat": "",
+    "yAxisPropertyType": "property",
+    "ymin": "55",
+    "ymax": "75",
+    "action": "append",
     "removeOlder": "30",
     "removeOlderUnit": "60",
     "removeOlderPoints": "",
@@ -878,14 +875,11 @@
       "#ffbb78",
       "#98df8a"
     ],
-    "smooth": false,
+    "width": "12",
+    "height": "6",
     "interpolation": "linear",
-    "legend": "right",
-    "action": "append",
-    "ymin": "55",
-    "ymax": "75",
-    "x": 620,
-    "y": 120,
+    "x": 830,
+    "y": 100,
     "wires": [
       []
     ]
@@ -895,11 +889,13 @@
     "type": "ui-template",
     "z": "his-flow-main",
     "group": "v2-grp-faults",
+    "page": "",
+    "ui": "",
     "name": "Fault Counts",
     "order": 1,
     "width": "12",
     "height": "4",
-    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"fc\">\n    <table>\n      <thead><tr><th>Node</th><th>P</th><th>T</th><th>RH</th></tr></thead>\n      <tbody>\n        <tr v-if=\"msg.payload['bills-office']\">\n          <td class=\"name\">Bills Office</td>\n          <td :class=\"msg.payload['bills-office'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].P }}</td>\n          <td :class=\"msg.payload['bills-office'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].T }}</td>\n          <td :class=\"msg.payload['bills-office'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].RH }}</td>\n        </tr>\n        <tr v-if=\"msg.payload['mud-room']\">\n          <td class=\"name\">Mud Room</td>\n          <td :class=\"msg.payload['mud-room'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].P }}</td>\n          <td :class=\"msg.payload['mud-room'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].T }}</td>\n          <td :class=\"msg.payload['mud-room'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].RH }}</td>\n        </tr>\n        <tr v-if=\"msg.payload['garage']\">\n          <td class=\"name\">Garage</td>\n          <td :class=\"msg.payload['garage'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].P }}</td>\n          <td :class=\"msg.payload['garage'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].T }}</td>\n          <td :class=\"msg.payload['garage'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].RH }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.fc { font-family: monospace; font-size: 13px }\n.fc table { width: 100%; border-collapse: collapse }\n.fc th, .fc td { padding: 4px 10px; border-bottom: 1px solid #444 }\n.fc th { text-align: center; color: #aaa }\n.name { text-align: left }\n.ctr { text-align: center }\n.ok { color: #2ca02c }\n.warn { color: #ff7f0e }\n</style>",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"fc\">\n    <table>\n      <thead><tr><th>Node</th><th>P</th><th>T</th><th>RH</th></tr></thead>\n      <tbody>\n        <tr v-if=\"msg.payload['bills-office']\">\n          <td class=\"name\">Bills Office</td>\n          <td :class=\"msg.payload['bills-office'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].P }}</td>\n          <td :class=\"msg.payload['bills-office'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].T }}</td>\n          <td :class=\"msg.payload['bills-office'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].RH }}</td>\n        </tr>\n        <tr v-if=\"msg.payload['mud-room']\">\n          <td class=\"name\">Mud Room</td>\n          <td :class=\"msg.payload['mud-room'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].P }}</td>\n          <td :class=\"msg.payload['mud-room'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].T }}</td>\n          <td :class=\"msg.payload['mud-room'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].RH }}</td>\n        </tr>\n        <tr v-if=\"msg.payload['garage']\">\n          <td class=\"name\">Garage</td>\n          <td :class=\"msg.payload['garage'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].P }}</td>\n          <td :class=\"msg.payload['garage'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].T }}</td>\n          <td :class=\"msg.payload['garage'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].RH }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.fc { font-family: monospace; font-size: 13px }\n.fc table { width: 100%; border-collapse: collapse }\n.fc th, .fc td { padding: 4px 10px; border-bottom: 1px solid #0d162b }\n.fc th { text-align: center; color: #0d162b }\n.name { text-align: left }\n.ctr { text-align: center }\n.ok { color: #0d162b }\n.warn { color: #0d162b }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
@@ -916,11 +912,13 @@
     "type": "ui-template",
     "z": "his-flow-main",
     "group": "v2-grp-status",
+    "page": "",
+    "ui": "",
     "name": "Node Status",
     "order": 1,
     "width": "12",
     "height": "3",
-    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ns\">\n    <table>\n      <thead><tr><th>Node</th><th>Last seen</th><th>Status</th></tr></thead>\n      <tbody>\n        <tr v-for=\"r in msg.payload\" :key=\"r.node\">\n          <td>{{ r.node }}</td>\n          <td>{{ r.age }}</td>\n          <td><span class=\"dot\" :style=\"{background: r.ok ? '#2ca02c' : '#d62728'}\"></span>{{ r.ok ? 'OK' : 'DOWN' }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.ns { font-family: monospace; font-size: 13px }\n.ns table { width: 100%; border-collapse: collapse }\n.ns th, .ns td { padding: 4px 12px; border-bottom: 1px solid #444 }\n.ns th { color: #aaa; text-align: left }\n.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px }\n</style>",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ns\">\n    <table>\n      <thead><tr><th>Node</th><th>Last seen</th><th>Status</th></tr></thead>\n      <tbody>\n        <tr v-for=\"r in msg.payload\" :key=\"r.node\">\n          <td>{{ r.node }}</td>\n          <td>{{ r.age }}</td>\n          <td><span class=\"dot\" :style=\"{background: r.ok ? '#2ca02c' : '#d62728'}\"></span>{{ r.ok ? 'OK' : 'DOWN' }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.ns { font-family: monospace; font-size: 13px }\n.ns table { width: 100%; border-collapse: collapse }\n.ns th, .ns td { padding: 4px 12px; border-bottom: 1px solid #444 }\n.ns th { color: #0d162b; text-align: left }\n.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
@@ -937,15 +935,15 @@
     "type": "ui-text",
     "z": "his-flow-main",
     "group": "v2-grp-doors",
+    "order": 1,
+    "width": "6",
+    "height": "1",
     "name": "Door Status",
     "label": "",
     "format": "{{msg.payload}}",
     "layout": "row-left",
     "style": false,
     "className": "",
-    "order": 1,
-    "width": "6",
-    "height": "1",
     "x": 600,
     "y": 420,
     "wires": []
@@ -955,15 +953,15 @@
     "type": "ui-text",
     "z": "his-flow-main",
     "group": "v2-grp-motion",
+    "order": 1,
+    "width": "6",
+    "height": "1",
     "name": "Motion Status",
     "label": "",
     "format": "{{msg.payload}}",
     "layout": "row-left",
     "style": false,
     "className": "",
-    "order": 1,
-    "width": "6",
-    "height": "1",
     "x": 600,
     "y": 480,
     "wires": []
@@ -998,7 +996,7 @@
     "order": 1,
     "width": "6",
     "height": "4",
-    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0–4095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
+    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0\u20134095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
@@ -1015,15 +1013,15 @@
     "type": "ui-text",
     "z": "his-flow-main",
     "group": "v2-grp-gas",
+    "order": 2,
+    "width": "12",
+    "height": "1",
     "name": "Alarm Banner",
-    "label": "⚠ Alert",
+    "label": "\u26a0 Alert",
     "format": "{{msg.payload}}",
     "layout": "row-left",
     "style": false,
     "className": "",
-    "order": 2,
-    "width": "12",
-    "height": "1",
     "x": 600,
     "y": 620,
     "wires": []
@@ -1033,15 +1031,15 @@
     "type": "ui-text",
     "z": "his-flow-main",
     "group": "v2-grp-visitor",
+    "order": 1,
+    "width": "12",
+    "height": "1",
     "name": "Last Visitor",
     "label": "Last event",
     "format": "{{msg.payload}}",
     "layout": "row-left",
     "style": false,
     "className": "",
-    "order": 1,
-    "width": "12",
-    "height": "1",
     "x": 640,
     "y": 720,
     "wires": []
@@ -1068,6 +1066,72 @@
     ]
   },
   {
+    "id": "pb-mqtt-trigger",
+    "type": "mqtt out",
+    "z": "pb-flow-main",
+    "name": "photobooth/trigger",
+    "topic": "home/photobooth/trigger",
+    "qos": "0",
+    "retain": "false",
+    "broker": "his-broker",
+    "x": 380,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "pb-mqtt-image",
+    "type": "mqtt in",
+    "z": "pb-flow-main",
+    "name": "home/photobooth/image",
+    "topic": "home/photobooth/image",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 160,
+    "y": 220,
+    "wires": [
+      [
+        "pb-fn-image-b64",
+        "pb-fn-ts"
+      ]
+    ]
+  },
+  {
+    "id": "pb-fn-image-b64",
+    "type": "function",
+    "z": "pb-flow-main",
+    "name": "JPEG \u2192 base64",
+    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 200,
+    "wires": [
+      [
+        "v2-tmpl-pb"
+      ]
+    ]
+  },
+  {
+    "id": "pb-fn-ts",
+    "type": "function",
+    "z": "pb-flow-main",
+    "name": "timestamp",
+    "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 360,
+    "y": 260,
+    "wires": [
+      [
+        "v2-text-pb-status"
+      ]
+    ]
+  },
+  {
     "id": "v2-btn-capture",
     "type": "ui-button",
     "z": "pb-flow-main",
@@ -1077,7 +1141,6 @@
     "order": 1,
     "width": "4",
     "height": "1",
-    "passthru": false,
     "tooltip": "",
     "color": "",
     "bgcolor": "",
@@ -1101,15 +1164,15 @@
     "type": "ui-text",
     "z": "pb-flow-main",
     "group": "v2-grp-pb-cam",
+    "order": 2,
+    "width": "8",
+    "height": "1",
     "name": "Capture Status",
     "label": "",
     "format": "{{msg.payload}}",
     "layout": "row-left",
     "style": false,
     "className": "",
-    "order": 2,
-    "width": "8",
-    "height": "1",
     "x": 580,
     "y": 260,
     "wires": []
