@@ -1056,5 +1056,70 @@
     "x": 580,
     "y": 260,
     "wires": []
+  },
+  {
+    "id": "his-ui-grp-photo",
+    "type": "ui_group",
+    "name": "Current Photo",
+    "tab": "his-ui-tab-overview",
+    "order": 3,
+    "disp": true,
+    "width": 12,
+    "collapse": false
+  },
+  {
+    "id": "his-mqtt-display-photo",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/display/photo",
+    "topic": "home/display/photo",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 180,
+    "y": 840,
+    "wires": [
+      [
+        "his-fn-display-b64"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-display-b64",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "JPEG to base64",
+    "func": "msg.payload = msg.payload.toString(\"base64\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 420,
+    "y": 840,
+    "wires": [
+      [
+        "his-template-display-photo"
+      ]
+    ]
+  },
+  {
+    "id": "his-template-display-photo",
+    "type": "ui_template",
+    "z": "his-flow-main",
+    "group": "his-ui-grp-photo",
+    "order": 1,
+    "width": 12,
+    "height": 9,
+    "name": "Current Photo",
+    "format": "<canvas id=\"his-display-photo\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch(\"msg\",function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById(\"his-display-photo\");\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext(\"2d\").drawImage(img,0,0); };\n    img.src=\"data:image/jpeg;base64,\"+msg.payload;\n  });\n})(scope);\n</script>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "x": 680,
+    "y": 840,
+    "wires": [
+      []
+    ]
   }
 ]
