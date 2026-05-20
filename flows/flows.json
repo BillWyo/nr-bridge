@@ -1121,5 +1121,53 @@
     "wires": [
       []
     ]
+  },
+  {
+    "id": "his-http-capture",
+    "type": "http in",
+    "z": "his-flow-main",
+    "name": "POST /capture",
+    "url": "/capture",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 180,
+    "y": 900,
+    "wires": [
+      [
+        "his-fn-capture-proc"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-capture-proc",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "JPEG to display",
+    "func": "var b64 = msg.payload.toString(\"base64\");\nvar imgMsg = {payload: b64};\nvar respMsg = {payload: \"OK\", statusCode: 200, req: msg.req, res: msg.res};\nreturn [imgMsg, respMsg];",
+    "outputs": 2,
+    "noerr": 0,
+    "x": 420,
+    "y": 900,
+    "wires": [
+      [
+        "his-template-display-photo",
+        "his-template-image"
+      ],
+      [
+        "his-http-resp-capture"
+      ]
+    ]
+  },
+  {
+    "id": "his-http-resp-capture",
+    "type": "http response",
+    "z": "his-flow-main",
+    "name": "200 OK",
+    "statusCode": "200",
+    "headers": {},
+    "x": 680,
+    "y": 940,
+    "wires": []
   }
 ]
