@@ -1,108 +1,203 @@
 [
   {
-    "id": "d748b5591e098c6c",
-    "type": "ui_base",
-    "theme": {
-      "name": "theme-dark",
-      "lightTheme": {
-        "default": "#0094CE",
-        "baseColor": "#0094CE",
-        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-        "edited": true,
-        "reset": false
-      },
-      "darkTheme": {
-        "default": "#097479",
-        "baseColor": "#097479",
-        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-        "edited": true,
-        "reset": false
-      },
-      "customTheme": {
-        "name": "Untitled Theme 1",
-        "default": "#4B7930",
-        "baseColor": "#4B7930",
-        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-      },
-      "themeState": {
-        "base-color": {
-          "default": "#097479",
-          "value": "#097479",
-          "edited": false
-        },
-        "page-titlebar-backgroundColor": {
-          "value": "#097479",
-          "edited": false
-        },
-        "page-backgroundColor": {
-          "value": "#111111",
-          "edited": false
-        },
-        "page-sidebar-backgroundColor": {
-          "value": "#333333",
-          "edited": false
-        },
-        "group-textColor": {
-          "value": "#0eb8c0",
-          "edited": false
-        },
-        "group-borderColor": {
-          "value": "#555555",
-          "edited": false
-        },
-        "group-backgroundColor": {
-          "value": "#333333",
-          "edited": false
-        },
-        "widget-textColor": {
-          "value": "#eeeeee",
-          "edited": false
-        },
-        "widget-backgroundColor": {
-          "value": "#097479",
-          "edited": false
-        },
-        "widget-borderColor": {
-          "value": "#333333",
-          "edited": false
-        },
-        "base-font": {
-          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-        }
-      },
-      "angularTheme": {
-        "primary": "indigo",
-        "accents": "blue",
-        "warn": "red",
-        "background": "grey",
-        "palette": "light"
-      }
-    },
-    "site": {
-      "name": "Node-RED Dashboard",
-      "hideToolbar": "false",
-      "allowSwipe": "false",
-      "lockMenu": "false",
-      "allowTempTheme": "true",
-      "dateFormat": "DD/MM/YYYY",
-      "sizes": {
-        "sx": 48,
-        "sy": 48,
-        "gx": 6,
-        "gy": 6,
-        "cx": 7,
-        "cy": 6,
-        "px": 0,
-        "py": 0
-      }
-    }
+    "id": "v2-ui-base",
+    "type": "ui-base",
+    "name": "HIS Dashboard",
+    "path": "/dashboard",
+    "includeClientData": true,
+    "acceptsClientConfig": [
+      "ui-notification",
+      "ui-control"
+    ],
+    "navigationStyle": "default",
+    "showPathInSidebar": false
+  },
+  {
+    "id": "v2-page-pth",
+    "type": "ui-page",
+    "name": "PTH Charts",
+    "ui": "v2-ui-base",
+    "path": "/pth",
+    "icon": "show_chart",
+    "layout": "notebook",
+    "theme": "",
+    "order": 1,
+    "groups": []
+  },
+  {
+    "id": "v2-page-overview",
+    "type": "ui-page",
+    "name": "Home Overview",
+    "ui": "v2-ui-base",
+    "path": "/overview",
+    "icon": "home",
+    "layout": "notebook",
+    "theme": "",
+    "order": 2,
+    "groups": []
+  },
+  {
+    "id": "v2-page-alarms",
+    "type": "ui-page",
+    "name": "Alarms",
+    "ui": "v2-ui-base",
+    "path": "/alarms",
+    "icon": "warning",
+    "layout": "notebook",
+    "theme": "",
+    "order": 3,
+    "groups": []
+  },
+  {
+    "id": "v2-page-frontdoor",
+    "type": "ui-page",
+    "name": "Front Door",
+    "ui": "v2-ui-base",
+    "path": "/frontdoor",
+    "icon": "camera_alt",
+    "layout": "notebook",
+    "theme": "",
+    "order": 4,
+    "groups": []
+  },
+  {
+    "id": "v2-page-pb",
+    "type": "ui-page",
+    "name": "Photo Booth",
+    "ui": "v2-ui-base",
+    "path": "/photobooth",
+    "icon": "photo_camera",
+    "layout": "notebook",
+    "theme": "",
+    "order": 5,
+    "groups": []
+  },
+  {
+    "id": "v2-grp-pressure",
+    "type": "ui-group",
+    "name": "Pressure (PSI)",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-temp",
+    "type": "ui-group",
+    "name": "Temperature (°F)",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 2,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-faults",
+    "type": "ui-group",
+    "name": "Sensor Fault Counts",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-status",
+    "type": "ui-group",
+    "name": "Node Status",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 4,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-doors",
+    "type": "ui-group",
+    "name": "Doors & Windows",
+    "page": "v2-page-overview",
+    "width": "6",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-motion",
+    "type": "ui-group",
+    "name": "Motion",
+    "page": "v2-page-overview",
+    "width": "6",
+    "height": "1",
+    "order": 2,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-photo",
+    "type": "ui-group",
+    "name": "Current Photo",
+    "page": "v2-page-overview",
+    "width": "12",
+    "height": "1",
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-gas",
+    "type": "ui-group",
+    "name": "Smoke / CO",
+    "page": "v2-page-alarms",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-visitor",
+    "type": "ui-group",
+    "name": "Visitor",
+    "page": "v2-page-frontdoor",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-pb-cam",
+    "type": "ui-group",
+    "name": "Camera",
+    "page": "v2-page-pb",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
   },
   {
     "id": "his-flow-main",
     "type": "tab",
     "label": "HIS Main",
     "disabled": false,
-    "info": "Home Information System \u2014 main flow"
+    "info": "Home Information System — main flow"
   },
   {
     "id": "his-broker",
@@ -116,112 +211,6 @@
     "protocolVersion": "4",
     "keepalive": "60",
     "cleansession": true
-  },
-  {
-    "id": "his-ui-tab-pth",
-    "type": "ui_tab",
-    "name": "PTH Charts",
-    "icon": "show_chart",
-    "order": 1,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-pressure",
-    "type": "ui_group",
-    "name": "Pressure (PSI)",
-    "tab": "his-ui-tab-pth",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-grp-temp",
-    "type": "ui_group",
-    "name": "Temperature (\u00b0F)",
-    "tab": "his-ui-tab-pth",
-    "order": 2,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-grp-faults",
-    "type": "ui_group",
-    "name": "Sensor Fault Counts",
-    "tab": "his-ui-tab-pth",
-    "order": 5,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-tab-overview",
-    "type": "ui_tab",
-    "name": "Home Overview",
-    "icon": "home",
-    "order": 2,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-doors",
-    "type": "ui_group",
-    "name": "Doors & Windows",
-    "tab": "his-ui-tab-overview",
-    "order": 1,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-grp-motion",
-    "type": "ui_group",
-    "name": "Motion",
-    "tab": "his-ui-tab-overview",
-    "order": 2,
-    "disp": true,
-    "width": "6",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-tab-alarms",
-    "type": "ui_tab",
-    "name": "Alarms",
-    "icon": "warning",
-    "order": 3,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-gas",
-    "type": "ui_group",
-    "name": "Smoke / CO",
-    "tab": "his-ui-tab-alarms",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "his-ui-tab-frontdoor",
-    "type": "ui_tab",
-    "name": "Front Door",
-    "icon": "camera_alt",
-    "order": 4,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "his-ui-grp-visitor",
-    "type": "ui_group",
-    "name": "Visitor",
-    "tab": "his-ui-tab-frontdoor",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
   },
   {
     "id": "his-mqtt-pth",
@@ -258,7 +247,7 @@
         "his-fn-p-diffs"
       ],
       [
-        "his-chart-temp"
+        "v2-chart-temp"
       ],
       [
         "his-fn-rh-summary"
@@ -266,65 +255,6 @@
       [
         "his-fn-fault-collect"
       ]
-    ]
-  },
-  {
-    "id": "his-chart-pressure",
-    "type": "ui_template",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-pressure",
-    "order": 1,
-    "width": 0,
-    "height": 7,
-    "name": "Pressure Summary",
-    "format": "<style>.ps{font-family:monospace;padding:10px}.ps-val{font-size:4.4em;font-weight:bold;color:#0eb8c0}.ps-trend{font-size:2.1em;color:#eeeeee;margin-top:6px}.ps-conf{font-size:1.8em;color:#aaaaaa;margin-top:4px}.ps-src{font-size:1.5em;color:#666;margin-top:4px}</style><div class=\"ps\" ng-if=\"msg.payload\"><div class=\"ps-val\">{{msg.payload.pressure}} PSI</div><div class=\"ps-trend\">{{msg.payload.trend}}</div><div class=\"ps-conf\">Confidence: {{msg.payload.conf}}</div><div class=\"ps-src\">Source: {{msg.payload.source}}</div></div>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 620,
-    "y": 80,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "his-chart-temp",
-    "type": "ui_chart",
-    "z": "his-flow-main",
-    "name": "Temperature",
-    "group": "his-ui-grp-temp",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "label": "Temperature (\u00b0F)",
-    "chartType": "line",
-    "legend": "true",
-    "xformat": "HH:mm:ss",
-    "interpolate": "linear",
-    "nodata": "",
-    "dot": false,
-    "ymin": "55",
-    "ymax": "75",
-    "removeOlder": 30,
-    "removeOlderUnit": "60",
-    "removeOlderPoints": "",
-    "colors": [
-      "#1f77b4",
-      "#ff7f0e",
-      "#2ca02c",
-      "#d62728",
-      "#9467bd",
-      "#aec7e8",
-      "#ffbb78",
-      "#98df8a"
-    ],
-    "useOldColors": false,
-    "outputs": 1,
-    "x": 620,
-    "y": 120,
-    "wires": [
-      []
     ]
   },
   {
@@ -339,28 +269,8 @@
     "y": 160,
     "wires": [
       [
-        "his-template-rh"
+        "v2-tmpl-rh"
       ]
-    ]
-  },
-  {
-    "id": "his-template-rh",
-    "type": "ui_template",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-pressure",
-    "order": 2,
-    "width": 0,
-    "height": 3,
-    "name": "Humidity Summary",
-    "format": "<style>.rhs{font-family:monospace;padding:10px}.rhs-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #333}.rhs-node{font-size:1.6em;color:#aaaaaa}.rhs-val{font-size:1.8em;font-weight:bold;color:#0eb8c0}</style><div class=\"rhs\" ng-if=\"msg.payload\"><div class=\"rhs-row\" ng-repeat=\"r in msg.payload\"><span class=\"rhs-node\">{{r.label}}</span><span class=\"rhs-val\">{{r.value}}</span></div></div>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 840,
-    "y": 160,
-    "wires": [
-      []
     ]
   },
   {
@@ -368,14 +278,14 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "P differences",
-    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='\u2192 stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='\u2191 +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='\u2193 '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='\u00b1 '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
+    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='→ stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='↑ +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='↓ '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='± '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 620,
     "y": 220,
     "wires": [
       [
-        "his-chart-pressure"
+        "v2-tmpl-pressure"
       ]
     ]
   },
@@ -391,28 +301,8 @@
     "y": 300,
     "wires": [
       [
-        "his-template-faults"
+        "v2-tmpl-faults"
       ]
-    ]
-  },
-  {
-    "id": "his-template-faults",
-    "type": "ui_template",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-faults",
-    "order": 1,
-    "width": 0,
-    "height": 3,
-    "name": "Fault Counts",
-    "format": "<style>.fc{font-family:monospace;font-size:13px}.fc table{width:100%;border-collapse:collapse}.fc th,.fc td{padding:4px 10px;border-bottom:1px solid #444}.fc th{text-align:center;color:#aaa}.fc .name{text-align:left}</style><div class=\"fc\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>P faults</th><th>T faults</th><th>RH faults</th></tr><tr><td class=\"name\">Bills Office</td><td ng-style=\"{color:msg.payload['bills-office'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].P}}</td><td ng-style=\"{color:msg.payload['bills-office'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].T}}</td><td ng-style=\"{color:msg.payload['bills-office'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['bills-office'].RH}}</td></tr><tr><td class=\"name\">Mud Room</td><td ng-style=\"{color:msg.payload['mud-room'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].P}}</td><td ng-style=\"{color:msg.payload['mud-room'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].T}}</td><td ng-style=\"{color:msg.payload['mud-room'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['mud-room'].RH}}</td></tr><tr><td class=\"name\">Garage</td><td ng-style=\"{color:msg.payload['garage'].P>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].P}}</td><td ng-style=\"{color:msg.payload['garage'].T>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].T}}</td><td ng-style=\"{color:msg.payload['garage'].RH>0?'#ff7f0e':'#2ca02c'}\" style=\"text-align:center\">{{msg.payload['garage'].RH}}</td></tr></table></div>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 840,
-    "y": 300,
-    "wires": [
-      []
     ]
   },
   {
@@ -439,32 +329,16 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "format door",
-    "func": "var icon = msg.payload.state === 'open' ? '\u1f513 OPEN' : '\u1f512 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "func": "var icon = msg.payload.state === 'open' ? 'ὑ3 OPEN' : 'ὑ2 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
     "y": 420,
     "wires": [
       [
-        "his-text-door"
+        "v2-text-door"
       ]
     ]
-  },
-  {
-    "id": "his-text-door",
-    "type": "ui_text",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-doors",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "name": "Door Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 600,
-    "y": 420,
-    "wires": []
   },
   {
     "id": "his-mqtt-motion",
@@ -490,32 +364,16 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "format motion",
-    "func": "var icon = msg.payload.state === 'detected' ? '\u1f6a8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "func": "var icon = msg.payload.state === 'detected' ? 'Ὢ8 DETECTED' : '✅ clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
     "y": 480,
     "wires": [
       [
-        "his-text-motion"
+        "v2-text-motion"
       ]
     ]
-  },
-  {
-    "id": "his-text-motion",
-    "type": "ui_text",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-motion",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "name": "Motion Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 600,
-    "y": 480,
-    "wires": []
   },
   {
     "id": "his-mqtt-alarm",
@@ -549,67 +407,25 @@
     "y": 560,
     "wires": [
       [
-        "his-gauge-smoke"
+        "v2-gauge-smoke"
       ]
     ]
-  },
-  {
-    "id": "his-gauge-smoke",
-    "type": "ui_gauge",
-    "z": "his-flow-main",
-    "name": "Smoke Level",
-    "group": "his-ui-grp-gas",
-    "order": 1,
-    "width": 6,
-    "height": 4,
-    "gtype": "gage",
-    "title": "Smoke (ADC)",
-    "label": "ADC counts",
-    "format": "{{value}}",
-    "min": 0,
-    "max": 4095,
-    "colors": [
-      "#00b500",
-      "#e6e600",
-      "#e60000"
-    ],
-    "seg1": 1500,
-    "seg2": 2500,
-    "x": 600,
-    "y": 560,
-    "wires": []
   },
   {
     "id": "his-fn-alarm-check",
     "type": "function",
     "z": "his-flow-main",
     "name": "alert if true",
-    "func": "if (msg.payload.alert === true) {\n    msg.payload = '\u1f6a8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
+    "func": "if (msg.payload.alert === true) {\n    msg.payload = 'Ὢ8 ALARM: ' + msg.payload.type.toUpperCase() + ' — node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
     "y": 620,
     "wires": [
       [
-        "his-text-alarm-banner"
+        "v2-text-alarm"
       ]
     ]
-  },
-  {
-    "id": "his-text-alarm-banner",
-    "type": "ui_text",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-gas",
-    "order": 2,
-    "width": 12,
-    "height": 0,
-    "name": "Alarm Banner",
-    "label": "\u26a0 Alert",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 600,
-    "y": 620,
-    "wires": []
   },
   {
     "id": "his-mqtt-visitor",
@@ -635,32 +451,16 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "visitor label",
-    "func": "var trig = msg.payload.trigger === 'button' ? '\u1f514 Doorbell' : '\u1f464 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+    "func": "var trig = msg.payload.trigger === 'button' ? 'ὑ4 Doorbell' : '὆4 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 420,
     "y": 720,
     "wires": [
       [
-        "his-text-visitor"
+        "v2-text-visitor"
       ]
     ]
-  },
-  {
-    "id": "his-text-visitor",
-    "type": "ui_text",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-visitor",
-    "order": 1,
-    "width": 12,
-    "height": 0,
-    "name": "Last Visitor",
-    "label": "Last event",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 640,
-    "y": 720,
-    "wires": []
   },
   {
     "id": "his-mqtt-image",
@@ -685,7 +485,7 @@
     "id": "his-fn-image-b64",
     "type": "function",
     "z": "his-flow-main",
-    "name": "JPEG \u2192 base64 img",
+    "name": "JPEG → base64 img",
     "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -693,39 +493,9 @@
     "y": 780,
     "wires": [
       [
-        "his-template-image"
+        "v2-tmpl-frontdoor"
       ]
     ]
-  },
-  {
-    "id": "his-template-image",
-    "type": "ui_template",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-visitor",
-    "order": 2,
-    "width": 12,
-    "height": 9,
-    "name": "Visitor Snapshot",
-    "format": "<canvas id=\"his-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('his-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 680,
-    "y": 780,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "his-ui-grp-status",
-    "type": "ui_group",
-    "name": "Node Status",
-    "tab": "his-ui-tab-pth",
-    "order": 6,
-    "disp": true,
-    "width": "12",
-    "collapse": false
   },
   {
     "id": "his-fn-lastseen",
@@ -775,28 +545,8 @@
     "y": 1060,
     "wires": [
       [
-        "his-template-node-status"
+        "v2-tmpl-status"
       ]
-    ]
-  },
-  {
-    "id": "his-template-node-status",
-    "type": "ui_template",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-status",
-    "order": 1,
-    "width": 12,
-    "height": 2,
-    "name": "Node Status",
-    "format": "<style>.ns{font-family:monospace;font-size:13px}.ns table{width:100%;border-collapse:collapse}.ns th,.ns td{padding:4px 12px;border-bottom:1px solid #444}.ns th{color:#aaa;text-align:left}.ns .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}</style><div class=\"ns\" ng-if=\"msg.payload\"><table><tr><th>Node</th><th>Last seen</th><th>Status</th></tr><tr ng-repeat=\"r in msg.payload\"><td>{{r.node}}</td><td>{{r.age}}</td><td><span class=\"dot\" ng-style=\"{background:r.ok?'#2ca02c':'#d62728'}\"></span>{{r.ok?'OK':'DOWN'}}</td></tr></table></div>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 680,
-    "y": 1060,
-    "wires": [
-      []
     ]
   },
   {
@@ -908,53 +658,7 @@
     "type": "tab",
     "label": "Photo Booth",
     "disabled": false,
-    "info": "Photo Booth \u2014 MQTT triggered capture"
-  },
-  {
-    "id": "pb-ui-tab",
-    "type": "ui_tab",
-    "name": "Photo Booth",
-    "icon": "photo_camera",
-    "order": 5,
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "pb-ui-grp-cam",
-    "type": "ui_group",
-    "name": "Camera",
-    "tab": "pb-ui-tab",
-    "order": 1,
-    "disp": true,
-    "width": "12",
-    "collapse": false
-  },
-  {
-    "id": "pb-btn-capture",
-    "type": "ui_button",
-    "z": "pb-flow-main",
-    "name": "Capture",
-    "group": "pb-ui-grp-cam",
-    "order": 1,
-    "width": 4,
-    "height": 1,
-    "passthru": false,
-    "label": "Capture",
-    "tooltip": "",
-    "color": "",
-    "bgcolor": "",
-    "icon": "camera_alt",
-    "payload": "go",
-    "payloadType": "str",
-    "topic": "",
-    "topicType": "str",
-    "x": 160,
-    "y": 100,
-    "wires": [
-      [
-        "pb-mqtt-trigger"
-      ]
-    ]
+    "info": "Photo Booth — MQTT triggered capture"
   },
   {
     "id": "pb-mqtt-trigger",
@@ -993,7 +697,7 @@
     "id": "pb-fn-image-b64",
     "type": "function",
     "z": "pb-flow-main",
-    "name": "JPEG \u2192 base64",
+    "name": "JPEG → base64",
     "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -1001,28 +705,8 @@
     "y": 200,
     "wires": [
       [
-        "pb-template-image"
+        "v2-tmpl-pb"
       ]
-    ]
-  },
-  {
-    "id": "pb-template-image",
-    "type": "ui_template",
-    "z": "pb-flow-main",
-    "group": "pb-ui-grp-cam",
-    "order": 3,
-    "width": 12,
-    "height": 9,
-    "name": "Snapshot",
-    "format": "<canvas id=\"pb-cam\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch('msg',function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById('pb-cam');\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); };\n    img.src='data:image/jpeg;base64,'+msg.payload;\n  });\n})(scope);\n</script>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 620,
-    "y": 200,
-    "wires": [
-      []
     ]
   },
   {
@@ -1037,35 +721,9 @@
     "y": 260,
     "wires": [
       [
-        "pb-text-status"
+        "v2-text-pb-status"
       ]
     ]
-  },
-  {
-    "id": "pb-text-status",
-    "type": "ui_text",
-    "z": "pb-flow-main",
-    "group": "pb-ui-grp-cam",
-    "order": 2,
-    "width": 8,
-    "height": 1,
-    "name": "Capture Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "x": 580,
-    "y": 260,
-    "wires": []
-  },
-  {
-    "id": "his-ui-grp-photo",
-    "type": "ui_group",
-    "name": "Current Photo",
-    "tab": "his-ui-tab-overview",
-    "order": 3,
-    "disp": true,
-    "width": 12,
-    "collapse": false
   },
   {
     "id": "his-mqtt-display-photo",
@@ -1098,28 +756,8 @@
     "y": 840,
     "wires": [
       [
-        "his-template-display-photo"
+        "v2-tmpl-photo"
       ]
-    ]
-  },
-  {
-    "id": "his-template-display-photo",
-    "type": "ui_template",
-    "z": "his-flow-main",
-    "group": "his-ui-grp-photo",
-    "order": 1,
-    "width": 12,
-    "height": 9,
-    "name": "Current Photo",
-    "format": "<canvas id=\"his-display-photo\" style=\"max-width:100%;border-radius:4px\"></canvas>\n<script>\n(function(scope){\n  scope.$watch(\"msg\",function(msg){\n    if(!msg||!msg.payload) return;\n    var c=document.getElementById(\"his-display-photo\");\n    var img=new Image();\n    img.onload=function(){ c.width=img.width; c.height=img.height; c.getContext(\"2d\").drawImage(img,0,0); };\n    img.src=\"data:image/jpeg;base64,\"+msg.payload;\n  });\n})(scope);\n</script>",
-    "storeOutMessages": true,
-    "fwdInMessages": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "x": 680,
-    "y": 840,
-    "wires": [
-      []
     ]
   },
   {
@@ -1151,8 +789,8 @@
     "y": 900,
     "wires": [
       [
-        "his-template-display-photo",
-        "his-template-image"
+        "v2-tmpl-photo",
+        "v2-tmpl-frontdoor"
       ],
       [
         "his-http-resp-capture"
@@ -1169,5 +807,332 @@
     "x": 680,
     "y": 940,
     "wires": []
+  },
+  {
+    "id": "v2-tmpl-pressure",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-pressure",
+    "name": "Pressure Summary",
+    "order": 1,
+    "width": "12",
+    "height": "7",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ps\">\n    <div class=\"ps-val\">{{ msg.payload.pressure }} PSI</div>\n    <div class=\"ps-trend\">{{ msg.payload.trend }}</div>\n    <div class=\"ps-conf\">Confidence: {{ msg.payload.conf }}</div>\n    <div class=\"ps-src\">Source: {{ msg.payload.source }}</div>\n  </div>\n</template>\n<style scoped>\n.ps { font-family: monospace; padding: 10px }\n.ps-val { font-size: 2.8em; font-weight: bold; color: #0eb8c0 }\n.ps-trend { font-size: 1.6em; color: #eeeeee; margin-top: 6px }\n.ps-conf { font-size: 1.4em; color: #aaaaaa; margin-top: 4px }\n.ps-src { font-size: 1.2em; color: #666; margin-top: 4px }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 620,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-tmpl-rh",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-pressure",
+    "name": "Humidity Summary",
+    "order": 2,
+    "width": "12",
+    "height": "3",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"rhs\">\n    <div v-for=\"r in msg.payload\" :key=\"r.label\" class=\"rhs-row\">\n      <span class=\"rhs-node\">{{ r.label }}</span>\n      <span class=\"rhs-val\">{{ r.value }}</span>\n    </div>\n  </div>\n</template>\n<style scoped>\n.rhs { font-family: monospace; padding: 10px }\n.rhs-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #333 }\n.rhs-node { font-size: 1.4em; color: #aaaaaa }\n.rhs-val { font-size: 1.6em; font-weight: bold; color: #0eb8c0 }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 840,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-chart-temp",
+    "type": "ui-chart",
+    "z": "his-flow-main",
+    "group": "v2-grp-temp",
+    "name": "Temperature",
+    "label": "Temperature (°F)",
+    "order": 1,
+    "width": "12",
+    "height": "6",
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "removeOlder": "30",
+    "removeOlderUnit": "60",
+    "removeOlderPoints": "",
+    "colors": [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd",
+      "#aec7e8",
+      "#ffbb78",
+      "#98df8a"
+    ],
+    "smooth": false,
+    "interpolation": "linear",
+    "legend": "right",
+    "action": "append",
+    "ymin": "55",
+    "ymax": "75",
+    "x": 620,
+    "y": 120,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-tmpl-faults",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-faults",
+    "name": "Fault Counts",
+    "order": 1,
+    "width": "12",
+    "height": "4",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"fc\">\n    <table>\n      <thead><tr><th>Node</th><th>P</th><th>T</th><th>RH</th></tr></thead>\n      <tbody>\n        <tr v-if=\"msg.payload['bills-office']\">\n          <td class=\"name\">Bills Office</td>\n          <td :class=\"msg.payload['bills-office'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].P }}</td>\n          <td :class=\"msg.payload['bills-office'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].T }}</td>\n          <td :class=\"msg.payload['bills-office'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['bills-office'].RH }}</td>\n        </tr>\n        <tr v-if=\"msg.payload['mud-room']\">\n          <td class=\"name\">Mud Room</td>\n          <td :class=\"msg.payload['mud-room'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].P }}</td>\n          <td :class=\"msg.payload['mud-room'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].T }}</td>\n          <td :class=\"msg.payload['mud-room'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['mud-room'].RH }}</td>\n        </tr>\n        <tr v-if=\"msg.payload['garage']\">\n          <td class=\"name\">Garage</td>\n          <td :class=\"msg.payload['garage'].P > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].P }}</td>\n          <td :class=\"msg.payload['garage'].T > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].T }}</td>\n          <td :class=\"msg.payload['garage'].RH > 0 ? 'warn' : 'ok'\" class=\"ctr\">{{ msg.payload['garage'].RH }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.fc { font-family: monospace; font-size: 13px }\n.fc table { width: 100%; border-collapse: collapse }\n.fc th, .fc td { padding: 4px 10px; border-bottom: 1px solid #444 }\n.fc th { text-align: center; color: #aaa }\n.name { text-align: left }\n.ctr { text-align: center }\n.ok { color: #2ca02c }\n.warn { color: #ff7f0e }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 840,
+    "y": 300,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-tmpl-status",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-status",
+    "name": "Node Status",
+    "order": 1,
+    "width": "12",
+    "height": "3",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ns\">\n    <table>\n      <thead><tr><th>Node</th><th>Last seen</th><th>Status</th></tr></thead>\n      <tbody>\n        <tr v-for=\"r in msg.payload\" :key=\"r.node\">\n          <td>{{ r.node }}</td>\n          <td>{{ r.age }}</td>\n          <td><span class=\"dot\" :style=\"{background: r.ok ? '#2ca02c' : '#d62728'}\"></span>{{ r.ok ? 'OK' : 'DOWN' }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.ns { font-family: monospace; font-size: 13px }\n.ns table { width: 100%; border-collapse: collapse }\n.ns th, .ns td { padding: 4px 12px; border-bottom: 1px solid #444 }\n.ns th { color: #aaa; text-align: left }\n.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 680,
+    "y": 1060,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-text-door",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-doors",
+    "name": "Door Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "order": 1,
+    "width": "6",
+    "height": "1",
+    "x": 600,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "v2-text-motion",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-motion",
+    "name": "Motion Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "order": 1,
+    "width": "6",
+    "height": "1",
+    "x": 600,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-photo",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-photo",
+    "name": "Current Photo",
+    "order": 1,
+    "width": "12",
+    "height": "9",
+    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 680,
+    "y": 840,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-gauge-smoke",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-gas",
+    "name": "Smoke Level",
+    "order": 1,
+    "width": "6",
+    "height": "4",
+    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0–4095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 600,
+    "y": 560,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-text-alarm",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-gas",
+    "name": "Alarm Banner",
+    "label": "⚠ Alert",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "order": 2,
+    "width": "12",
+    "height": "1",
+    "x": 600,
+    "y": 620,
+    "wires": []
+  },
+  {
+    "id": "v2-text-visitor",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-visitor",
+    "name": "Last Visitor",
+    "label": "Last event",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "order": 1,
+    "width": "12",
+    "height": "1",
+    "x": 640,
+    "y": 720,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-frontdoor",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-visitor",
+    "name": "Visitor Snapshot",
+    "order": 2,
+    "width": "12",
+    "height": "9",
+    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 680,
+    "y": 780,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-btn-capture",
+    "type": "ui-button",
+    "z": "pb-flow-main",
+    "group": "v2-grp-pb-cam",
+    "name": "Capture",
+    "label": "Capture",
+    "order": 1,
+    "width": "4",
+    "height": "1",
+    "passthru": false,
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "camera_alt",
+    "iconPosition": "left",
+    "payload": "go",
+    "payloadType": "str",
+    "topic": "",
+    "topicType": "str",
+    "x": 160,
+    "y": 100,
+    "wires": [
+      [
+        "pb-mqtt-trigger"
+      ]
+    ]
+  },
+  {
+    "id": "v2-text-pb-status",
+    "type": "ui-text",
+    "z": "pb-flow-main",
+    "group": "v2-grp-pb-cam",
+    "name": "Capture Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "order": 2,
+    "width": "8",
+    "height": "1",
+    "x": 580,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-pb",
+    "type": "ui-template",
+    "z": "pb-flow-main",
+    "group": "v2-grp-pb-cam",
+    "name": "Snapshot",
+    "order": 3,
+    "width": "12",
+    "height": "9",
+    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 620,
+    "y": 200,
+    "wires": [
+      []
+    ]
   }
 ]
