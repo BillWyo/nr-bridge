@@ -1430,5 +1430,120 @@
         "gov-fn-send"
       ]
     ]
+  },
+  {
+    "id": "gov-inject-id-1",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Bulb A  .30",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"23:99:5C:E7:53:E6:17:B2\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 520,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-id-2",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Bulb B  .29",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"47:A7:5C:E7:53:F0:80:74\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 580,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-id-3",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Bulb C  .32",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"15:A2:5C:E7:53:F2:38:D8\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 640,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-id-4",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Bulb D  .31",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"10:31:5C:E7:53:ED:FA:78\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 700,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-all-off",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "All OFF",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 0, \"devices\": \"all\"}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 760,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
   }
 ]
