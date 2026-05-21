@@ -77,7 +77,7 @@
     "path": "/overview",
     "icon": "home",
     "layout": "notebook",
-    "theme": "",
+    "theme": "8caffb684107c6b6",
     "order": 2
   },
   {
@@ -88,7 +88,7 @@
     "path": "/alarms",
     "icon": "warning",
     "layout": "notebook",
-    "theme": "",
+    "theme": "8caffb684107c6b6",
     "order": 3
   },
   {
@@ -99,7 +99,7 @@
     "path": "/frontdoor",
     "icon": "camera_alt",
     "layout": "notebook",
-    "theme": "",
+    "theme": "8caffb684107c6b6",
     "order": 4
   },
   {
@@ -110,7 +110,7 @@
     "path": "/photobooth",
     "icon": "photo_camera",
     "layout": "notebook",
-    "theme": "",
+    "theme": "8caffb684107c6b6",
     "order": 5
   },
   {
