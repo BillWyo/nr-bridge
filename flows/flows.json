@@ -1262,6 +1262,22 @@
     "wires": []
   },
   {
+    "id": "gov-udp-ctrl",
+    "type": "udp out",
+    "z": "gov-flow",
+    "name": "UDP ctrl",
+    "addr": "",
+    "iface": "",
+    "port": "",
+    "ipv": "udp4",
+    "outport": "",
+    "base64": false,
+    "multicast": "false",
+    "x": 760,
+    "y": 300,
+    "wires": []
+  },
+  {
     "id": "gov-udp-in",
     "type": "udp in",
     "z": "gov-flow",
@@ -1323,7 +1339,7 @@
     "y": 300,
     "wires": [
       [
-        "gov-udp-out"
+        "gov-udp-ctrl"
       ]
     ]
   },
