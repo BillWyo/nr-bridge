@@ -1197,5 +1197,238 @@
     "wires": [
       []
     ]
+  },
+  {
+    "id": "gov-flow",
+    "type": "tab",
+    "label": "Govee Lights",
+    "disabled": false,
+    "info": "Govee LAN API — 4 bulbs"
+  },
+  {
+    "id": "gov-inject-scan",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Discover bulbs",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 80,
+    "wires": [
+      [
+        "gov-fn-scan-msg"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-scan-msg",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "build scan",
+    "func": "msg.payload = JSON.stringify({\"msg\":{\"cmd\":\"scan\",\"data\":{\"account_topic\":\"reserve\"}}});\nmsg.ip   = \"255.255.255.255\";\nmsg.port = 4001;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 80,
+    "wires": [
+      [
+        "gov-udp-out"
+      ]
+    ]
+  },
+  {
+    "id": "gov-udp-out",
+    "type": "udp out",
+    "z": "gov-flow",
+    "name": "UDP send",
+    "addr": "255.255.255.255",
+    "iface": "",
+    "port": "4001",
+    "ipv": "udp4",
+    "outport": "",
+    "base64": false,
+    "multicast": "false",
+    "x": 760,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "gov-udp-in",
+    "type": "udp in",
+    "z": "gov-flow",
+    "name": "device responses",
+    "iface": "",
+    "port": "4002",
+    "ipv": "udp4",
+    "multicast": "false",
+    "group": "",
+    "datatype": "utf8",
+    "x": 180,
+    "y": 160,
+    "wires": [
+      [
+        "gov-fn-parse-scan"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-parse-scan",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "parse + store",
+    "func": "try {\n    var d = JSON.parse(msg.payload);\n    if (!d.msg || d.msg.cmd !== 'scan') return null;\n    var info = d.msg.data;\n    var devs = flow.get('govee_devices') || {};\n    devs[info.device] = { ip: info.ip, sku: info.sku, device: info.device };\n    flow.set('govee_devices', devs);\n    node.status({fill:'green', shape:'dot', text: info.sku + ' @ ' + info.ip});\n    msg.payload = devs;\n    return msg;\n} catch(e) {\n    node.warn('Govee parse error: ' + e.message);\n    return null;\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 160,
+    "wires": [
+      [
+        "gov-debug-devices"
+      ]
+    ]
+  },
+  {
+    "id": "gov-debug-devices",
+    "type": "debug",
+    "z": "gov-flow",
+    "name": "device map",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 600,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "gov-fn-send",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "send to devices",
+    "func": "// Expects: msg.govee_cmd     = {cmd:'...', data:{...}}\n//          msg.govee_targets = 'all' | ['device-id', ...]\nvar devs = flow.get('govee_devices') || {};\nvar keys = Object.keys(devs);\nif (!keys.length) { node.warn('No Govee devices found - run discovery first'); return null; }\n\nvar targets;\nif (!msg.govee_targets || msg.govee_targets === 'all') {\n    targets = Object.values(devs);\n} else {\n    var ids = Array.isArray(msg.govee_targets) ? msg.govee_targets : [msg.govee_targets];\n    targets = ids.map(function(id) { return devs[id]; }).filter(Boolean);\n}\nif (!targets.length) { node.warn('No matching Govee devices'); return null; }\n\nvar msgs = targets.map(function(d) {\n    return { payload: JSON.stringify({msg: msg.govee_cmd}), ip: d.ip, port: 4003 };\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 580,
+    "y": 300,
+    "wires": [
+      [
+        "gov-udp-out"
+      ]
+    ]
+  },
+  {
+    "id": "gov-mqtt-ctrl",
+    "type": "mqtt in",
+    "z": "gov-flow",
+    "name": "home/lights/set",
+    "topic": "home/lights/set",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 180,
+    "y": 300,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-mqtt-ctrl",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "MQTT → Govee cmd",
+    "func": "// MQTT payload: {cmd, value|r,g,b|kelvin, devices:'all'|[ids]}\nvar p = msg.payload;\nvar gcmd;\nswitch (p.cmd) {\n    case 'turn':       gcmd = {cmd:'turn',       data:{value: p.value ? 1 : 0}}; break;\n    case 'brightness': gcmd = {cmd:'brightness',  data:{value: p.value}}; break;\n    case 'color':      gcmd = {cmd:'colorwc',     data:{color:{r:p.r||0,g:p.g||0,b:p.b||0}, colorTemInKelvin:0}}; break;\n    case 'colortemp':  gcmd = {cmd:'colorwc',     data:{color:{r:0,g:0,b:0}, colorTemInKelvin:p.kelvin||4000}}; break;\n    default: node.warn('Unknown Govee cmd: ' + p.cmd); return null;\n}\nmsg.govee_cmd     = gcmd;\nmsg.govee_targets = p.devices || 'all';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 390,
+    "y": 300,
+    "wires": [
+      [
+        "gov-fn-send"
+      ]
+    ]
+  },
+  {
+    "id": "gov-mqtt-visitor",
+    "type": "mqtt in",
+    "z": "gov-flow",
+    "name": "home/frontdoor/visitor",
+    "topic": "home/frontdoor/visitor",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 180,
+    "y": 380,
+    "wires": [
+      [
+        "gov-fn-visitor"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-visitor",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "visitor → warm white",
+    "func": "// Doorbell / motion at front door → warm white\nmsg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\nmsg.govee_targets = 'all';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 380,
+    "wires": [
+      [
+        "gov-fn-send"
+      ]
+    ]
+  },
+  {
+    "id": "gov-mqtt-alarm",
+    "type": "mqtt in",
+    "z": "gov-flow",
+    "name": "home/+/alarm",
+    "topic": "home/+/alarm",
+    "qos": "1",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "x": 180,
+    "y": 440,
+    "wires": [
+      [
+        "gov-fn-alarm"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-alarm",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "alarm → red / clear → white",
+    "func": "// Smoke / CO alert → solid red; clear → restore warm white\nif (!msg.payload) return null;\nif (msg.payload.alert === true) {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n} else {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n}\nmsg.govee_targets = 'all';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 440,
+    "wires": [
+      [
+        "gov-fn-send"
+      ]
+    ]
   }
 ]
