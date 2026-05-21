@@ -1758,118 +1758,6 @@
     "visible": "true"
   },
   {
-    "id": "v2-btn-evening",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-presets",
-    "name": "Evening",
-    "label": "Evening",
-    "order": 1,
-    "width": "3",
-    "height": "2",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#f5a623",
-    "textColor": "#000000",
-    "iconColor": "#000000",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "Evening",
-    "payloadType": "str",
-    "topic": "preset",
-    "topicType": "str",
-    "x": 200,
-    "y": 1100,
-    "wires": [
-      [
-        "gov-fn-apply-preset"
-      ]
-    ]
-  },
-  {
-    "id": "v2-btn-bright",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-presets",
-    "name": "Bright",
-    "label": "Bright",
-    "order": 2,
-    "width": "3",
-    "height": "2",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#ffffff",
-    "textColor": "#000000",
-    "iconColor": "#000000",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "Bright",
-    "payloadType": "str",
-    "topic": "preset",
-    "topicType": "str",
-    "x": 200,
-    "y": 1160,
-    "wires": [
-      [
-        "gov-fn-apply-preset"
-      ]
-    ]
-  },
-  {
-    "id": "v2-btn-movie",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-presets",
-    "name": "Movie",
-    "label": "Movie",
-    "order": 3,
-    "width": "3",
-    "height": "2",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#4a3580",
-    "textColor": "#ffffff",
-    "iconColor": "#ffffff",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "Movie",
-    "payloadType": "str",
-    "topic": "preset",
-    "topicType": "str",
-    "x": 200,
-    "y": 1220,
-    "wires": [
-      [
-        "gov-fn-apply-preset"
-      ]
-    ]
-  },
-  {
-    "id": "v2-btn-alloff",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-presets",
-    "name": "All Off",
-    "label": "All Off",
-    "order": 4,
-    "width": "3",
-    "height": "2",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#333333",
-    "textColor": "#ffffff",
-    "iconColor": "#ffffff",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "All Off",
-    "payloadType": "str",
-    "topic": "preset",
-    "topicType": "str",
-    "x": 200,
-    "y": 1280,
-    "wires": [
-      [
-        "gov-fn-apply-preset"
-      ]
-    ]
-  },
-  {
     "id": "gov-fn-apply-preset",
     "type": "function",
     "z": "gov-flow",
@@ -1968,90 +1856,6 @@
     ]
   },
   {
-    "id": "v2-btn-save-evening",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-save",
-    "name": "Save Evening",
-    "label": "Save Evening",
-    "order": 1,
-    "width": "4",
-    "height": "1",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#f5a623",
-    "textColor": "#000000",
-    "iconColor": "#000000",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "Evening",
-    "payloadType": "str",
-    "topic": "save",
-    "topicType": "str",
-    "x": 210,
-    "y": 1460,
-    "wires": [
-      [
-        "gov-fn-save-preset"
-      ]
-    ]
-  },
-  {
-    "id": "v2-btn-save-bright",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-save",
-    "name": "Save Bright",
-    "label": "Save Bright",
-    "order": 2,
-    "width": "4",
-    "height": "1",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#ffffff",
-    "textColor": "#000000",
-    "iconColor": "#000000",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "Bright",
-    "payloadType": "str",
-    "topic": "save",
-    "topicType": "str",
-    "x": 210,
-    "y": 1520,
-    "wires": [
-      [
-        "gov-fn-save-preset"
-      ]
-    ]
-  },
-  {
-    "id": "v2-btn-save-movie",
-    "type": "ui-button",
-    "z": "gov-flow",
-    "group": "v2-grp-govee-save",
-    "name": "Save Movie",
-    "label": "Save Movie",
-    "order": 3,
-    "width": "4",
-    "height": "1",
-    "emitOnlyOnClick": true,
-    "buttonColor": "#4a3580",
-    "textColor": "#ffffff",
-    "iconColor": "#ffffff",
-    "enableClick": true,
-    "enablePointerdown": false,
-    "payload": "Movie",
-    "payloadType": "str",
-    "topic": "save",
-    "topicType": "str",
-    "x": 210,
-    "y": 1580,
-    "wires": [
-      [
-        "gov-fn-save-preset"
-      ]
-    ]
-  },
-  {
     "id": "gov-fn-save-preset",
     "type": "function",
     "z": "gov-flow",
@@ -2139,6 +1943,202 @@
     "y": 1640,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "v2-btn-evening",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "Evening",
+    "label": "Evening",
+    "order": 1,
+    "width": "3",
+    "height": "2",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Evening",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#f5a623",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "className": "",
+    "x": 200,
+    "y": 1100,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-bright",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "Bright",
+    "label": "Bright",
+    "order": 2,
+    "width": "3",
+    "height": "2",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Bright",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#fffde7",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "className": "",
+    "x": 200,
+    "y": 1160,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-movie",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "Movie",
+    "label": "Movie",
+    "order": 3,
+    "width": "3",
+    "height": "2",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Movie",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#4a3580",
+    "textColor": "#ffffff",
+    "iconColor": "#ffffff",
+    "className": "",
+    "x": 200,
+    "y": 1220,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-alloff",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "All Off",
+    "label": "All Off",
+    "order": 4,
+    "width": "3",
+    "height": "2",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "All Off",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#333333",
+    "textColor": "#ffffff",
+    "iconColor": "#ffffff",
+    "className": "",
+    "x": 200,
+    "y": 1280,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-save-evening",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-save",
+    "name": "Save Evening",
+    "label": "Save Evening",
+    "order": 1,
+    "width": "4",
+    "height": "1",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Evening",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#f5a623",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "className": "",
+    "x": 210,
+    "y": 1460,
+    "wires": [
+      [
+        "gov-fn-save-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-save-bright",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-save",
+    "name": "Save Bright",
+    "label": "Save Bright",
+    "order": 2,
+    "width": "4",
+    "height": "1",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Bright",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#fffde7",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "className": "",
+    "x": 210,
+    "y": 1520,
+    "wires": [
+      [
+        "gov-fn-save-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-save-movie",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-save",
+    "name": "Save Movie",
+    "label": "Save Movie",
+    "order": 3,
+    "width": "4",
+    "height": "1",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Movie",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#4a3580",
+    "textColor": "#ffffff",
+    "iconColor": "#ffffff",
+    "className": "",
+    "x": 210,
+    "y": 1580,
+    "wires": [
+      [
+        "gov-fn-save-preset"
+      ]
     ]
   }
 ]
