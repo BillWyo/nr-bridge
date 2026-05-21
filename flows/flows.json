@@ -1332,7 +1332,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "send to devices",
-    "func": "// Expects: msg.govee_cmd     = {cmd:'...', data:{...}}\n//          msg.govee_targets = 'all' | ['device-id', ...]\nvar devs = flow.get('govee_devices') || {};\nvar keys = Object.keys(devs);\nif (!keys.length) { node.warn('No Govee devices found - run discovery first'); return null; }\n\nvar targets;\nif (!msg.govee_targets || msg.govee_targets === 'all') {\n    targets = Object.values(devs);\n} else {\n    var ids = Array.isArray(msg.govee_targets) ? msg.govee_targets : [msg.govee_targets];\n    targets = ids.map(function(id) { return devs[id]; }).filter(Boolean);\n}\nif (!targets.length) { node.warn('No matching Govee devices'); return null; }\n\nvar msgs = targets.map(function(d) {\n    return { payload: JSON.stringify({msg: msg.govee_cmd}), ip: d.ip, port: 4003 };\n});\nreturn [msgs];",
+    "func": "// Expects: msg.govee_cmd     = {cmd:'...', data:{...}}\n//          msg.govee_targets = 'all' | ['name-or-device-id', ...]\nvar devs     = flow.get('govee_devices') || {};\nvar nameMap  = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('No Govee devices found - run discovery first'); return null; }\n\nvar targets;\nif (!msg.govee_targets || msg.govee_targets === 'all') {\n    targets = Object.values(devs);\n} else {\n    var ids = Array.isArray(msg.govee_targets) ? msg.govee_targets : [msg.govee_targets];\n    ids = ids.map(function(t) { return nameMap[t] || t; });\n    targets = ids.map(function(id) { return devs[id]; }).filter(Boolean);\n}\nif (!targets.length) { node.warn('No matching Govee devices'); return null; }\n\nvar msgs = targets.map(function(d) {\n    return { payload: JSON.stringify({msg: msg.govee_cmd}), ip: d.ip, port: 4003 };\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
     "x": 580,
@@ -1452,7 +1452,7 @@
     "id": "gov-inject-id-1",
     "type": "inject",
     "z": "gov-flow",
-    "name": "Bulb A  .30",
+    "name": "lvgrm_2",
     "props": [
       {
         "p": "payload"
@@ -1461,7 +1461,7 @@
     "repeat": "",
     "crontab": "",
     "once": false,
-    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"23:99:5C:E7:53:E6:17:B2\"]}",
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_2\"]}",
     "payloadType": "json",
     "x": 180,
     "y": 520,
@@ -1475,7 +1475,7 @@
     "id": "gov-inject-id-2",
     "type": "inject",
     "z": "gov-flow",
-    "name": "Bulb B  .29",
+    "name": "lvgrm_1",
     "props": [
       {
         "p": "payload"
@@ -1484,7 +1484,7 @@
     "repeat": "",
     "crontab": "",
     "once": false,
-    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"47:A7:5C:E7:53:F0:80:74\"]}",
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_1\"]}",
     "payloadType": "json",
     "x": 180,
     "y": 580,
@@ -1498,7 +1498,7 @@
     "id": "gov-inject-id-3",
     "type": "inject",
     "z": "gov-flow",
-    "name": "Bulb C  .32",
+    "name": "lvgrm_4",
     "props": [
       {
         "p": "payload"
@@ -1507,7 +1507,7 @@
     "repeat": "",
     "crontab": "",
     "once": false,
-    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"15:A2:5C:E7:53:F2:38:D8\"]}",
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_4\"]}",
     "payloadType": "json",
     "x": 180,
     "y": 640,
@@ -1521,7 +1521,7 @@
     "id": "gov-inject-id-4",
     "type": "inject",
     "z": "gov-flow",
-    "name": "Bulb D  .31",
+    "name": "lvgrm_3",
     "props": [
       {
         "p": "payload"
@@ -1530,7 +1530,7 @@
     "repeat": "",
     "crontab": "",
     "once": false,
-    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"10:31:5C:E7:53:ED:FA:78\"]}",
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_3\"]}",
     "payloadType": "json",
     "x": 180,
     "y": 700,
@@ -1614,5 +1614,43 @@
     "x": 620,
     "y": 840,
     "wires": []
+  },
+  {
+    "id": "gov-inject-names",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Set bulb names",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 5,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 920,
+    "wires": [
+      [
+        "gov-fn-set-names"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-set-names",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "store name map",
+    "func": "flow.set('govee_names', {\n    'lvgrm_1': '47:A7:5C:E7:53:F0:80:74',\n    'lvgrm_2': '23:99:5C:E7:53:E6:17:B2',\n    'lvgrm_3': '10:31:5C:E7:53:ED:FA:78',\n    'lvgrm_4': '15:A2:5C:E7:53:F2:38:D8',\n});\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 920,
+    "wires": [
+      []
+    ]
   }
 ]

@@ -60,7 +60,7 @@ for n in flows:
         label, payload = IDENTIFY_UPDATES[n['id']]
         n['name'] = label
         n['payload'] = payload
-        print(f"Updated {n['id']} → {label}")
+        print(f"Updated {n['id']} -> {label}")
 
 # Add startup name-assignment nodes
 flows.extend([
