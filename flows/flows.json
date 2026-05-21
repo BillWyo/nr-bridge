@@ -1546,5 +1546,57 @@
         "gov-fn-mqtt-ctrl"
       ]
     ]
+  },
+  {
+    "id": "gov-inject-clear-retained",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Clear retained MQTT",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 840,
+    "wires": [
+      [
+        "gov-fn-clear-retained"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-clear-retained",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "build clear msgs",
+    "func": "var topics = [\n    'home/lights/set',\n    'home/frontdoor/visitor',\n    'home/frontdoor/alarm'\n];\nreturn topics.map(function(t) {\n    return { topic: t, payload: '', retain: true };\n});",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 400,
+    "y": 840,
+    "wires": [
+      [
+        "gov-mqtt-clear-out"
+      ]
+    ]
+  },
+  {
+    "id": "gov-mqtt-clear-out",
+    "type": "mqtt out",
+    "z": "gov-flow",
+    "name": "clear retained",
+    "topic": "",
+    "qos": "0",
+    "retain": "true",
+    "broker": "his-broker",
+    "x": 620,
+    "y": 840,
+    "wires": []
   }
 ]
