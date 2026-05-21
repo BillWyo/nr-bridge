@@ -1301,14 +1301,17 @@
     "type": "function",
     "z": "gov-flow",
     "name": "parse + store",
-    "func": "try {\n    var d = JSON.parse(msg.payload);\n    if (!d.msg || d.msg.cmd !== 'scan') return null;\n    var info = d.msg.data;\n    var devs = flow.get('govee_devices') || {};\n    devs[info.device] = { ip: info.ip, sku: info.sku, device: info.device };\n    flow.set('govee_devices', devs);\n    node.status({fill:'green', shape:'dot', text: info.sku + ' @ ' + info.ip});\n    msg.payload = devs;\n    return msg;\n} catch(e) {\n    node.warn('Govee parse error: ' + e.message);\n    return null;\n}",
-    "outputs": 1,
+    "func": "try {\n    var d = JSON.parse(msg.payload);\n    if (!d.msg) return null;\n\n    if (d.msg.cmd === 'scan') {\n        var info = d.msg.data;\n        var devs = flow.get('govee_devices') || {};\n        devs[info.device] = { ip: info.ip, sku: info.sku, device: info.device };\n        flow.set('govee_devices', devs);\n        node.status({fill:'green', shape:'dot', text: info.sku + ' @ ' + info.ip});\n        msg.payload = devs;\n        return [msg, null];\n    }\n\n    if (d.msg.cmd === 'devStatus') {\n        var nameMap  = flow.get('govee_names')   || {};\n        var devs2    = flow.get('govee_devices')  || {};\n        var idToName = {};\n        Object.keys(nameMap).forEach(function(n) { idToName[nameMap[n]] = n; });\n        var dev = Object.values(devs2).find(function(x) { return x.ip === msg.ip; });\n        var label = dev ? (idToName[dev.device] || dev.device) : msg.ip;\n\n        var snapshot = flow.get('govee_snapshot') || {};\n        snapshot[label] = d.msg.data;\n        flow.set('govee_snapshot', snapshot);\n        var count = Object.keys(snapshot).length;\n        node.status({fill:'blue', shape:'dot', text: 'status ' + count + '/4'});\n        if (count >= 4) {\n            node.status({fill:'green', shape:'ring', text: 'snapshot ready'});\n            msg.payload = snapshot;\n            return [null, msg];\n        }\n        return null;\n    }\n\n    return null;\n} catch(e) {\n    node.warn('parse error: ' + e.message);\n    return null;\n}",
+    "outputs": 2,
     "noerr": 0,
     "x": 400,
     "y": 160,
     "wires": [
       [
         "gov-debug-devices"
+      ],
+      [
+        "gov-debug-status"
       ]
     ]
   },
@@ -1652,5 +1655,59 @@
     "wires": [
       []
     ]
+  },
+  {
+    "id": "gov-inject-read-state",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Read state",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 1000,
+    "wires": [
+      [
+        "gov-fn-query-status"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-query-status",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "query devStatus",
+    "func": "flow.set('govee_snapshot', {});\nvar devs = flow.get('govee_devices') || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\nvar msgs = Object.values(devs).map(function(d) {\n    return { payload: JSON.stringify({msg:{cmd:'devStatus',data:{}}}), ip: d.ip, port: 4003 };\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 390,
+    "y": 1000,
+    "wires": [
+      [
+        "gov-udp-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-debug-status",
+    "type": "debug",
+    "z": "gov-flow",
+    "name": "state snapshot",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 620,
+    "y": 160,
+    "wires": []
   }
 ]
