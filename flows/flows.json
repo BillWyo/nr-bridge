@@ -1762,14 +1762,17 @@
     "type": "function",
     "z": "gov-flow",
     "name": "apply preset",
-    "func": "var name = msg.payload;\nvar devs    = flow.get('govee_devices') || {};\nvar nameMap = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\n\nif (name === 'All Off') {\n    var msgs = Object.values(devs).map(function(d) {\n        return {payload:JSON.stringify({msg:{cmd:'turn',data:{value:0}}}), ip:d.ip, port:4003};\n    });\n    return [msgs];\n}\n\nvar presets = flow.get('govee_presets') || {};\nvar preset  = presets[name];\nif (!preset) { node.warn('Preset not found: ' + name); return null; }\n\nvar msgs = [];\nObject.keys(preset).forEach(function(devName) {\n    var state = preset[devName];\n    var dev   = devs[nameMap[devName]];\n    if (!dev) return;\n    msgs.push({payload:JSON.stringify({msg:{cmd:'turn',      data:{value:state.onOff}}}),                                                            ip:dev.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'brightness', data:{value:state.brightness}}}),                                                       ip:dev.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'colorwc',    data:{color:state.color||{r:0,g:0,b:0}, colorTemInKelvin:state.colorTemInKelvin||0}}}), ip:dev.ip, port:4003});\n});\nreturn [msgs];",
-    "outputs": 1,
+    "func": "var name    = msg.payload;\nvar devs    = flow.get('govee_devices') || {};\nvar nameMap = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\n\nif (name === 'All Off') {\n    var msgs = Object.values(devs).map(function(d) {\n        return {payload:JSON.stringify({msg:{cmd:'turn',data:{value:0}}}), ip:d.ip, port:4003};\n    });\n    return [[msgs], null];\n}\n\nvar presets = flow.get('govee_presets') || {};\nvar preset  = presets[name];\nif (!preset) { node.warn('Preset not found: ' + name); return null; }\n\nvar msgs = [];\nObject.keys(preset).forEach(function(devName) {\n    var state = preset[devName];\n    var dev   = devs[nameMap[devName]];\n    if (!dev) return;\n    msgs.push({payload:JSON.stringify({msg:{cmd:'turn',      data:{value:state.onOff}}}),                                                            ip:dev.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'brightness', data:{value:state.brightness}}}),                                                       ip:dev.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'colorwc',    data:{color:state.color||{r:0,g:0,b:0}, colorTemInKelvin:state.colorTemInKelvin||0}}}), ip:dev.ip, port:4003});\n});\n\nvar ref = preset['lvgrm_1'] || Object.values(preset)[0];\nreturn [[msgs], {payload: ref}];",
+    "outputs": 2,
     "noerr": 0,
     "x": 440,
     "y": 1160,
     "wires": [
       [
         "gov-udp-ctrl"
+      ],
+      [
+        "gov-fn-update-sliders"
       ]
     ]
   },
@@ -1860,14 +1863,17 @@
     "type": "function",
     "z": "gov-flow",
     "name": "save preset",
-    "func": "var name     = msg.payload;\nvar snapshot = flow.get('govee_snapshot') || {};\nif (!Object.keys(snapshot).length) { node.warn('No snapshot - click Read state first'); return null; }\nvar presets  = flow.get('govee_presets') || {};\npresets[name] = JSON.parse(JSON.stringify(snapshot));\nflow.set('govee_presets', presets);\nnode.status({fill:'green', shape:'dot', text: name + ' saved'});\nmsg.payload  = JSON.stringify(presets, null, 2);\nreturn msg;",
-    "outputs": 1,
+    "func": "var name     = msg.payload;\nvar snapshot = flow.get('govee_snapshot') || {};\nif (!Object.keys(snapshot).length) { node.warn('No snapshot - click Read state first'); return null; }\nvar presets  = flow.get('govee_presets') || {};\npresets[name] = JSON.parse(JSON.stringify(snapshot));\nflow.set('govee_presets', presets);\nnode.status({fill:'green', shape:'dot', text: name + ' saved'});\nvar ref = snapshot['lvgrm_1'] || Object.values(snapshot)[0];\nreturn [{payload: JSON.stringify(presets, null, 2)}, {payload: ref}];",
+    "outputs": 2,
     "noerr": 0,
     "x": 450,
     "y": 1520,
     "wires": [
       [
         "gov-file-write-presets"
+      ],
+      [
+        "gov-fn-update-sliders"
       ]
     ]
   },
@@ -2138,6 +2144,25 @@
     "wires": [
       [
         "gov-fn-save-preset"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-update-sliders",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "update sliders",
+    "func": "var ref = msg.payload;\nif (!ref) return null;\nvar brightness = (ref.brightness !== undefined) ? ref.brightness : 50;\nvar colortemp  = ref.colorTemInKelvin || 3000;\nreturn [{payload: brightness}, {payload: colortemp}];",
+    "outputs": 2,
+    "noerr": 0,
+    "x": 460,
+    "y": 1700,
+    "wires": [
+      [
+        "v2-slider-brightness"
+      ],
+      [
+        "v2-slider-colortemp"
       ]
     ]
   }
