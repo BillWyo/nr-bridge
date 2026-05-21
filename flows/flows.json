@@ -1758,25 +1758,6 @@
     "visible": "true"
   },
   {
-    "id": "gov-fn-apply-preset",
-    "type": "function",
-    "z": "gov-flow",
-    "name": "apply preset",
-    "func": "var name    = msg.payload;\nvar devs    = flow.get('govee_devices') || {};\nvar nameMap = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\n\nif (name === 'All Off') {\n    var msgs = Object.values(devs).map(function(d) {\n        return {payload:JSON.stringify({msg:{cmd:'turn',data:{value:0}}}), ip:d.ip, port:4003};\n    });\n    return [[msgs], null];\n}\n\nvar presets = flow.get('govee_presets') || {};\nvar preset  = presets[name];\nif (!preset) { node.warn('Preset not found: ' + name); return null; }\n\nvar msgs = [];\nObject.keys(preset).forEach(function(devName) {\n    var state = preset[devName];\n    var dev   = devs[nameMap[devName]];\n    if (!dev) return;\n    msgs.push({payload:JSON.stringify({msg:{cmd:'turn',      data:{value:state.onOff}}}),                                                            ip:dev.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'brightness', data:{value:state.brightness}}}),                                                       ip:dev.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'colorwc',    data:{color:state.color||{r:0,g:0,b:0}, colorTemInKelvin:state.colorTemInKelvin||0}}}), ip:dev.ip, port:4003});\n});\n\nvar ref = preset['lvgrm_1'] || Object.values(preset)[0];\nreturn [[msgs], {payload: ref}];",
-    "outputs": 2,
-    "noerr": 0,
-    "x": 440,
-    "y": 1160,
-    "wires": [
-      [
-        "gov-udp-ctrl"
-      ],
-      [
-        "gov-fn-update-sliders"
-      ]
-    ]
-  },
-  {
     "id": "v2-slider-brightness",
     "type": "ui-slider",
     "z": "gov-flow",
@@ -1823,57 +1804,6 @@
     "wires": [
       [
         "gov-fn-all-colortemp"
-      ]
-    ]
-  },
-  {
-    "id": "gov-fn-all-brightness",
-    "type": "function",
-    "z": "gov-flow",
-    "name": "brightness → all",
-    "func": "var devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'brightness',data:{value:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 450,
-    "y": 1340,
-    "wires": [
-      [
-        "gov-udp-ctrl"
-      ]
-    ]
-  },
-  {
-    "id": "gov-fn-all-colortemp",
-    "type": "function",
-    "z": "gov-flow",
-    "name": "colortemp → all",
-    "func": "var devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 450,
-    "y": 1400,
-    "wires": [
-      [
-        "gov-udp-ctrl"
-      ]
-    ]
-  },
-  {
-    "id": "gov-fn-save-preset",
-    "type": "function",
-    "z": "gov-flow",
-    "name": "save preset",
-    "func": "var name     = msg.payload;\nvar snapshot = flow.get('govee_snapshot') || {};\nif (!Object.keys(snapshot).length) { node.warn('No snapshot - click Read state first'); return null; }\nvar presets  = flow.get('govee_presets') || {};\npresets[name] = JSON.parse(JSON.stringify(snapshot));\nflow.set('govee_presets', presets);\nnode.status({fill:'green', shape:'dot', text: name + ' saved'});\nvar ref = snapshot['lvgrm_1'] || Object.values(snapshot)[0];\nreturn [{payload: JSON.stringify(presets, null, 2)}, {payload: ref}];",
-    "outputs": 2,
-    "noerr": 0,
-    "x": 450,
-    "y": 1520,
-    "wires": [
-      [
-        "gov-file-write-presets"
-      ],
-      [
-        "gov-fn-update-sliders"
       ]
     ]
   },
@@ -2148,25 +2078,6 @@
     ]
   },
   {
-    "id": "gov-fn-update-sliders",
-    "type": "function",
-    "z": "gov-flow",
-    "name": "update sliders",
-    "func": "var ref = msg.payload;\nif (!ref) return null;\nvar brightness = (ref.brightness !== undefined) ? ref.brightness : 50;\nvar colortemp  = ref.colorTemInKelvin || 3000;\nreturn [{payload: brightness}, {payload: colortemp}];",
-    "outputs": 2,
-    "noerr": 0,
-    "x": 460,
-    "y": 1700,
-    "wires": [
-      [
-        "v2-slider-brightness"
-      ],
-      [
-        "v2-slider-colortemp"
-      ]
-    ]
-  },
-  {
     "id": "v2-grp-govee-color",
     "type": "ui-group",
     "name": "Color",
@@ -2179,6 +2090,111 @@
     "visible": "true"
   },
   {
+    "id": "gov-fn-apply-preset",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "apply preset",
+    "func": "var name    = msg.payload;\nvar devs    = flow.get('govee_devices') || {};\nvar nameMap = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\n\nif (name === 'All Off') {\n    flow.set('govee_current', {onOff:0, brightness:0, colortemp:4000, color:{r:0,g:0,b:0}, mode:'white'});\n    var msgs = Object.values(devs).map(function(d) {\n        return {payload:JSON.stringify({msg:{cmd:'turn',data:{value:0}}}), ip:d.ip, port:4003};\n    });\n    return [[msgs], null];\n}\n\nvar presets = flow.get('govee_presets') || {};\nvar preset  = presets[name];\nif (!preset) { node.warn('Preset not found: ' + name); return null; }\nflow.set('govee_current', preset);\n\nvar msgs = [];\nObject.values(devs).forEach(function(d) {\n    msgs.push({payload:JSON.stringify({msg:{cmd:'turn',      data:{value:preset.onOff}}}), ip:d.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'brightness', data:{value:preset.brightness}}}), ip:d.ip, port:4003});\n    var colorData = preset.mode === 'color'\n        ? {color: preset.color, colorTemInKelvin: 0}\n        : {color: {r:0,g:0,b:0}, colorTemInKelvin: preset.colortemp || 4000};\n    msgs.push({payload:JSON.stringify({msg:{cmd:'colorwc', data:colorData}}), ip:d.ip, port:4003});\n});\nreturn [[msgs], {payload: preset}];",
+    "outputs": 2,
+    "noerr": 0,
+    "x": 440,
+    "y": 1160,
+    "wires": [
+      [
+        "gov-udp-ctrl"
+      ],
+      [
+        "gov-fn-update-sliders"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-save-preset",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "save preset",
+    "func": "var name    = msg.payload;\nvar current = flow.get('govee_current') || {};\nif (!Object.keys(current).length) { node.warn('Apply a preset first to initialise state'); return null; }\nvar presets = flow.get('govee_presets') || {};\npresets[name] = JSON.parse(JSON.stringify(current));\nflow.set('govee_presets', presets);\nnode.status({fill:'green', shape:'dot', text: name + ' saved'});\nmsg.payload = JSON.stringify(presets, null, 2);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 450,
+    "y": 1520,
+    "wires": [
+      [
+        "gov-file-write-presets"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-all-brightness",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "brightness → all",
+    "func": "var current = flow.get('govee_current') || {};\ncurrent.brightness = msg.payload;\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'brightness',data:{value:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 450,
+    "y": 1340,
+    "wires": [
+      [
+        "gov-udp-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-all-colortemp",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "colortemp → all",
+    "func": "var current = flow.get('govee_current') || {};\ncurrent.colortemp = msg.payload;\ncurrent.mode = 'white';\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 450,
+    "y": 1400,
+    "wires": [
+      [
+        "gov-udp-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-color-cmd",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "color cmd",
+    "func": "var current = flow.get('govee_current') || {};\nif (msg.payload.mode === 'color') {\n    current.color = {r:msg.payload.r, g:msg.payload.g, b:msg.payload.b};\n    current.mode  = 'color';\n} else {\n    current.mode     = 'white';\n    current.colortemp = current.colortemp || 4000;\n}\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar data = current.mode === 'color'\n    ? {color: current.color, colorTemInKelvin: 0}\n    : {color: {r:0,g:0,b:0}, colorTemInKelvin: current.colortemp};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:data}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 440,
+    "y": 1720,
+    "wires": [
+      [
+        "gov-udp-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-update-sliders",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "update sliders",
+    "func": "var p = msg.payload;\nif (!p) return null;\nvar brightness = p.brightness !== undefined ? p.brightness : 50;\nvar colortemp  = p.colortemp  || 4000;\nreturn [\n    {payload: brightness},\n    {payload: colortemp},\n    {payload: {color: p.color || {r:255,g:136,b:0}}}\n];",
+    "outputs": 3,
+    "noerr": 0,
+    "x": 460,
+    "y": 1700,
+    "wires": [
+      [
+        "v2-slider-brightness"
+      ],
+      [
+        "v2-slider-colortemp"
+      ],
+      [
+        "v2-tmpl-color-picker"
+      ]
+    ]
+  },
+  {
     "id": "v2-tmpl-color-picker",
     "type": "ui-template",
     "z": "gov-flow",
@@ -2187,7 +2203,7 @@
     "order": 1,
     "width": "12",
     "height": "4",
-    "format": "<template>\n  <div style=\"padding:8px\">\n    <label style=\"display:block;margin-bottom:6px;font-size:14px\">Color</label>\n    <input type=\"color\" v-model=\"color\" @change=\"onPick\"\n           style=\"width:100%;height:64px;border:none;border-radius:6px;cursor:pointer;padding:2px\"/>\n    <button @click=\"onWhite\"\n            style=\"margin-top:8px;width:100%;height:40px;border:none;border-radius:6px;\n                   background:#fffde7;color:#333;font-size:14px;cursor:pointer\">\n      Back to White Light\n    </button>\n  </div>\n</template>\n<script>\n  export default {\n    data() { return { color: '#ff8800' } },\n    methods: {\n      onPick() {\n        const h = this.color;\n        const r = parseInt(h.slice(1,3), 16);\n        const g = parseInt(h.slice(3,5), 16);\n        const b = parseInt(h.slice(5,7), 16);\n        this.send({ payload: { mode:'color', r, g, b } });\n      },\n      onWhite() {\n        this.send({ payload: { mode:'white' } });\n      }\n    }\n  }\n</script>",
+    "format": "<template>\n  <div style=\"padding:8px\">\n    <label style=\"display:block;margin-bottom:6px;font-size:14px\">Color</label>\n    <input type=\"color\" v-model=\"color\" @change=\"onPick\"\n           style=\"width:100%;height:64px;border:none;border-radius:6px;cursor:pointer;padding:2px\"/>\n    <button @click=\"onWhite\"\n            style=\"margin-top:8px;width:100%;height:40px;border:none;border-radius:6px;\n                   background:#fffde7;color:#333;font-size:14px;cursor:pointer\">\n      Back to White Light\n    </button>\n  </div>\n</template>\n<script>\n  export default {\n    data() { return { color: '#ff8800' } },\n    watch: {\n      msg(v) {\n        if (v && v.payload && v.payload.color) {\n          const c = v.payload.color;\n          this.color = '#'\n            + (c.r||0).toString(16).padStart(2,'0')\n            + (c.g||0).toString(16).padStart(2,'0')\n            + (c.b||0).toString(16).padStart(2,'0');\n        }\n      }\n    },\n    methods: {\n      onPick() {\n        const h = this.color;\n        const r = parseInt(h.slice(1,3),16);\n        const g = parseInt(h.slice(3,5),16);\n        const b = parseInt(h.slice(5,7),16);\n        this.send({payload:{mode:'color',r,g,b}});\n      },\n      onWhite() { this.send({payload:{mode:'white'}}); }\n    }\n  }\n</script>",
     "storeOutMessages": true,
     "passthru": true,
     "resendOnRefresh": true,
@@ -2198,22 +2214,6 @@
     "wires": [
       [
         "gov-fn-color-cmd"
-      ]
-    ]
-  },
-  {
-    "id": "gov-fn-color-cmd",
-    "type": "function",
-    "z": "gov-flow",
-    "name": "color cmd",
-    "func": "var devs = flow.get('govee_devices') || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\nvar data;\nif (msg.payload.mode === 'color') {\n    data = { color: {r: msg.payload.r, g: msg.payload.g, b: msg.payload.b}, colorTemInKelvin: 0 };\n} else {\n    data = { color: {r:0, g:0, b:0}, colorTemInKelvin: 4000 };\n}\nvar msgs = Object.values(devs).map(function(d) {\n    return { payload: JSON.stringify({msg:{cmd:'colorwc', data:data}}), ip:d.ip, port:4003 };\n});\nreturn [msgs];",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 440,
-    "y": 1720,
-    "wires": [
-      [
-        "gov-udp-ctrl"
       ]
     ]
   }
