@@ -302,10 +302,12 @@
     "y": 120,
     "wires": [
       [
-        "his-fn-p-diffs"
+        "his-fn-p-diffs",
+        "dbg-grubbs-p"
       ],
       [
-        "v2-chart-temp"
+        "v2-chart-temp",
+        "dbg-grubbs-t"
       ],
       [
         "his-fn-rh-summary"
@@ -1214,6 +1216,40 @@
     "statusType": "auto",
     "x": 160,
     "y": 180,
+    "wires": []
+  },
+  {
+    "id": "dbg-grubbs-t",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "Grubbs T out",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "payload",
+    "statusType": "auto",
+    "x": 620,
+    "y": 150,
+    "wires": []
+  },
+  {
+    "id": "dbg-grubbs-p",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "Grubbs P out",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "payload",
+    "statusType": "auto",
+    "x": 620,
+    "y": 250,
     "wires": []
   }
 ]
