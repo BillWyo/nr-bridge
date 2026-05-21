@@ -285,7 +285,8 @@
     "wires": [
       [
         "his-fn-grubbs",
-        "his-fn-lastseen"
+        "his-fn-lastseen",
+        "dbg-pth-raw"
       ]
     ]
   },
@@ -1197,5 +1198,22 @@
     "wires": [
       []
     ]
+  },
+  {
+    "id": "dbg-pth-raw",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "PTH raw",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "payload",
+    "statusType": "auto",
+    "x": 160,
+    "y": 180,
+    "wires": []
   }
 ]
