@@ -2238,5 +2238,38 @@
     "x": 960,
     "y": 300,
     "wires": []
+  },
+  {
+    "id": "v2-grp-clock",
+    "type": "ui-group",
+    "name": "Clock",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 0,
+    "showTitle": false,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-tmpl-clock",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-clock",
+    "name": "Clock",
+    "order": 1,
+    "width": "12",
+    "height": "3",
+    "format": "<template>\n  <div class=\"clk\">\n    <div class=\"clk-time\">{{ time }}</div>\n    <div class=\"clk-day\">{{ day }}</div>\n  </div>\n</template>\n<script>\n  export default {\n    data() { return { time: '', day: '' } },\n    mounted()      { this.tick(); this._t = setInterval(this.tick, 10000); },\n    beforeUnmount(){ clearInterval(this._t); },\n    methods: {\n      tick() {\n        const d = new Date();\n        const h = d.getHours(), m = String(d.getMinutes()).padStart(2, '0');\n        this.time = (h % 12 || 12) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM');\n        const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\n        this.day = days[d.getDay()] + '  ' + months[d.getMonth()] + ' ' + d.getDate();\n      }\n    }\n  }\n</script>\n<style scoped>\n.clk      { font-family: monospace; padding: 10px }\n.clk-time { font-size: 2.8em; font-weight: bold; color: #0eb8c0 }\n.clk-day  { font-size: 1.6em; color: var(--nrdb-widget-textColor, #eeeeee); margin-top: 6px }\n</style>",
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": false,
+    "templateScope": "local",
+    "className": "",
+    "x": 850,
+    "y": 100,
+    "wires": [
+      []
+    ]
   }
 ]
