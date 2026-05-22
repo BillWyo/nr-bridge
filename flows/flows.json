@@ -1371,7 +1371,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "MQTT → Govee cmd",
-    "func": "if (msg.retain) return null;\n// MQTT payload: {cmd, value|r,g,b|kelvin, devices:'all'|[ids]}\nvar p = msg.payload;\nvar gcmd;\nswitch (p.cmd) {\n    case 'turn':       gcmd = {cmd:'turn',       data:{value: p.value ? 1 : 0}}; break;\n    case 'brightness': gcmd = {cmd:'brightness',  data:{value: p.value}}; break;\n    case 'color':      gcmd = {cmd:'colorwc',     data:{color:{r:p.r||0,g:p.g||0,b:p.b||0}, colorTemInKelvin:0}}; break;\n    case 'colortemp':  gcmd = {cmd:'colorwc',     data:{color:{r:0,g:0,b:0}, colorTemInKelvin:p.kelvin||4000}}; break;\n    default: node.warn('Unknown Govee cmd: ' + p.cmd); return null;\n}\nmsg.govee_cmd     = gcmd;\nmsg.govee_targets = p.devices || 'all';\nreturn msg;",
+    "func": "node.warn('SRC:mqtt-ctrl retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\n// MQTT payload: {cmd, value|r,g,b|kelvin, devices:'all'|[ids]}\nvar p = msg.payload;\nvar gcmd;\nswitch (p.cmd) {\n    case 'turn':       gcmd = {cmd:'turn',       data:{value: p.value ? 1 : 0}}; break;\n    case 'brightness': gcmd = {cmd:'brightness',  data:{value: p.value}}; break;\n    case 'color':      gcmd = {cmd:'colorwc',     data:{color:{r:p.r||0,g:p.g||0,b:p.b||0}, colorTemInKelvin:0}}; break;\n    case 'colortemp':  gcmd = {cmd:'colorwc',     data:{color:{r:0,g:0,b:0}, colorTemInKelvin:p.kelvin||4000}}; break;\n    default: node.warn('Unknown Govee cmd: ' + p.cmd); return null;\n}\nmsg.govee_cmd     = gcmd;\nmsg.govee_targets = p.devices || 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 390,
@@ -1406,7 +1406,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "visitor → warm white",
-    "func": "if (msg.retain) return null;\n// Doorbell / motion at front door → warm white\nmsg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\nmsg.govee_targets = 'all';\nreturn msg;",
+    "func": "node.warn('SRC:visitor retain=' + msg.retain);\nif (msg.retain) return null;\n// Doorbell / motion at front door → warm white\nmsg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\nmsg.govee_targets = 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 400,
@@ -1441,7 +1441,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "alarm → red / clear → white",
-    "func": "if (msg.retain) return null;\n// Smoke / CO alert → solid red; clear → restore warm white\nif (!msg.payload) return null;\nif (msg.payload.alert === true) {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n} else {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n}\nmsg.govee_targets = 'all';\nreturn msg;",
+    "func": "node.warn('SRC:alarm retain=' + msg.retain);\nif (msg.retain) return null;\n// Smoke / CO alert → solid red; clear → restore warm white\nif (!msg.payload) return null;\nif (msg.payload.alert === true) {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n} else {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n}\nmsg.govee_targets = 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 400,
@@ -1579,7 +1579,7 @@
     ],
     "repeat": "",
     "crontab": "",
-    "once": false,
+    "once": true,
     "payload": "",
     "payloadType": "date",
     "x": 180,
@@ -1588,7 +1588,8 @@
       [
         "gov-fn-clear-retained"
       ]
-    ]
+    ],
+    "onceDelay": 1
   },
   {
     "id": "gov-fn-clear-retained",
@@ -2149,7 +2150,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "colortemp → all",
-    "func": "var current = flow.get('govee_current') || {};\ncurrent.colortemp = msg.payload;\ncurrent.mode = 'white';\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "func": "node.warn('SRC:colortemp-slider value=' + msg.payload);\nvar current = flow.get('govee_current') || {};\ncurrent.colortemp = msg.payload;\ncurrent.mode = 'white';\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
     "x": 450,
@@ -2166,7 +2167,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "color cmd",
-    "func": "var current = flow.get('govee_current') || {};\nif (msg.payload.mode === 'color') {\n    current.color = {r:msg.payload.r, g:msg.payload.g, b:msg.payload.b};\n    current.mode  = 'color';\n} else {\n    current.mode     = 'white';\n    current.colortemp = current.colortemp || 4000;\n}\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar data = current.mode === 'color'\n    ? {color: current.color, colorTemInKelvin: 0}\n    : {color: {r:0,g:0,b:0}, colorTemInKelvin: current.colortemp};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:data}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "func": "node.warn('SRC:color-cmd payload=' + JSON.stringify(msg.payload));\nvar current = flow.get('govee_current') || {};\nif (msg.payload.mode === 'color') {\n    current.color = {r:msg.payload.r, g:msg.payload.g, b:msg.payload.b};\n    current.mode  = 'color';\n} else {\n    current.mode     = 'white';\n    current.colortemp = current.colortemp || 4000;\n}\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar data = current.mode === 'color'\n    ? {color: current.color, colorTemInKelvin: 0}\n    : {color: {r:0,g:0,b:0}, colorTemInKelvin: current.colortemp};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:data}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
     "x": 440,
