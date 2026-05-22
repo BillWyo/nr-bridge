@@ -1357,7 +1357,7 @@
     "datatype": "json",
     "broker": "his-broker",
     "nl": false,
-    "rap": false,
+    "rap": true,
     "x": 180,
     "y": 300,
     "wires": [
@@ -1392,7 +1392,7 @@
     "datatype": "json",
     "broker": "his-broker",
     "nl": false,
-    "rap": false,
+    "rap": true,
     "x": 180,
     "y": 380,
     "wires": [
@@ -1427,7 +1427,7 @@
     "datatype": "json",
     "broker": "his-broker",
     "nl": false,
-    "rap": false,
+    "rap": true,
     "x": 180,
     "y": 440,
     "wires": [
@@ -1596,7 +1596,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "build clear msgs",
-    "func": "var topics = [\n    'home/lights/set',\n    'home/frontdoor/visitor',\n    'home/frontdoor/alarm'\n];\nreturn topics.map(function(t) {\n    return { topic: t, payload: '', retain: true };\n});",
+    "func": "var topics = [\"home/lights/set\", \"home/frontdoor/visitor\", \"home/frontdoor/alarm\", \"home/bills-office/alarm\", \"home/mud-room/alarm\", \"home/garage/alarm\"];\nreturn topics.map(function(t) {\n    return { topic: t, payload: '', retain: true };\n});",
     "outputs": 1,
     "noerr": 0,
     "x": 400,
