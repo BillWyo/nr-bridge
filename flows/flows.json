@@ -1441,7 +1441,7 @@
     "type": "function",
     "z": "gov-flow",
     "name": "alarm → red / clear → white",
-    "func": "node.warn('SRC:alarm topic=' + msg.topic + ' retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\nif (!msg.payload || typeof msg.payload !== 'object') return null;\nif (msg.payload.alert === true) {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n} else if (msg.payload.alert === false) {\n    msg.govee_cmd = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n} else {\n    node.warn('alarm: no alert field - discarded');\n    return null;\n}\nmsg.govee_targets = 'all';\nreturn msg;",
+    "func": "if (msg.retain) return null;\nif (!msg.payload || typeof msg.payload !== 'object') return null;\n\nif (msg.payload.alert === true) {\n    flow.set('govee_alarm_active', true);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nif (msg.payload.alert === false) {\n    if (!flow.get('govee_alarm_active')) return null;  // not in alarm - ignore routine sensor readings\n    flow.set('govee_alarm_active', false);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nreturn null;  // no alert field - discard",
     "outputs": 1,
     "noerr": 0,
     "x": 400,
