@@ -24,7 +24,7 @@ if (name === 'All Off') {
     var msgs = Object.values(devs).map(function(d) {
         return {payload:JSON.stringify({msg:{cmd:'turn',data:{value:0}}}), ip:d.ip, port:4003};
     });
-    return [[msgs], null];
+    return [msgs, null];
 }
 
 var presets = flow.get('govee_presets') || {};
@@ -41,7 +41,7 @@ Object.values(devs).forEach(function(d) {
         : {color: {r:0,g:0,b:0}, colorTemInKelvin: preset.colortemp || 4000};
     msgs.push({payload:JSON.stringify({msg:{cmd:'colorwc', data:colorData}}), ip:d.ip, port:4003});
 });
-return [[msgs], {payload: preset}];"""
+return [msgs, {payload: preset}];"""
 
 FN_SAVE_PRESET = """\
 var name    = msg.payload;
