@@ -25,11 +25,15 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: text })
-            }).then(function() {
-                document.getElementById('status').textContent = 'Sent!';
-                document.getElementById('txt').value = '';
+            }).then(function(r) {
+                if (r.ok) {
+                    document.getElementById('status').textContent = 'Sent!';
+                    document.getElementById('txt').value = '';
+                } else {
+                    document.getElementById('status').textContent = 'Error ' + r.status + ' — check Node-RED';
+                }
             }).catch(function() {
-                document.getElementById('status').textContent = 'Error — check Node-RED';
+                document.getElementById('status').textContent = 'Error — check connection';
             });
         }
     </script>
