@@ -26,5 +26,11 @@ if (msg.intent === "add" && msg.item) {
     msg.telegram_text = null;
 }
 
-msg.payload = { chatId: msg.chatId || global.get("telegram_chat_id"), text: msg.telegram_text };
+if (!msg.telegram_text) return null;
+
+msg.payload = {
+    chatid: "8823231843",
+    type: "message",
+    content: msg.telegram_text
+};
 return msg;
