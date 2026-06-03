@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Voice to Node-RED</title>
+    <style>
+        body { font-family: sans-serif; padding: 30px; background: #1a1a2e; color: white; max-width: 500px; margin: 0 auto; }
+        h2 { text-align: center; margin-bottom: 30px; }
+        textarea { width: 100%; font-size: 18px; padding: 15px; border-radius: 10px; border: none; min-height: 120px; box-sizing: border-box; background: #16213e; color: white; }
+        button { width: 100%; margin-top: 15px; font-size: 22px; padding: 20px; border-radius: 50px; background: #e94560; color: white; border: none; }
+        #status { text-align: center; margin-top: 20px; font-size: 16px; color: #aaa; min-height: 24px; }
+    </style>
+</head>
+<body>
+    <h2>Voice to Node-RED</h2>
+    <textarea id="txt" placeholder="Tap the mic on your keyboard and speak..."></textarea>
+    <button onclick="send()">Send</button>
+    <div id="status"></div>
+    <script>
+        function send() {
+            var text = document.getElementById('txt').value.trim();
+            if (!text) return;
+            document.getElementById('status').textContent = 'Sending...';
+            fetch('/voice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            }).then(function() {
+                document.getElementById('status').textContent = 'Sent!';
+                document.getElementById('txt').value = '';
+            }).catch(function() {
+                document.getElementById('status').textContent = 'Error — check Node-RED';
+            });
+        }
+    </script>
+</body>
+</html>

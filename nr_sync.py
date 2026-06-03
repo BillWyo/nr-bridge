@@ -65,17 +65,14 @@ def safe_filename(name):
 
 
 def cmd_push(args):
-    """Sync nodes/*.js files into matching Node-RED function nodes."""
+    """Sync nodes/*.js and templates/*.html into matching Node-RED nodes."""
     print(f"Connecting to Node-RED at {NR_URL} ...")
     flows = get_flows()
 
-    node_files = glob.glob(f"{NODES_DIR}/*.js")
-    if not node_files:
-        print(f"No .js files found in {NODES_DIR}/")
-        return
-
     updated = 0
-    for filepath in node_files:
+
+    # Function nodes from nodes/*.js
+    for filepath in glob.glob(f"{NODES_DIR}/*.js"):
         node_name = os.path.splitext(os.path.basename(filepath))[0]
         with open(filepath, "r") as f:
             code = f.read()
@@ -83,18 +80,29 @@ def cmd_push(args):
             if node.get("type") == "function" and node.get("name") == node_name:
                 node["func"] = code
                 updated += 1
-                print(f"  Matched: '{node_name}'  (id: {node['id']})")
+                print(f"  Function: '{node_name}'  (id: {node['id']})")
+
+    # Template nodes from templates/*.html
+    for filepath in glob.glob("templates/*.html"):
+        node_name = os.path.splitext(os.path.basename(filepath))[0]
+        with open(filepath, "r") as f:
+            content = f.read()
+        for node in flows:
+            if node.get("type") == "template" and node.get("name") == node_name:
+                node["template"] = content
+                updated += 1
+                print(f"  Template: '{node_name}'  (id: {node['id']})")
 
     if updated == 0:
-        print("No matching function nodes found.")
-        print("Node name in Node-RED must match the filename (without .js).")
+        print("No matching nodes found.")
+        print("Node names must match filenames (without extension).")
         return
 
     post_flows(flows, deploy_type="nodes")
     print(f"Deployed {updated} node(s) to Node-RED.")
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-    git_commit_and_push(f"push: sync {updated} function node(s) [{timestamp}]")
+    git_commit_and_push(f"push: sync {updated} node(s) [{timestamp}]")
 
 
 def cmd_pull(args):
