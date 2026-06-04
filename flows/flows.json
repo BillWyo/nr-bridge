@@ -1,944 +1,1007 @@
 [
   {
-    "id": "his-flow-main",
+    "id": "gov-flow",
     "type": "tab",
-    "label": "HIS Main",
+    "label": "Govee Lights",
     "disabled": false,
-    "info": "Home Information System \u2014 main flow"
+    "info": "Govee LAN API \u2014 4 bulbs"
   },
   {
-    "id": "his-mqtt-pth",
-    "type": "mqtt in",
-    "z": "his-flow-main",
-    "name": "home/+/pth",
-    "topic": "home/+/pth",
-    "qos": "0",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 120,
+    "id": "gov-inject-scan",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Discover bulbs",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 2,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 80,
     "wires": [
       [
-        "his-fn-split-pth",
-        "his-fn-lastseen"
+        "gov-fn-scan-msg"
       ]
     ]
   },
   {
-    "id": "his-fn-rh-summary",
+    "id": "gov-fn-scan-msg",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "RH summary",
-    "func": "var nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');var latest=flow.get('rh_latest')||{};latest[nodeId]=msg.payload;flow.set('rh_latest',latest);var nodes=['bills-office','mud-room','garage'];var labels={'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};var readings=nodes.map(function(n){return{label:labels[n],value:latest[n]!==undefined?latest[n].toFixed(1)+'%':'--'};});msg.payload=readings;return msg;",
+    "z": "gov-flow",
+    "name": "build scan",
+    "func": "msg.payload = JSON.stringify({\"msg\":{\"cmd\":\"scan\",\"data\":{\"account_topic\":\"reserve\"}}});\nmsg.ip   = \"239.255.255.250\";\nmsg.port = 4001;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 620,
+    "x": 380,
+    "y": 80,
+    "wires": [
+      [
+        "gov-udp-out"
+      ]
+    ]
+  },
+  {
+    "id": "gov-udp-out",
+    "type": "udp out",
+    "z": "gov-flow",
+    "name": "UDP send",
+    "addr": "239.255.255.250",
+    "iface": "",
+    "port": "4001",
+    "ipv": "udp4",
+    "outport": "",
+    "base64": false,
+    "multicast": "true",
+    "x": 760,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "gov-udp-ctrl",
+    "type": "udp out",
+    "z": "gov-flow",
+    "name": "UDP ctrl",
+    "addr": "",
+    "iface": "",
+    "port": "",
+    "ipv": "udp4",
+    "outport": "",
+    "base64": false,
+    "multicast": "false",
+    "x": 760,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "gov-udp-in",
+    "type": "udp in",
+    "z": "gov-flow",
+    "name": "device responses",
+    "iface": "",
+    "port": "4002",
+    "ipv": "udp4",
+    "multicast": "false",
+    "group": "",
+    "datatype": "utf8",
+    "x": 180,
     "y": 160,
     "wires": [
       [
-        "v2-tmpl-rh"
+        "gov-fn-parse-scan"
       ]
     ]
   },
   {
-    "id": "his-fn-p-diffs",
+    "id": "gov-fn-parse-scan",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "P differences",
-    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='\u2192 stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='\u2191 +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='\u2193 '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='\u00b1 '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
-    "outputs": 1,
+    "z": "gov-flow",
+    "name": "parse + store",
+    "func": "try {\n    var d = JSON.parse(msg.payload);\n    if (!d.msg) return null;\n\n    if (d.msg.cmd === 'scan') {\n        var info = d.msg.data;\n        var devs = flow.get('govee_devices') || {};\n        devs[info.device] = { ip: info.ip, sku: info.sku, device: info.device };\n        flow.set('govee_devices', devs);\n        node.status({fill:'green', shape:'dot', text: info.sku + ' @ ' + info.ip});\n        msg.payload = devs;\n        return [msg, null];\n    }\n\n    if (d.msg.cmd === 'devStatus') {\n        var nameMap  = flow.get('govee_names')   || {};\n        var devs2    = flow.get('govee_devices')  || {};\n        var idToName = {};\n        Object.keys(nameMap).forEach(function(n) { idToName[nameMap[n]] = n; });\n        var dev = Object.values(devs2).find(function(x) { return x.ip === msg.ip; });\n        var label = dev ? (idToName[dev.device] || dev.device) : msg.ip;\n\n        var snapshot = flow.get('govee_snapshot') || {};\n        snapshot[label] = d.msg.data;\n        flow.set('govee_snapshot', snapshot);\n        var count = Object.keys(snapshot).length;\n        node.status({fill:'blue', shape:'dot', text: 'status ' + count + '/4'});\n        if (count >= 4) {\n            node.status({fill:'green', shape:'ring', text: 'snapshot ready'});\n            msg.payload = snapshot;\n            return [null, msg];\n        }\n        return null;\n    }\n\n    return null;\n} catch(e) {\n    node.warn('parse error: ' + e.message);\n    return null;\n}",
+    "outputs": 2,
     "noerr": 0,
-    "x": 620,
-    "y": 220,
+    "x": 400,
+    "y": 160,
     "wires": [
       [
-        "v2-tmpl-pressure"
+        "gov-debug-devices"
+      ],
+      [
+        "gov-debug-status"
       ]
     ]
   },
   {
-    "id": "his-mqtt-door",
+    "id": "gov-debug-devices",
+    "type": "debug",
+    "z": "gov-flow",
+    "name": "device map",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 600,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "gov-fn-send",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "send to devices",
+    "func": "// Expects: msg.govee_cmd     = {cmd:'...', data:{...}}\n//          msg.govee_targets = 'all' | ['name-or-device-id', ...]\nvar devs     = flow.get('govee_devices') || {};\nvar nameMap  = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('No Govee devices found - run discovery first'); return null; }\n\nvar targets;\nif (!msg.govee_targets || msg.govee_targets === 'all') {\n    targets = Object.values(devs);\n} else {\n    var ids = Array.isArray(msg.govee_targets) ? msg.govee_targets : [msg.govee_targets];\n    ids = ids.map(function(t) { return nameMap[t] || t; });\n    targets = ids.map(function(id) { return devs[id]; }).filter(Boolean);\n}\nif (!targets.length) { node.warn('No matching Govee devices'); return null; }\n\nvar msgs = targets.map(function(d) {\n    return { payload: JSON.stringify({msg: msg.govee_cmd}), ip: d.ip, port: 4003 };\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 580,
+    "y": 300,
+    "wires": [
+      [
+        "gov-udp-ctrl",
+        "gov-debug-udp"
+      ]
+    ]
+  },
+  {
+    "id": "gov-mqtt-ctrl",
     "type": "mqtt in",
-    "z": "his-flow-main",
-    "name": "home/+/door",
-    "topic": "home/+/door",
-    "qos": "1",
+    "z": "gov-flow",
+    "name": "home/lights/set",
+    "topic": "home/lights/set",
+    "qos": "0",
     "datatype": "json",
     "broker": "his-broker",
     "nl": false,
     "rap": true,
     "inputs": 0,
-    "x": 160,
-    "y": 420,
+    "x": 180,
+    "y": 300,
     "wires": [
       [
-        "his-fn-door-text"
+        "gov-fn-mqtt-ctrl"
       ]
     ]
   },
   {
-    "id": "his-fn-door-text",
+    "id": "gov-fn-mqtt-ctrl",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "format door",
-    "func": "var icon = msg.payload.state === 'open' ? '\u1f513 OPEN' : '\u1f512 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "z": "gov-flow",
+    "name": "MQTT \u2192 Govee cmd",
+    "func": "node.warn('SRC:mqtt-ctrl retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\n// MQTT payload: {cmd, value|r,g,b|kelvin, devices:'all'|[ids]}\nvar p = msg.payload;\nvar gcmd;\nswitch (p.cmd) {\n    case 'turn':       gcmd = {cmd:'turn',       data:{value: p.value ? 1 : 0}}; break;\n    case 'brightness': gcmd = {cmd:'brightness',  data:{value: p.value}}; break;\n    case 'color':      gcmd = {cmd:'colorwc',     data:{color:{r:p.r||0,g:p.g||0,b:p.b||0}, colorTemInKelvin:0}}; break;\n    case 'colortemp':  gcmd = {cmd:'colorwc',     data:{color:{r:0,g:0,b:0}, colorTemInKelvin:p.kelvin||4000}}; break;\n    default: node.warn('Unknown Govee cmd: ' + p.cmd); return null;\n}\nmsg.govee_cmd     = gcmd;\nmsg.govee_targets = p.devices || 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 380,
-    "y": 420,
+    "x": 390,
+    "y": 300,
     "wires": [
       [
-        "v2-text-door"
+        "gov-fn-send"
       ]
     ]
   },
   {
-    "id": "his-mqtt-motion",
+    "id": "gov-mqtt-visitor",
     "type": "mqtt in",
-    "z": "his-flow-main",
-    "name": "home/+/motion",
-    "topic": "home/+/motion",
-    "qos": "0",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 480,
-    "wires": [
-      [
-        "his-fn-motion-text"
-      ]
-    ]
-  },
-  {
-    "id": "his-fn-motion-text",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "format motion",
-    "func": "var icon = msg.payload.state === 'detected' ? '\u1f6a8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 480,
-    "wires": [
-      [
-        "v2-text-motion"
-      ]
-    ]
-  },
-  {
-    "id": "his-mqtt-alarm",
-    "type": "mqtt in",
-    "z": "his-flow-main",
-    "name": "home/+/alarm",
-    "topic": "home/+/alarm",
-    "qos": "1",
-    "datatype": "json",
-    "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 160,
-    "y": 580,
-    "wires": [
-      [
-        "his-fn-alarm-gauge",
-        "his-fn-alarm-check"
-      ]
-    ]
-  },
-  {
-    "id": "his-fn-alarm-gauge",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "smoke level",
-    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.smoke;\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 560,
-    "wires": [
-      [
-        "v2-gauge-smoke"
-      ]
-    ]
-  },
-  {
-    "id": "his-fn-alarm-check",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "alert if true",
-    "func": "if (msg.payload.alert === true) {\n    msg.payload = '\u1f6a8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
-    "outputs": 1,
-    "noerr": 0,
-    "x": 380,
-    "y": 620,
-    "wires": [
-      [
-        "v2-text-alarm"
-      ]
-    ]
-  },
-  {
-    "id": "his-mqtt-visitor",
-    "type": "mqtt in",
-    "z": "his-flow-main",
+    "z": "gov-flow",
     "name": "home/frontdoor/visitor",
     "topic": "home/frontdoor/visitor",
     "qos": "0",
     "datatype": "json",
     "broker": "his-broker",
     "nl": false,
-    "rap": false,
+    "rap": true,
     "inputs": 0,
     "x": 180,
-    "y": 720,
+    "y": 380,
     "wires": [
       [
-        "his-fn-visitor-text"
+        "gov-fn-visitor"
       ]
     ]
   },
   {
-    "id": "his-fn-visitor-text",
+    "id": "gov-fn-visitor",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "visitor label",
-    "func": "var trig = msg.payload.trigger === 'button' ? '\u1f514 Doorbell' : '\u1f464 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+    "z": "gov-flow",
+    "name": "visitor \u2192 warm white",
+    "func": "node.warn('SRC:visitor topic=' + msg.topic + ' retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\nif (!msg.payload || !msg.payload.trigger) { node.warn('visitor: no trigger field - discarded'); return null; }\nmsg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\nmsg.govee_targets = 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
-    "x": 420,
-    "y": 720,
+    "x": 400,
+    "y": 380,
     "wires": [
       [
-        "v2-text-visitor"
+        "gov-fn-send"
       ]
     ]
   },
   {
-    "id": "his-mqtt-image",
+    "id": "gov-mqtt-alarm",
     "type": "mqtt in",
-    "z": "his-flow-main",
-    "name": "home/frontdoor/image",
-    "topic": "home/frontdoor/image",
-    "qos": "0",
-    "datatype": "buffer",
+    "z": "gov-flow",
+    "name": "home/+/alarm",
+    "topic": "home/+/alarm",
+    "qos": "1",
+    "datatype": "json",
     "broker": "his-broker",
     "nl": false,
-    "rap": false,
+    "rap": true,
     "inputs": 0,
     "x": 180,
-    "y": 780,
+    "y": 440,
     "wires": [
       [
-        "his-fn-image-b64"
+        "gov-fn-alarm"
       ]
     ]
   },
   {
-    "id": "his-fn-image-b64",
+    "id": "gov-fn-alarm",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "JPEG \u2192 base64 img",
-    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+    "z": "gov-flow",
+    "name": "alarm \u2192 red / clear \u2192 white",
+    "func": "if (msg.retain) return null;\nif (!msg.payload || typeof msg.payload !== 'object') return null;\n\nif (msg.payload.alert === true) {\n    flow.set('govee_alarm_active', true);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nif (msg.payload.alert === false) {\n    if (!flow.get('govee_alarm_active')) return null;  // not in alarm - ignore routine sensor readings\n    flow.set('govee_alarm_active', false);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nreturn null;  // no alert field - discard",
     "outputs": 1,
     "noerr": 0,
-    "x": 440,
-    "y": 780,
+    "x": 400,
+    "y": 440,
     "wires": [
       [
-        "v2-tmpl-frontdoor"
+        "gov-fn-send"
       ]
     ]
   },
   {
-    "id": "his-fn-lastseen",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "update last seen",
-    "func": "var nodeId = msg.topic.split('/')[1];\nvar ls = flow.get('node_lastseen') || {};\nls[nodeId] = Date.now();\nflow.set('node_lastseen', ls);\nreturn null;",
-    "outputs": 0,
-    "noerr": 0,
-    "x": 380,
-    "y": 160,
-    "wires": []
-  },
-  {
-    "id": "his-inject-watchdog",
+    "id": "gov-inject-id-1",
     "type": "inject",
-    "z": "his-flow-main",
-    "name": "watchdog tick",
+    "z": "gov-flow",
+    "name": "lvgrm_2",
     "props": [
       {
         "p": "payload"
       }
     ],
-    "repeat": "60",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_2\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 520,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-id-2",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "lvgrm_1",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_1\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 580,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-id-3",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "lvgrm_4",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_4\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 640,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-id-4",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "lvgrm_3",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 1, \"devices\": [\"lvgrm_3\"]}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 700,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-all-off",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "All OFF",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"cmd\": \"turn\", \"value\": 0, \"devices\": \"all\"}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 760,
+    "wires": [
+      [
+        "gov-fn-mqtt-ctrl"
+      ]
+    ]
+  },
+  {
+    "id": "gov-inject-clear-retained",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Clear retained MQTT",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
     "crontab": "",
     "once": true,
-    "onceDelay": 10,
+    "onceDelay": 1,
     "payload": "",
     "payloadType": "date",
     "x": 180,
-    "y": 1060,
+    "y": 840,
     "wires": [
       [
-        "his-fn-watchdog"
+        "gov-fn-clear-retained"
       ]
     ]
   },
   {
-    "id": "his-fn-watchdog",
+    "id": "gov-fn-clear-retained",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "check node health",
-    "func": "var STALE_MS = 300000;\nvar nodes  = ['bills-office','mud-room','garage'];\nvar labels = {'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};\nvar ls  = flow.get('node_lastseen') || {};\nvar now = Date.now();\nvar rows = nodes.map(function(n) {\n    var t = ls[n];\n    if (!t) return {node: labels[n], age: 'never', ok: false};\n    var age = Math.floor((now - t) / 1000);\n    var d  = new Date(t);\n    var mo = d.getMonth() + 1;\n    var dd = String(d.getDate()).padStart(2, '0');\n    var hh = String(d.getHours()).padStart(2, '0');\n    var mm = String(d.getMinutes()).padStart(2, '0');\n    var stamp = mo + '/' + dd + ' ' + hh + ':' + mm;\n    return {node: labels[n], age: stamp, ok: age < (STALE_MS / 1000)};\n});\nmsg.payload = rows;\nreturn msg;",
+    "z": "gov-flow",
+    "name": "build clear msgs",
+    "func": "var topics = [\"home/lights/set\", \"home/frontdoor/visitor\", \"home/frontdoor/alarm\", \"home/bills-office/alarm\", \"home/mud-room/alarm\", \"home/garage/alarm\"];\nreturn topics.map(function(t) {\n    return { topic: t, payload: '', retain: true };\n});",
     "outputs": 1,
     "noerr": 0,
-    "x": 420,
-    "y": 1060,
+    "x": 400,
+    "y": 840,
     "wires": [
       [
-        "v2-tmpl-status"
+        "gov-mqtt-clear-out"
       ]
     ]
   },
   {
-    "id": "his-mqtt-display-photo",
-    "type": "mqtt in",
-    "z": "his-flow-main",
-    "name": "home/display/photo",
-    "topic": "home/display/photo",
+    "id": "gov-mqtt-clear-out",
+    "type": "mqtt out",
+    "z": "gov-flow",
+    "name": "clear retained",
+    "topic": "",
     "qos": "0",
-    "datatype": "buffer",
+    "retain": "true",
     "broker": "his-broker",
-    "nl": false,
-    "rap": false,
-    "inputs": 0,
-    "x": 180,
+    "x": 620,
     "y": 840,
+    "wires": []
+  },
+  {
+    "id": "gov-inject-names",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Set bulb names",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 5,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 920,
     "wires": [
       [
-        "his-fn-display-b64"
+        "gov-fn-set-names"
       ]
     ]
   },
   {
-    "id": "his-fn-display-b64",
+    "id": "gov-fn-set-names",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "JPEG to base64",
-    "func": "msg.payload = msg.payload.toString(\"base64\");\nreturn msg;",
+    "z": "gov-flow",
+    "name": "store name map",
+    "func": "flow.set('govee_names', {\n    'lvgrm_1': '47:A7:5C:E7:53:F0:80:74',\n    'lvgrm_2': '23:99:5C:E7:53:E6:17:B2',\n    'lvgrm_3': '10:31:5C:E7:53:ED:FA:78',\n    'lvgrm_4': '15:A2:5C:E7:53:F2:38:D8',\n});\nreturn null;",
     "outputs": 1,
     "noerr": 0,
-    "x": 420,
-    "y": 840,
+    "x": 400,
+    "y": 920,
     "wires": [
-      [
-        "v2-tmpl-photo"
-      ]
+      []
     ]
   },
   {
-    "id": "his-http-capture",
-    "type": "http in",
-    "z": "his-flow-main",
-    "name": "POST /capture",
-    "url": "/capture",
-    "method": "post",
-    "upload": false,
-    "swaggerDoc": "",
+    "id": "gov-inject-read-state",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Read state",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "",
+    "payloadType": "date",
     "x": 180,
-    "y": 900,
+    "y": 1000,
     "wires": [
       [
-        "his-fn-capture-proc"
+        "gov-fn-query-status"
       ]
     ]
   },
   {
-    "id": "his-fn-capture-proc",
+    "id": "gov-fn-query-status",
     "type": "function",
-    "z": "his-flow-main",
-    "name": "JPEG to display",
-    "func": "var b64 = msg.payload.toString(\"base64\");\nvar imgMsg = {payload: b64};\nvar respMsg = {payload: \"OK\", statusCode: 200, req: msg.req, res: msg.res};\nreturn [imgMsg, respMsg];",
+    "z": "gov-flow",
+    "name": "query devStatus",
+    "func": "flow.set('govee_snapshot', {});\nvar devs = flow.get('govee_devices') || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\nvar msgs = Object.values(devs).map(function(d) {\n    return { payload: JSON.stringify({msg:{cmd:'devStatus',data:{}}}), ip: d.ip, port: 4003 };\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 390,
+    "y": 1000,
+    "wires": [
+      [
+        "gov-udp-ctrl",
+        "gov-debug-udp"
+      ]
+    ]
+  },
+  {
+    "id": "gov-debug-status",
+    "type": "debug",
+    "z": "gov-flow",
+    "name": "state snapshot",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 620,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "gov-file-write-presets",
+    "type": "file",
+    "z": "gov-flow",
+    "name": "write presets.json",
+    "filename": "C:\\Users\\johan\\.node-red\\projects\\Home_PTRH\\govee_presets.json",
+    "filenameType": "str",
+    "appendNewline": false,
+    "createDir": false,
+    "overwriteFile": "true",
+    "encoding": "none",
+    "x": 680,
+    "y": 1520,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "gov-inject-load-presets",
+    "type": "inject",
+    "z": "gov-flow",
+    "name": "Load presets",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 8,
+    "payload": "",
+    "payloadType": "date",
+    "x": 200,
+    "y": 1640,
+    "wires": [
+      [
+        "gov-file-read-presets"
+      ]
+    ]
+  },
+  {
+    "id": "gov-file-read-presets",
+    "type": "file in",
+    "z": "gov-flow",
+    "name": "read presets.json",
+    "filename": "C:\\Users\\johan\\.node-red\\projects\\Home_PTRH\\govee_presets.json",
+    "filenameType": "str",
+    "format": "utf8",
+    "chunk": false,
+    "sendError": false,
+    "encoding": "none",
+    "x": 420,
+    "y": 1640,
+    "wires": [
+      [
+        "gov-fn-load-presets"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-load-presets",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "parse presets",
+    "func": "try {\n    var presets = JSON.parse(msg.payload);\n    flow.set('govee_presets', presets);\n    node.status({fill:'green', shape:'dot', text: Object.keys(presets).length + ' presets loaded'});\n} catch(e) {\n    node.status({fill:'yellow', shape:'ring', text: 'no presets file yet'});\n}\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 640,
+    "y": 1640,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-btn-evening",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "Evening",
+    "label": "Evening",
+    "order": 1,
+    "width": "3",
+    "height": "2",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Evening",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#f5a623",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "x": 200,
+    "y": 1100,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-bright",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "Bright",
+    "label": "Bright",
+    "order": 2,
+    "width": "3",
+    "height": "2",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Bright",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#fffde7",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "x": 200,
+    "y": 1160,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-movie",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "Movie",
+    "label": "Movie",
+    "order": 3,
+    "width": "3",
+    "height": "2",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Movie",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#4a3580",
+    "textColor": "#ffffff",
+    "iconColor": "#ffffff",
+    "x": 200,
+    "y": 1220,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-alloff",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-presets",
+    "name": "All Off",
+    "label": "All Off",
+    "order": 4,
+    "width": "3",
+    "height": "2",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "All Off",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#333333",
+    "textColor": "#ffffff",
+    "iconColor": "#ffffff",
+    "x": 200,
+    "y": 1280,
+    "wires": [
+      [
+        "gov-fn-apply-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-save-evening",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-save",
+    "name": "Save Evening",
+    "label": "Save Evening",
+    "order": 1,
+    "width": "4",
+    "height": "1",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Evening",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#f5a623",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "x": 210,
+    "y": 1460,
+    "wires": [
+      [
+        "gov-fn-save-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-save-bright",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-save",
+    "name": "Save Bright",
+    "label": "Save Bright",
+    "order": 2,
+    "width": "4",
+    "height": "1",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Bright",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#fffde7",
+    "textColor": "#000000",
+    "iconColor": "#000000",
+    "x": 210,
+    "y": 1520,
+    "wires": [
+      [
+        "gov-fn-save-preset"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-save-movie",
+    "type": "ui-button",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-save",
+    "name": "Save Movie",
+    "label": "Save Movie",
+    "order": 3,
+    "width": "4",
+    "height": "1",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "Movie",
+    "payloadType": "str",
+    "topic": "preset",
+    "topicType": "str",
+    "buttonColor": "#4a3580",
+    "textColor": "#ffffff",
+    "iconColor": "#ffffff",
+    "x": 210,
+    "y": 1580,
+    "wires": [
+      [
+        "gov-fn-save-preset"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-apply-preset",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "apply preset",
+    "func": "var name    = msg.payload;\nvar devs    = flow.get('govee_devices') || {};\nvar nameMap = flow.get('govee_names')   || {};\nif (!Object.keys(devs).length) { node.warn('Run discovery first'); return null; }\n\nif (name === 'All Off') {\n    flow.set('govee_current', {onOff:0, brightness:0, colortemp:4000, color:{r:0,g:0,b:0}, mode:'white'});\n    var msgs = Object.values(devs).map(function(d) {\n        return {payload:JSON.stringify({msg:{cmd:'turn',data:{value:0}}}), ip:d.ip, port:4003};\n    });\n    return [msgs, null];\n}\n\nvar presets = flow.get('govee_presets') || {};\nvar preset  = presets[name];\nif (!preset) { node.warn('Preset not found: ' + name + ' (use sliders + Save to create it)'); return null; }\nflow.set('govee_current', preset);\n\nvar msgs = [];\nObject.values(devs).forEach(function(d) {\n    var onOff = (preset.onOff !== undefined) ? preset.onOff : 1;\n    msgs.push({payload:JSON.stringify({msg:{cmd:'turn',      data:{value:onOff}}}),                                    ip:d.ip, port:4003});\n    msgs.push({payload:JSON.stringify({msg:{cmd:'brightness', data:{value:preset.brightness || 50}}}),                 ip:d.ip, port:4003});\n    var colorData = preset.mode === 'color'\n        ? {color: preset.color, colorTemInKelvin: 0}\n        : {color: {r:0,g:0,b:0}, colorTemInKelvin: preset.colortemp || 4000};\n    msgs.push({payload:JSON.stringify({msg:{cmd:'colorwc', data:colorData}}), ip:d.ip, port:4003});\n});\nreturn [msgs, {payload: preset}];",
     "outputs": 2,
     "noerr": 0,
-    "x": 420,
-    "y": 900,
+    "x": 440,
+    "y": 1160,
     "wires": [
       [
-        "v2-tmpl-photo",
-        "v2-tmpl-frontdoor"
+        "gov-udp-ctrl",
+        "gov-debug-udp"
       ],
       [
-        "his-http-resp-capture"
+        "gov-fn-update-sliders"
       ]
     ]
   },
   {
-    "id": "his-http-resp-capture",
-    "type": "http response",
-    "z": "his-flow-main",
-    "name": "200 OK",
-    "statusCode": "200",
-    "headers": {},
-    "x": 680,
-    "y": 940,
-    "wires": []
-  },
-  {
-    "id": "v2-tmpl-pressure",
-    "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-pressure",
-    "page": "",
-    "ui": "",
-    "name": "Pressure Summary",
-    "order": 2,
-    "width": "4",
-    "height": "3",
-    "format": "<template>\n  <div class=\"ps\">\n    <div class=\"ps-val\">{{ msg && msg.payload ? msg.payload.pressure + ' PSI' : '-- PSI' }}</div>\n    <div class=\"ps-trend\">{{ msg && msg.payload ? msg.payload.trend : 'waiting for sensors...' }}</div>\n    <div class=\"ps-conf\">{{ msg && msg.payload ? 'Confidence: ' + msg.payload.conf : '' }}</div>\n    <div class=\"ps-src\">{{ msg && msg.payload ? 'Source: ' + msg.payload.source : '' }}</div>\n  </div>\n</template>\n<style scoped>\n.ps { font-family: monospace; padding: 10px }\n.ps-val { font-size: 2.8em; font-weight: bold; color: #91362a }\n.ps-trend { font-size: 1.6em; color: var(--nrdb-widget-textColor, #302524); margin-top: 6px }\n.ps-conf { font-size: 1.4em; color: var(--nrdb-widget-textColor, #302524); margin-top: 4px }\n.ps-src { font-size: 1.2em; color: var(--nrdb-widget-textColor, #302524); margin-top: 4px }\n</style>",
-    "storeOutMessages": true,
-    "passthru": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 850,
-    "y": 220,
+    "id": "gov-fn-save-preset",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "save preset",
+    "func": "var name    = msg.payload;\nvar current = flow.get('govee_current') || {};\nif (!Object.keys(current).length) { node.warn('Use sliders first to set brightness/colortemp, then save'); return null; }\n\n// Ensure all required fields are present\ncurrent.onOff      = (current.onOff !== undefined) ? current.onOff : 1;\ncurrent.brightness = (current.brightness !== undefined) ? current.brightness : 50;\ncurrent.colortemp  = current.colortemp  || 4000;\ncurrent.color      = current.color      || {r:255, g:136, b:0};\ncurrent.mode       = current.mode       || 'white';\n\nvar presets = flow.get('govee_presets') || {};\npresets[name] = JSON.parse(JSON.stringify(current));\nflow.set('govee_presets', presets);\nnode.status({fill:'green', shape:'dot', text: name + ' saved'});\nmsg.payload = JSON.stringify(presets, null, 2);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 450,
+    "y": 1520,
     "wires": [
-      []
+      [
+        "gov-file-write-presets"
+      ]
     ]
   },
   {
-    "id": "v2-tmpl-rh",
+    "id": "gov-fn-all-brightness",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "brightness \u2192 all",
+    "func": "var current = flow.get('govee_current') || {};\ncurrent.brightness = msg.payload;\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'brightness',data:{value:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 450,
+    "y": 1340,
+    "wires": [
+      [
+        "gov-udp-ctrl",
+        "gov-debug-udp"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-all-colortemp",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "colortemp \u2192 all",
+    "func": "node.warn('SRC:colortemp-slider value=' + msg.payload);\nvar current = flow.get('govee_current') || {};\ncurrent.colortemp = msg.payload;\ncurrent.mode = 'white';\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 450,
+    "y": 1400,
+    "wires": [
+      [
+        "gov-udp-ctrl",
+        "gov-debug-udp"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-color-cmd",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "color cmd",
+    "func": "node.warn('SRC:color-cmd payload=' + JSON.stringify(msg.payload));\nvar current = flow.get('govee_current') || {};\nif (msg.payload.mode === 'color') {\n    current.color = {r:msg.payload.r, g:msg.payload.g, b:msg.payload.b};\n    current.mode  = 'color';\n} else {\n    current.mode     = 'white';\n    current.colortemp = current.colortemp || 4000;\n}\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar data = current.mode === 'color'\n    ? {color: current.color, colorTemInKelvin: 0}\n    : {color: {r:0,g:0,b:0}, colorTemInKelvin: current.colortemp};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:data}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 440,
+    "y": 1720,
+    "wires": [
+      [
+        "gov-udp-ctrl",
+        "gov-debug-udp"
+      ]
+    ]
+  },
+  {
+    "id": "gov-fn-update-sliders",
+    "type": "function",
+    "z": "gov-flow",
+    "name": "update sliders",
+    "func": "var p = msg.payload;\nif (!p) return null;\nvar brightness = p.brightness !== undefined ? p.brightness : 50;\nvar colortemp  = p.colortemp  || 4000;\nreturn [\n    {payload: brightness},\n    {payload: colortemp},\n    {payload: {color: p.color || {r:255,g:136,b:0}}}\n];",
+    "outputs": 3,
+    "noerr": 0,
+    "x": 460,
+    "y": 1700,
+    "wires": [
+      [
+        "533d671845fb6b33"
+      ],
+      [
+        "f33f0729cf17b3ec"
+      ],
+      [
+        "v2-tmpl-color-picker"
+      ]
+    ]
+  },
+  {
+    "id": "v2-tmpl-color-picker",
     "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-temp",
-    "page": "",
-    "ui": "",
-    "name": "Humidity Summary",
-    "order": 2,
-    "width": "6",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-color",
+    "name": "Color Picker",
+    "order": 1,
+    "width": "12",
     "height": "4",
-    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"rhs\">\n    <div v-for=\"r in msg.payload\" :key=\"r.label\" class=\"rhs-row\">\n      <span class=\"rhs-node\">{{ r.label }}</span>\n      <span class=\"rhs-val\">{{ r.value }}</span>\n    </div>\n  </div>\n</template>\n<style scoped>\n.rhs { font-family: monospace; padding: 10px }\n.rhs-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #0d162b }\n.rhs-node { font-size: 1.4em; color: #0d162b }\n.rhs-val { font-size: 1.6em; font-weight: bold; color: #0d162b }\n</style>",
-    "storeOutMessages": true,
-    "passthru": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 840,
-    "y": 160,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "v2-chart-temp",
-    "type": "ui-chart",
-    "z": "his-flow-main",
-    "group": "v2-grp-temp",
-    "name": "Temperature",
-    "label": "Temperature (\u00b0F)",
-    "order": 1,
-    "chartType": "line",
-    "category": "topic",
-    "categoryType": "msg",
-    "xAxisLabel": "",
-    "xAxisProperty": "",
-    "xAxisPropertyType": "timestamp",
-    "xAxisType": "time",
-    "xAxisFormat": "",
-    "xAxisFormatType": "auto",
-    "xmin": "",
-    "xmax": "",
-    "yAxisLabel": "",
-    "yAxisProperty": "",
-    "yAxisPropertyType": "property",
-    "ymin": "55",
-    "ymax": "75",
-    "bins": "",
-    "action": "append",
-    "stackSeries": false,
-    "pointRadius": "",
-    "showLegend": true,
-    "removeOlder": "30",
-    "removeOlderUnit": "60",
-    "removeOlderPoints": "",
-    "colors": [
-      "#1f77b4",
-      "#ff7f0e",
-      "#2ca02c",
-      "#d62728",
-      "#9467bd",
-      "#aec7e8",
-      "#ffbb78",
-      "#98df8a",
-      "#000000"
-    ],
-    "textColor": [
-      "#666666"
-    ],
-    "textColorDefault": true,
-    "gridColor": [
-      "#e5e5e5"
-    ],
-    "gridColorDefault": true,
-    "width": "6",
-    "height": "4",
-    "className": "",
-    "interpolation": "linear",
-    "x": 830,
-    "y": 100,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "v2-tmpl-status",
-    "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-status",
-    "page": "",
-    "ui": "",
-    "name": "Node Status",
-    "order": 1,
-    "width": "12",
-    "height": "3",
-    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ns\">\n    <table>\n      <thead><tr><th>Node</th><th>Last seen</th></tr></thead>\n      <tbody>\n        <tr v-for=\"r in msg.payload\" :key=\"r.node\">\n          <td>{{ r.node }}</td>\n          <td>{{ r.age }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.ns { font-family: monospace; font-size: 13px }\n.ns table { width: 100%; border-collapse: collapse }\n.ns th, .ns td { padding: 4px 12px; border-bottom: 1px solid #444 }\n.ns th { color: #0d162b; text-align: left }\n</style>",
-    "storeOutMessages": true,
-    "passthru": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 680,
-    "y": 1060,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "v2-text-door",
-    "type": "ui-text",
-    "z": "his-flow-main",
-    "group": "v2-grp-doors",
-    "order": 1,
-    "width": "6",
-    "height": "1",
-    "name": "Door Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "style": false,
-    "className": "",
-    "x": 600,
-    "y": 420,
-    "wires": []
-  },
-  {
-    "id": "v2-text-motion",
-    "type": "ui-text",
-    "z": "his-flow-main",
-    "group": "v2-grp-motion",
-    "order": 1,
-    "width": "6",
-    "height": "1",
-    "name": "Motion Status",
-    "label": "",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "style": false,
-    "className": "",
-    "x": 600,
-    "y": 480,
-    "wires": []
-  },
-  {
-    "id": "v2-tmpl-photo",
-    "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-photo",
-    "name": "Current Photo",
-    "order": 1,
-    "width": "12",
-    "height": "9",
-    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
-    "storeOutMessages": true,
-    "passthru": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 680,
-    "y": 840,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "v2-gauge-smoke",
-    "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-gas",
-    "name": "Smoke Level",
-    "order": 1,
-    "width": "6",
-    "height": "4",
-    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0\u20134095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
-    "storeOutMessages": true,
-    "passthru": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 600,
-    "y": 560,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "v2-text-alarm",
-    "type": "ui-text",
-    "z": "his-flow-main",
-    "group": "v2-grp-gas",
-    "order": 2,
-    "width": "12",
-    "height": "1",
-    "name": "Alarm Banner",
-    "label": "\u26a0 Alert",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "style": false,
-    "className": "",
-    "x": 600,
-    "y": 620,
-    "wires": []
-  },
-  {
-    "id": "v2-text-visitor",
-    "type": "ui-text",
-    "z": "his-flow-main",
-    "group": "v2-grp-visitor",
-    "order": 1,
-    "width": "12",
-    "height": "1",
-    "name": "Last Visitor",
-    "label": "Last event",
-    "format": "{{msg.payload}}",
-    "layout": "row-left",
-    "style": false,
-    "className": "",
-    "x": 640,
-    "y": 720,
-    "wires": []
-  },
-  {
-    "id": "v2-tmpl-frontdoor",
-    "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-visitor",
-    "name": "Visitor Snapshot",
-    "order": 2,
-    "width": "12",
-    "height": "9",
-    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
-    "storeOutMessages": true,
-    "passthru": false,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 680,
-    "y": 780,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "v2-tmpl-clock",
-    "type": "ui-template",
-    "z": "his-flow-main",
-    "group": "v2-grp-pressure",
-    "page": "",
-    "ui": "",
-    "name": "Clock",
-    "order": 1,
-    "width": "4",
-    "height": "3",
-    "format": "<template>\n  <div class=\"clk\">\n    <div class=\"clk-time\">{{ time }}</div>\n    <div class=\"clk-day\">{{ day }}</div>\n  </div>\n</template>\n<script>\n  export default {\n    data() { return { time: '', day: '' } },\n    mounted()      { this.tick(); this._t = setInterval(this.tick, 10000); },\n    beforeUnmount(){ clearInterval(this._t); },\n    methods: {\n      tick() {\n        const d = new Date();\n        const h = d.getHours(), m = String(d.getMinutes()).padStart(2, '0');\n        this.time = (h % 12 || 12) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM');\n        const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\n        this.day = days[d.getDay()] + '  ' + months[d.getMonth()] + ' ' + d.getDate();\n      }\n    }\n  }\n</script>\n<style scoped>\n.clk      { font-family: monospace; padding: 10px }\n.clk-time { font-size: 2.8em; font-weight: bold; color: #91362a }\n.clk-day  { font-size: 1.6em; color: var(--nrdb-widget-textColor, #302524); margin-top: 6px }\n</style>",
+    "format": "<template>\n  <div style=\"padding:8px\">\n    <label style=\"display:block;margin-bottom:6px;font-size:14px\">Color</label>\n    <input type=\"color\" v-model=\"color\" @change=\"onPick\"\n           style=\"width:100%;height:64px;border:none;border-radius:6px;cursor:pointer;padding:2px\"/>\n    <button @click=\"onWhite\"\n            style=\"margin-top:8px;width:100%;height:40px;border:none;border-radius:6px;\n                   background:#fffde7;color:#333;font-size:14px;cursor:pointer\">\n      Back to White Light\n    </button>\n  </div>\n</template>\n<script>\n  export default {\n    data() { return { color: '#ff8800' } },\n    watch: {\n      msg(v) {\n        if (v && v.payload && v.payload.color) {\n          const c = v.payload.color;\n          this.color = '#'\n            + (c.r||0).toString(16).padStart(2,'0')\n            + (c.g||0).toString(16).padStart(2,'0')\n            + (c.b||0).toString(16).padStart(2,'0');\n        }\n      }\n    },\n    methods: {\n      onPick() {\n        const h = this.color;\n        const r = parseInt(h.slice(1,3),16);\n        const g = parseInt(h.slice(3,5),16);\n        const b = parseInt(h.slice(5,7),16);\n        this.send({payload:{mode:'color',r,g,b}});\n      },\n      onWhite() { this.send({payload:{mode:'white'}}); }\n    }\n  }\n</script>",
     "storeOutMessages": false,
     "passthru": false,
     "resendOnRefresh": false,
     "templateScope": "local",
     "className": "",
-    "x": 850,
-    "y": 100,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "his-fn-split-pth",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "Split P/T/RH",
-    "func": "var nodeId = msg.topic.split('/')[1];\nvar d = msg.payload;\nfunction mk(v) { return { payload: v, _nodeId: nodeId, topic: nodeId }; }\nreturn [ mk(d.P), mk(d.T), mk(d.RH) ];",
-    "outputs": 3,
-    "noerr": 0,
-    "x": 380,
-    "y": 120,
+    "x": 210,
+    "y": 1720,
     "wires": [
       [
-        "his-fn-p-diffs"
-      ],
-      [
-        "v2-chart-temp"
-      ],
-      [
-        "his-fn-rh-summary"
+        "gov-fn-color-cmd"
       ]
     ]
   },
   {
-    "id": "2255e6a229deff89",
-    "type": "http response",
-    "z": "his-flow-main",
-    "name": "",
-    "statusCode": "",
-    "headers": {},
-    "x": 1430,
-    "y": 400,
-    "wires": []
-  },
-  {
-    "id": "c7432bc008d82fc8",
+    "id": "gov-debug-udp",
     "type": "debug",
-    "z": "his-flow-main",
-    "name": "debug 1",
+    "z": "gov-flow",
+    "name": "UDP out tap",
     "active": true,
     "tosidebar": true,
     "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 1600,
-    "y": 500,
-    "wires": []
-  },
-  {
-    "id": "8db92d9dccf5b93b",
-    "type": "template",
-    "z": "his-flow-main",
-    "name": "voice_ui_page",
-    "field": "payload",
-    "fieldType": "msg",
-    "format": "handlebars",
-    "syntax": "mustache",
-    "template": "<!DOCTYPE html>\n<html>\n<head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Voice to Node-RED</title>\n    <style>\n        body { font-family: sans-serif; padding: 30px; background: #1a1a2e; color: white; max-width: 500px; margin: 0 auto; }\n        h2 { text-align: center; margin-bottom: 30px; }\n        textarea { width: 100%; font-size: 18px; padding: 15px; border-radius: 10px; border: none; min-height: 120px; box-sizing: border-box; background: #16213e; color: white; }\n        button { width: 100%; margin-top: 15px; font-size: 22px; padding: 20px; border-radius: 50px; background: #e94560; color: white; border: none; }\n        #status { text-align: center; margin-top: 20px; font-size: 16px; color: #aaa; min-height: 24px; }\n    </style>\n</head>\n<body>\n    <h2>Voice to Node-RED</h2>\n    <textarea id=\"txt\" placeholder=\"Tap the mic on your keyboard and speak...\"></textarea>\n    <button onclick=\"send()\">Send</button>\n    <div id=\"status\"></div>\n    <script>\n        function send() {\n            var text = document.getElementById('txt').value.trim();\n            if (!text) return;\n            document.getElementById('status').textContent = 'Sending...';\n            fetch('/voice', {\n                method: 'POST',\n                headers: { 'Content-Type': 'application/json' },\n                body: JSON.stringify({ text: text })\n            }).then(function() {\n                document.getElementById('status').textContent = 'Sent!';\n                document.getElementById('txt').value = '';\n            }).catch(function() {\n                document.getElementById('status').textContent = 'Error \u00e2\u20ac\u201d check Node-RED';\n            });\n        }\n    </script>\n</body>\n</html>\n",
-    "output": "str",
-    "x": 1260,
-    "y": 400,
-    "wires": [
-      [
-        "2255e6a229deff89",
-        "c7432bc008d82fc8"
-      ]
-    ]
-  },
-  {
-    "id": "be24c38b75cecf10",
-    "type": "http in",
-    "z": "his-flow-main",
-    "name": "",
-    "url": "/voice-ui",
-    "method": "get",
-    "upload": false,
-    "skipBodyParsing": false,
-    "swaggerDoc": "",
-    "x": 1030,
-    "y": 400,
-    "wires": [
-      [
-        "8db92d9dccf5b93b"
-      ]
-    ]
-  },
-  {
-    "id": "ea7f37b249ea2019",
-    "type": "debug",
-    "z": "his-flow-main",
-    "name": "debug 2",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 1340,
-    "y": 720,
-    "wires": []
-  },
-  {
-    "id": "296ae86c5f8e1286",
-    "type": "http in",
-    "z": "his-flow-main",
-    "name": "",
-    "url": "/voice",
-    "method": "post",
-    "upload": false,
-    "skipBodyParsing": false,
-    "swaggerDoc": "",
-    "x": 1050,
-    "y": 620,
-    "wires": [
-      [
-        "64c5868e463e8603"
-      ]
-    ]
-  },
-  {
-    "id": "64c5868e463e8603",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "voice_handler",
-    "func": "var raw = (typeof msg.payload === \"object\") ? msg.payload.text : String(msg.payload);\nraw = (raw || \"\").trim().toLowerCase();\n\nnode.warn(\"Voice input: \" + raw);\n\nif (raw.startsWith(\"add \")) {\n    msg.intent = \"add\";\n    msg.item = raw.slice(4).trim();\n} else if (raw.startsWith(\"remove \") || raw.startsWith(\"delete \")) {\n    msg.intent = \"remove\";\n    msg.item = raw.replace(/^(remove|delete)\\s+/, \"\").trim();\n} else if (raw === \"clear list\" || raw === \"clear\") {\n    msg.intent = \"clear\";\n    msg.item = null;\n} else if (raw === \"list\" || raw === \"send list\") {\n    msg.intent = \"send\";\n    msg.item = null;\n} else {\n    msg.intent = \"unknown\";\n    msg.item = raw;\n}\n\nmsg.statusCode = 200;\nmsg.payload = { status: \"received\", intent: msg.intent, item: msg.item };\nreturn msg;",
-    "outputs": 1,
-    "timeout": 0,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 1260,
-    "y": 620,
-    "wires": [
-      [
-        "ea7f37b249ea2019",
-        "79db1598637ea990",
-        "a434f6b77452f6f4"
-      ]
-    ]
-  },
-  {
-    "id": "79db1598637ea990",
-    "type": "function",
-    "z": "his-flow-main",
-    "name": "shopping_list",
-    "func": "var list = global.get(\"shopping_list\") || [];\n\nif (msg.intent === \"add\" && msg.item) {\n    list.push(msg.item);\n    global.set(\"shopping_list\", list);\n    msg.telegram_text = \"Added: \" + msg.item + \"\\nList now has \" + list.length + \" item(s).\";\n\n} else if (msg.intent === \"remove\" && msg.item) {\n    var before = list.length;\n    list = list.filter(function(i) { return i !== msg.item; });\n    global.set(\"shopping_list\", list);\n    msg.telegram_text = (list.length < before)\n        ? \"Removed: \" + msg.item\n        : \"'\" + msg.item + \"' not found on list.\";\n\n} else if (msg.intent === \"clear\") {\n    global.set(\"shopping_list\", []);\n    msg.telegram_text = \"Shopping list cleared.\";\n\n} else if (msg.intent === \"send\") {\n    msg.telegram_text = list.length === 0\n        ? \"Shopping list is empty.\"\n        : \"Shopping list:\\n\" + list.map(function(i, n) { return (n+1) + \". \" + i; }).join(\"\\n\");\n\n} else {\n    msg.telegram_text = null;\n}\n\nif (!msg.telegram_text) return null;\n\nmsg.payload = {\n    chatId: 8823231843,\n    type: \"message\",\n    content: msg.telegram_text\n};\nreturn msg;",
-    "outputs": 1,
-    "timeout": 0,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 1490,
-    "y": 620,
-    "wires": [
-      [
-        "21e377cb90fade5a",
-        "157fb6db4a7b2262"
-      ]
-    ]
-  },
-  {
-    "id": "21e377cb90fade5a",
-    "type": "telegram sender",
-    "z": "his-flow-main",
-    "name": "HIS Bot",
-    "bot": "8dc22b28810092a2",
-    "haserroroutput": false,
-    "outputs": 1,
-    "x": 1720,
-    "y": 640,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "157fb6db4a7b2262",
-    "type": "debug",
-    "z": "his-flow-main",
-    "name": "debug 3",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
+    "tostatus": true,
     "complete": "true",
     "targetType": "full",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 1660,
-    "y": 760,
+    "x": 960,
+    "y": 300,
     "wires": []
   },
   {
-    "id": "7fbcec58f4773769",
-    "type": "telegram receiver",
-    "z": "his-flow-main",
-    "name": "",
-    "bot": "8dc22b28810092a2",
-    "saveDataDir": "",
-    "filterCommands": false,
-    "hasinput": false,
-    "inputs": 0,
-    "handleallupdates": false,
-    "handleprocessupdates": false,
-    "x": 1310,
-    "y": 280,
+    "id": "533d671845fb6b33",
+    "type": "ui-number-input",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-adjust",
+    "name": "Brightness",
+    "label": "Range: 0 to 100",
+    "order": 2,
+    "width": "6",
+    "height": "2",
+    "topic": "topic",
+    "topicType": "msg",
+    "min": 0,
+    "max": "100",
+    "step": "10",
+    "tooltip": "",
+    "delay": 300,
+    "passthru": true,
+    "sendOnDelay": false,
+    "sendOnBlur": true,
+    "sendOnEnter": true,
+    "className": "",
+    "clearable": false,
+    "icon": "",
+    "iconPosition": "left",
+    "iconInnerPosition": "inside",
+    "spinner": "default",
+    "x": 190,
+    "y": 1340,
     "wires": [
       [
-        "ecd341bff9b0658e"
-      ],
-      [
-        "6da70c14f268de8f"
+        "gov-fn-all-brightness"
       ]
     ]
   },
   {
-    "id": "6da70c14f268de8f",
-    "type": "debug",
-    "z": "his-flow-main",
-    "name": "debug 4",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 1580,
-    "y": 280,
-    "wires": []
-  },
-  {
-    "id": "ecd341bff9b0658e",
-    "type": "debug",
-    "z": "his-flow-main",
-    "name": "debug 5",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 1600,
-    "y": 200,
-    "wires": []
-  },
-  {
-    "id": "a434f6b77452f6f4",
-    "type": "http response",
-    "z": "his-flow-main",
-    "name": "",
-    "statusCode": "",
-    "headers": {},
-    "x": 1650,
-    "y": 560,
-    "wires": []
+    "id": "f33f0729cf17b3ec",
+    "type": "ui-number-input",
+    "z": "gov-flow",
+    "group": "v2-grp-govee-adjust",
+    "name": "Color Temp",
+    "label": "2700 to 6500",
+    "order": 1,
+    "width": "6",
+    "height": "2",
+    "topic": "topic",
+    "topicType": "msg",
+    "min": "2700",
+    "max": "6500",
+    "step": "100",
+    "tooltip": "",
+    "delay": 300,
+    "passthru": true,
+    "sendOnDelay": false,
+    "sendOnBlur": true,
+    "sendOnEnter": true,
+    "className": "",
+    "clearable": false,
+    "icon": "",
+    "iconPosition": "left",
+    "iconInnerPosition": "inside",
+    "spinner": "default",
+    "x": 210,
+    "y": 1380,
+    "wires": [
+      [
+        "gov-fn-all-colortemp"
+      ]
+    ]
   }
 ]
