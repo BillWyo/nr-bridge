@@ -29,7 +29,7 @@ if (msg.intent === "add" && msg.item) {
 if (!msg.telegram_text) return null;
 
 msg.payload = {
-    chatid: "8823231843",
+    chatId: 8823231843,
     type: "message",
     content: msg.telegram_text
 };
