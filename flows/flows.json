@@ -1,10 +1,1436 @@
 [
   {
+    "id": "v2-ui-base",
+    "type": "ui-base",
+    "name": "HIS Dashboard",
+    "path": "/dashboard",
+    "appIcon": "",
+    "includeClientData": true,
+    "acceptsClientConfig": [
+      "ui-notification",
+      "ui-control"
+    ],
+    "showPathInSidebar": false,
+    "headerContent": "page",
+    "navigationStyle": "default",
+    "titleBarStyle": "default",
+    "showReconnectNotification": true,
+    "notificationDisplayTime": 5,
+    "showDisconnectNotification": true,
+    "allowInstall": true
+  },
+  {
+    "id": "8caffb684107c6b6",
+    "type": "ui-theme",
+    "name": "Scheme_Theme",
+    "colors": {
+      "surface": "#135058",
+      "primary": "#bee4f4",
+      "bgPage": "#4a7b82",
+      "groupBg": "#b5bbc9",
+      "groupOutline": "#cccccc"
+    },
+    "sizes": {
+      "density": "default",
+      "pagePadding": "12px",
+      "groupGap": "12px",
+      "groupBorderRadius": "4px",
+      "widgetGap": "12px"
+    }
+  },
+  {
+    "id": "v2-page-govee",
+    "type": "ui-page",
+    "name": "Govee Lights",
+    "ui": "v2-ui-base",
+    "path": "/govee",
+    "icon": "mdi-lightbulb",
+    "layout": "notebook",
+    "theme": "8caffb684107c6b6",
+    "order": 6
+  },
+  {
+    "id": "v2-grp-govee-presets",
+    "type": "ui-group",
+    "name": "Presets",
+    "page": "v2-page-govee",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-govee-adjust",
+    "type": "ui-group",
+    "name": "Adjust",
+    "page": "v2-page-govee",
+    "width": "12",
+    "height": "1",
+    "order": 2,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-govee-save",
+    "type": "ui-group",
+    "name": "Save Preset",
+    "page": "v2-page-govee",
+    "width": "12",
+    "height": "1",
+    "order": 4,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-govee-color",
+    "type": "ui-group",
+    "name": "Color",
+    "page": "v2-page-govee",
+    "width": "12",
+    "height": "1",
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-page-pth",
+    "type": "ui-page",
+    "name": "PTH Charts",
+    "ui": "v2-ui-base",
+    "path": "/pth",
+    "icon": "show_chart",
+    "layout": "notebook",
+    "theme": "8caffb684107c6b6",
+    "breakpoints": [
+      {
+        "name": "Default",
+        "px": "0",
+        "cols": "3"
+      },
+      {
+        "name": "Tablet",
+        "px": "576",
+        "cols": "6"
+      },
+      {
+        "name": "Small Desktop",
+        "px": "768",
+        "cols": "9"
+      },
+      {
+        "name": "Desktop",
+        "px": "1024",
+        "cols": "12"
+      }
+    ],
+    "order": 1,
+    "className": "",
+    "visible": "true",
+    "disabled": "false"
+  },
+  {
+    "id": "v2-page-overview",
+    "type": "ui-page",
+    "name": "Home Overview",
+    "ui": "v2-ui-base",
+    "path": "/overview",
+    "icon": "home",
+    "layout": "notebook",
+    "theme": "8caffb684107c6b6",
+    "order": 2
+  },
+  {
+    "id": "v2-page-alarms",
+    "type": "ui-page",
+    "name": "Alarms",
+    "ui": "v2-ui-base",
+    "path": "/alarms",
+    "icon": "warning",
+    "layout": "notebook",
+    "theme": "8caffb684107c6b6",
+    "order": 3
+  },
+  {
+    "id": "v2-page-frontdoor",
+    "type": "ui-page",
+    "name": "Front Door",
+    "ui": "v2-ui-base",
+    "path": "/frontdoor",
+    "icon": "camera_alt",
+    "layout": "notebook",
+    "theme": "8caffb684107c6b6",
+    "order": 4
+  },
+  {
+    "id": "v2-page-pb",
+    "type": "ui-page",
+    "name": "Photo Booth",
+    "ui": "v2-ui-base",
+    "path": "/photobooth",
+    "icon": "photo_camera",
+    "layout": "notebook",
+    "theme": "8caffb684107c6b6",
+    "order": 5
+  },
+  {
+    "id": "v2-grp-pressure",
+    "type": "ui-group",
+    "name": "Pressure (PSI)",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": false,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "v2-grp-temp",
+    "type": "ui-group",
+    "name": "Temperature (°F)",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 2,
+    "showTitle": false,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "v2-grp-faults",
+    "type": "ui-group",
+    "name": "Sensor Fault Counts",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "v2-grp-status",
+    "type": "ui-group",
+    "name": "Node Status",
+    "page": "v2-page-pth",
+    "width": "12",
+    "height": "1",
+    "order": 4,
+    "showTitle": true,
+    "className": "",
+    "visible": true,
+    "disabled": false
+  },
+  {
+    "id": "v2-grp-doors",
+    "type": "ui-group",
+    "name": "Doors & Windows",
+    "page": "v2-page-overview",
+    "width": "6",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-motion",
+    "type": "ui-group",
+    "name": "Motion",
+    "page": "v2-page-overview",
+    "width": "6",
+    "height": "1",
+    "order": 2,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-photo",
+    "type": "ui-group",
+    "name": "Current Photo",
+    "page": "v2-page-overview",
+    "width": "12",
+    "height": "1",
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-gas",
+    "type": "ui-group",
+    "name": "Smoke / CO",
+    "page": "v2-page-alarms",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-visitor",
+    "type": "ui-group",
+    "name": "Visitor",
+    "page": "v2-page-frontdoor",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "v2-grp-pb-cam",
+    "type": "ui-group",
+    "name": "Camera",
+    "page": "v2-page-pb",
+    "width": "12",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true"
+  },
+  {
+    "id": "his-broker",
+    "type": "mqtt-broker",
+    "name": "Mosquitto Local",
+    "broker": "localhost",
+    "port": "1883",
+    "clientid": "nodered-his-hub",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true
+  },
+  {
+    "id": "mqtt-broker-music",
+    "type": "mqtt-broker",
+    "name": "Mosquitto Local",
+    "broker": "localhost",
+    "port": "1883",
+    "clientid": "nodered-musicbox",
+    "usetls": false,
+    "compatmode": true,
+    "keepalive": "60",
+    "cleansession": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "his-flow-main",
+    "type": "tab",
+    "label": "HIS Main",
+    "disabled": false,
+    "info": "Home Information System — main flow"
+  },
+  {
+    "id": "his-mqtt-pth",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/pth",
+    "topic": "home/+/pth",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 160,
+    "y": 120,
+    "wires": [
+      [
+        "his-fn-split-pth",
+        "his-fn-lastseen"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-rh-summary",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "RH summary",
+    "func": "var nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');var latest=flow.get('rh_latest')||{};latest[nodeId]=msg.payload;flow.set('rh_latest',latest);var nodes=['bills-office','mud-room','garage'];var labels={'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};var readings=nodes.map(function(n){return{label:labels[n],value:latest[n]!==undefined?latest[n].toFixed(1)+'%':'--'};});msg.payload=readings;return msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 160,
+    "wires": [
+      [
+        "v2-tmpl-rh"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-p-diffs",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "P differences",
+    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='→ stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='↑ +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='↓ '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='± '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 620,
+    "y": 220,
+    "wires": [
+      [
+        "v2-tmpl-pressure"
+      ]
+    ]
+  },
+  {
+    "id": "his-mqtt-door",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/door",
+    "topic": "home/+/door",
+    "qos": "1",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": true,
+    "inputs": 0,
+    "x": 160,
+    "y": 420,
+    "wires": [
+      [
+        "his-fn-door-text"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-door-text",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "format door",
+    "func": "var icon = msg.payload.state === 'open' ? 'ὑ3 OPEN' : 'ὑ2 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 420,
+    "wires": [
+      [
+        "v2-text-door"
+      ]
+    ]
+  },
+  {
+    "id": "his-mqtt-motion",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/motion",
+    "topic": "home/+/motion",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 160,
+    "y": 480,
+    "wires": [
+      [
+        "his-fn-motion-text"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-motion-text",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "format motion",
+    "func": "var icon = msg.payload.state === 'detected' ? 'Ὢ8 DETECTED' : '✅ clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 480,
+    "wires": [
+      [
+        "v2-text-motion"
+      ]
+    ]
+  },
+  {
+    "id": "his-mqtt-alarm",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/+/alarm",
+    "topic": "home/+/alarm",
+    "qos": "1",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 160,
+    "y": 580,
+    "wires": [
+      [
+        "his-fn-alarm-gauge",
+        "his-fn-alarm-check"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-alarm-gauge",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "smoke level",
+    "func": "msg.topic = msg.payload.device;\nmsg.payload = msg.payload.smoke;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 560,
+    "wires": [
+      [
+        "v2-gauge-smoke"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-alarm-check",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "alert if true",
+    "func": "if (msg.payload.alert === true) {\n    msg.payload = 'Ὢ8 ALARM: ' + msg.payload.type.toUpperCase() + ' — node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 620,
+    "wires": [
+      [
+        "v2-text-alarm"
+      ]
+    ]
+  },
+  {
+    "id": "his-mqtt-visitor",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/frontdoor/visitor",
+    "topic": "home/frontdoor/visitor",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 180,
+    "y": 720,
+    "wires": [
+      [
+        "his-fn-visitor-text"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-visitor-text",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "visitor label",
+    "func": "var trig = msg.payload.trigger === 'button' ? 'ὑ4 Doorbell' : '὆4 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 420,
+    "y": 720,
+    "wires": [
+      [
+        "v2-text-visitor"
+      ]
+    ]
+  },
+  {
+    "id": "his-mqtt-image",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/frontdoor/image",
+    "topic": "home/frontdoor/image",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 180,
+    "y": 780,
+    "wires": [
+      [
+        "his-fn-image-b64"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-image-b64",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "JPEG → base64 img",
+    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 440,
+    "y": 780,
+    "wires": [
+      [
+        "v2-tmpl-frontdoor"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-lastseen",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "update last seen",
+    "func": "var nodeId = msg.topic.split('/')[1];\nvar ls = flow.get('node_lastseen') || {};\nls[nodeId] = Date.now();\nflow.set('node_lastseen', ls);\nreturn null;",
+    "outputs": 0,
+    "noerr": 0,
+    "x": 380,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "his-inject-watchdog",
+    "type": "inject",
+    "z": "his-flow-main",
+    "name": "watchdog tick",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "60",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 10,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 1060,
+    "wires": [
+      [
+        "his-fn-watchdog"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-watchdog",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "check node health",
+    "func": "var STALE_MS = 300000;\nvar nodes  = ['bills-office','mud-room','garage'];\nvar labels = {'bills-office':'Bills Office','mud-room':'Mud Room','garage':'Garage'};\nvar ls  = flow.get('node_lastseen') || {};\nvar now = Date.now();\nvar rows = nodes.map(function(n) {\n    var t = ls[n];\n    if (!t) return {node: labels[n], age: 'never', ok: false};\n    var age = Math.floor((now - t) / 1000);\n    var d  = new Date(t);\n    var mo = d.getMonth() + 1;\n    var dd = String(d.getDate()).padStart(2, '0');\n    var hh = String(d.getHours()).padStart(2, '0');\n    var mm = String(d.getMinutes()).padStart(2, '0');\n    var stamp = mo + '/' + dd + ' ' + hh + ':' + mm;\n    return {node: labels[n], age: stamp, ok: age < (STALE_MS / 1000)};\n});\nmsg.payload = rows;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 420,
+    "y": 1060,
+    "wires": [
+      [
+        "v2-tmpl-status"
+      ]
+    ]
+  },
+  {
+    "id": "his-mqtt-display-photo",
+    "type": "mqtt in",
+    "z": "his-flow-main",
+    "name": "home/display/photo",
+    "topic": "home/display/photo",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 180,
+    "y": 840,
+    "wires": [
+      [
+        "his-fn-display-b64"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-display-b64",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "JPEG to base64",
+    "func": "msg.payload = msg.payload.toString(\"base64\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 420,
+    "y": 840,
+    "wires": [
+      [
+        "v2-tmpl-photo"
+      ]
+    ]
+  },
+  {
+    "id": "his-http-capture",
+    "type": "http in",
+    "z": "his-flow-main",
+    "name": "POST /capture",
+    "url": "/capture",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 180,
+    "y": 900,
+    "wires": [
+      [
+        "his-fn-capture-proc"
+      ]
+    ]
+  },
+  {
+    "id": "his-fn-capture-proc",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "JPEG to display",
+    "func": "var b64 = msg.payload.toString(\"base64\");\nvar imgMsg = {payload: b64};\nvar respMsg = {payload: \"OK\", statusCode: 200, req: msg.req, res: msg.res};\nreturn [imgMsg, respMsg];",
+    "outputs": 2,
+    "noerr": 0,
+    "x": 420,
+    "y": 900,
+    "wires": [
+      [
+        "v2-tmpl-photo",
+        "v2-tmpl-frontdoor"
+      ],
+      [
+        "his-http-resp-capture"
+      ]
+    ]
+  },
+  {
+    "id": "his-http-resp-capture",
+    "type": "http response",
+    "z": "his-flow-main",
+    "name": "200 OK",
+    "statusCode": "200",
+    "headers": {},
+    "x": 680,
+    "y": 940,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-pressure",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-pressure",
+    "page": "",
+    "ui": "",
+    "name": "Pressure Summary",
+    "order": 2,
+    "width": "4",
+    "height": "3",
+    "format": "<template>\n  <div class=\"ps\">\n    <div class=\"ps-val\">{{ msg && msg.payload ? msg.payload.pressure + ' PSI' : '-- PSI' }}</div>\n    <div class=\"ps-trend\">{{ msg && msg.payload ? msg.payload.trend : 'waiting for sensors...' }}</div>\n    <div class=\"ps-conf\">{{ msg && msg.payload ? 'Confidence: ' + msg.payload.conf : '' }}</div>\n    <div class=\"ps-src\">{{ msg && msg.payload ? 'Source: ' + msg.payload.source : '' }}</div>\n  </div>\n</template>\n<style scoped>\n.ps { font-family: monospace; padding: 10px }\n.ps-val { font-size: 2.8em; font-weight: bold; color: #91362a }\n.ps-trend { font-size: 1.6em; color: var(--nrdb-widget-textColor, #302524); margin-top: 6px }\n.ps-conf { font-size: 1.4em; color: var(--nrdb-widget-textColor, #302524); margin-top: 4px }\n.ps-src { font-size: 1.2em; color: var(--nrdb-widget-textColor, #302524); margin-top: 4px }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 850,
+    "y": 220,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-tmpl-rh",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-temp",
+    "page": "",
+    "ui": "",
+    "name": "Humidity Summary",
+    "order": 2,
+    "width": "6",
+    "height": "4",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"rhs\">\n    <div v-for=\"r in msg.payload\" :key=\"r.label\" class=\"rhs-row\">\n      <span class=\"rhs-node\">{{ r.label }}</span>\n      <span class=\"rhs-val\">{{ r.value }}</span>\n    </div>\n  </div>\n</template>\n<style scoped>\n.rhs { font-family: monospace; padding: 10px }\n.rhs-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #0d162b }\n.rhs-node { font-size: 1.4em; color: #0d162b }\n.rhs-val { font-size: 1.6em; font-weight: bold; color: #0d162b }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 840,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-chart-temp",
+    "type": "ui-chart",
+    "z": "his-flow-main",
+    "group": "v2-grp-temp",
+    "name": "Temperature",
+    "label": "Temperature (°F)",
+    "order": 1,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "timestamp",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "xmin": "",
+    "xmax": "",
+    "yAxisLabel": "",
+    "yAxisProperty": "",
+    "yAxisPropertyType": "property",
+    "ymin": "55",
+    "ymax": "75",
+    "bins": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointRadius": "",
+    "showLegend": true,
+    "removeOlder": "30",
+    "removeOlderUnit": "60",
+    "removeOlderPoints": "",
+    "colors": [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd",
+      "#aec7e8",
+      "#ffbb78",
+      "#98df8a",
+      "#000000"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": "6",
+    "height": "4",
+    "className": "",
+    "interpolation": "linear",
+    "x": 830,
+    "y": 100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-tmpl-status",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-status",
+    "page": "",
+    "ui": "",
+    "name": "Node Status",
+    "order": 1,
+    "width": "12",
+    "height": "3",
+    "format": "<template>\n  <div v-if=\"msg && msg.payload\" class=\"ns\">\n    <table>\n      <thead><tr><th>Node</th><th>Last seen</th></tr></thead>\n      <tbody>\n        <tr v-for=\"r in msg.payload\" :key=\"r.node\">\n          <td>{{ r.node }}</td>\n          <td>{{ r.age }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</template>\n<style scoped>\n.ns { font-family: monospace; font-size: 13px }\n.ns table { width: 100%; border-collapse: collapse }\n.ns th, .ns td { padding: 4px 12px; border-bottom: 1px solid #444 }\n.ns th { color: #0d162b; text-align: left }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 680,
+    "y": 1060,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-text-door",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-doors",
+    "order": 1,
+    "width": "6",
+    "height": "1",
+    "name": "Door Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "x": 600,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "v2-text-motion",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-motion",
+    "order": 1,
+    "width": "6",
+    "height": "1",
+    "name": "Motion Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "x": 600,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-photo",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-photo",
+    "name": "Current Photo",
+    "order": 1,
+    "width": "12",
+    "height": "9",
+    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 680,
+    "y": 840,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-gauge-smoke",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-gas",
+    "name": "Smoke Level",
+    "order": 1,
+    "width": "6",
+    "height": "4",
+    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0–4095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 600,
+    "y": 560,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-text-alarm",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-gas",
+    "order": 2,
+    "width": "12",
+    "height": "1",
+    "name": "Alarm Banner",
+    "label": "⚠ Alert",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "x": 600,
+    "y": 620,
+    "wires": []
+  },
+  {
+    "id": "v2-text-visitor",
+    "type": "ui-text",
+    "z": "his-flow-main",
+    "group": "v2-grp-visitor",
+    "order": 1,
+    "width": "12",
+    "height": "1",
+    "name": "Last Visitor",
+    "label": "Last event",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "x": 640,
+    "y": 720,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-frontdoor",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-visitor",
+    "name": "Visitor Snapshot",
+    "order": 2,
+    "width": "12",
+    "height": "9",
+    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 680,
+    "y": 780,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "v2-tmpl-clock",
+    "type": "ui-template",
+    "z": "his-flow-main",
+    "group": "v2-grp-pressure",
+    "page": "",
+    "ui": "",
+    "name": "Clock",
+    "order": 1,
+    "width": "4",
+    "height": "3",
+    "format": "<template>\n  <div class=\"clk\">\n    <div class=\"clk-time\">{{ time }}</div>\n    <div class=\"clk-day\">{{ day }}</div>\n  </div>\n</template>\n<script>\n  export default {\n    data() { return { time: '', day: '' } },\n    mounted()      { this.tick(); this._t = setInterval(this.tick, 10000); },\n    beforeUnmount(){ clearInterval(this._t); },\n    methods: {\n      tick() {\n        const d = new Date();\n        const h = d.getHours(), m = String(d.getMinutes()).padStart(2, '0');\n        this.time = (h % 12 || 12) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM');\n        const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];\n        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\n        this.day = days[d.getDay()] + '  ' + months[d.getMonth()] + ' ' + d.getDate();\n      }\n    }\n  }\n</script>\n<style scoped>\n.clk      { font-family: monospace; padding: 10px }\n.clk-time { font-size: 2.8em; font-weight: bold; color: #91362a }\n.clk-day  { font-size: 1.6em; color: var(--nrdb-widget-textColor, #302524); margin-top: 6px }\n</style>",
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": false,
+    "templateScope": "local",
+    "className": "",
+    "x": 850,
+    "y": 100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "his-fn-split-pth",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "Split P/T/RH",
+    "func": "var nodeId = msg.topic.split('/')[1];\nvar d = msg.payload;\nfunction mk(v) { return { payload: v, _nodeId: nodeId, topic: nodeId }; }\nreturn [ mk(d.P), mk(d.T), mk(d.RH) ];",
+    "outputs": 3,
+    "noerr": 0,
+    "x": 380,
+    "y": 120,
+    "wires": [
+      [
+        "his-fn-p-diffs"
+      ],
+      [
+        "v2-chart-temp"
+      ],
+      [
+        "his-fn-rh-summary"
+      ]
+    ]
+  },
+  {
+    "id": "2255e6a229deff89",
+    "type": "http response",
+    "z": "his-flow-main",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 1430,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "c7432bc008d82fc8",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "debug 1",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1600,
+    "y": 500,
+    "wires": []
+  },
+  {
+    "id": "8db92d9dccf5b93b",
+    "type": "template",
+    "z": "his-flow-main",
+    "name": "voice_ui_page",
+    "field": "payload",
+    "fieldType": "msg",
+    "format": "handlebars",
+    "syntax": "mustache",
+    "template": "<!DOCTYPE html>\n<html>\n<head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Voice to Node-RED</title>\n    <style>\n        body { font-family: sans-serif; padding: 30px; background: #1a1a2e; color: white; max-width: 500px; margin: 0 auto; }\n        h2 { text-align: center; margin-bottom: 30px; }\n        textarea { width: 100%; font-size: 18px; padding: 15px; border-radius: 10px; border: none; min-height: 120px; box-sizing: border-box; background: #16213e; color: white; }\n        button { width: 100%; margin-top: 15px; font-size: 22px; padding: 20px; border-radius: 50px; background: #e94560; color: white; border: none; }\n        #status { text-align: center; margin-top: 20px; font-size: 16px; color: #aaa; min-height: 24px; }\n    </style>\n</head>\n<body>\n    <h2>Voice to Node-RED</h2>\n    <textarea id=\"txt\" placeholder=\"Tap the mic on your keyboard and speak...\"></textarea>\n    <button onclick=\"send()\">Send</button>\n    <div id=\"status\"></div>\n    <script>\n        function send() {\n            var text = document.getElementById('txt').value.trim();\n            if (!text) return;\n            document.getElementById('status').textContent = 'Sending...';\n            fetch('/voice', {\n                method: 'POST',\n                headers: { 'Content-Type': 'application/json' },\n                body: JSON.stringify({ text: text })\n            }).then(function() {\n                document.getElementById('status').textContent = 'Sent!';\n                document.getElementById('txt').value = '';\n            }).catch(function() {\n                document.getElementById('status').textContent = 'Error â€” check Node-RED';\n            });\n        }\n    </script>\n</body>\n</html>\n",
+    "output": "str",
+    "x": 1260,
+    "y": 400,
+    "wires": [
+      [
+        "2255e6a229deff89",
+        "c7432bc008d82fc8"
+      ]
+    ]
+  },
+  {
+    "id": "be24c38b75cecf10",
+    "type": "http in",
+    "z": "his-flow-main",
+    "name": "",
+    "url": "/voice-ui",
+    "method": "get",
+    "upload": false,
+    "skipBodyParsing": false,
+    "swaggerDoc": "",
+    "x": 1030,
+    "y": 400,
+    "wires": [
+      [
+        "8db92d9dccf5b93b"
+      ]
+    ]
+  },
+  {
+    "id": "ea7f37b249ea2019",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "debug 2",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1340,
+    "y": 720,
+    "wires": []
+  },
+  {
+    "id": "296ae86c5f8e1286",
+    "type": "http in",
+    "z": "his-flow-main",
+    "name": "",
+    "url": "/voice",
+    "method": "post",
+    "upload": false,
+    "skipBodyParsing": false,
+    "swaggerDoc": "",
+    "x": 1050,
+    "y": 620,
+    "wires": [
+      [
+        "64c5868e463e8603"
+      ]
+    ]
+  },
+  {
+    "id": "64c5868e463e8603",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "voice_handler",
+    "func": "var raw = (typeof msg.payload === \"object\") ? msg.payload.text : String(msg.payload);\nraw = (raw || \"\").trim().toLowerCase();\n\nnode.warn(\"Voice input: \" + raw);\n\nif (raw.startsWith(\"add \")) {\n    msg.intent = \"add\";\n    msg.item = raw.slice(4).trim();\n} else if (raw.startsWith(\"remove \") || raw.startsWith(\"delete \")) {\n    msg.intent = \"remove\";\n    msg.item = raw.replace(/^(remove|delete)\\s+/, \"\").trim();\n} else if (raw === \"clear list\" || raw === \"clear\") {\n    msg.intent = \"clear\";\n    msg.item = null;\n} else if (raw === \"list\" || raw === \"send list\") {\n    msg.intent = \"send\";\n    msg.item = null;\n} else {\n    msg.intent = \"unknown\";\n    msg.item = raw;\n}\n\nmsg.statusCode = 200;\nmsg.payload = { status: \"received\", intent: msg.intent, item: msg.item };\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1260,
+    "y": 620,
+    "wires": [
+      [
+        "ea7f37b249ea2019",
+        "79db1598637ea990",
+        "a434f6b77452f6f4"
+      ]
+    ]
+  },
+  {
+    "id": "79db1598637ea990",
+    "type": "function",
+    "z": "his-flow-main",
+    "name": "shopping_list",
+    "func": "var list = global.get(\"shopping_list\") || [];\n\nif (msg.intent === \"add\" && msg.item) {\n    list.push(msg.item);\n    global.set(\"shopping_list\", list);\n    msg.telegram_text = \"Added: \" + msg.item + \"\\nList now has \" + list.length + \" item(s).\";\n\n} else if (msg.intent === \"remove\" && msg.item) {\n    var before = list.length;\n    list = list.filter(function(i) { return i !== msg.item; });\n    global.set(\"shopping_list\", list);\n    msg.telegram_text = (list.length < before)\n        ? \"Removed: \" + msg.item\n        : \"'\" + msg.item + \"' not found on list.\";\n\n} else if (msg.intent === \"clear\") {\n    global.set(\"shopping_list\", []);\n    msg.telegram_text = \"Shopping list cleared.\";\n\n} else if (msg.intent === \"send\") {\n    msg.telegram_text = list.length === 0\n        ? \"Shopping list is empty.\"\n        : \"Shopping list:\\n\" + list.map(function(i, n) { return (n+1) + \". \" + i; }).join(\"\\n\");\n\n} else {\n    msg.telegram_text = null;\n}\n\nif (!msg.telegram_text) return null;\n\nmsg.payload = {\n    chatId: 8823231843,\n    type: \"message\",\n    content: msg.telegram_text\n};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1490,
+    "y": 620,
+    "wires": [
+      [
+        "21e377cb90fade5a",
+        "157fb6db4a7b2262"
+      ]
+    ]
+  },
+  {
+    "id": "21e377cb90fade5a",
+    "type": "telegram sender",
+    "z": "his-flow-main",
+    "name": "HIS Bot",
+    "bot": "8dc22b28810092a2",
+    "haserroroutput": false,
+    "outputs": 1,
+    "x": 1720,
+    "y": 640,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "157fb6db4a7b2262",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "debug 3",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1660,
+    "y": 760,
+    "wires": []
+  },
+  {
+    "id": "7fbcec58f4773769",
+    "type": "telegram receiver",
+    "z": "his-flow-main",
+    "name": "",
+    "bot": "8dc22b28810092a2",
+    "saveDataDir": "",
+    "filterCommands": false,
+    "hasinput": false,
+    "inputs": 0,
+    "handleallupdates": false,
+    "handleprocessupdates": false,
+    "x": 1310,
+    "y": 280,
+    "wires": [
+      [
+        "ecd341bff9b0658e"
+      ],
+      [
+        "6da70c14f268de8f"
+      ]
+    ]
+  },
+  {
+    "id": "6da70c14f268de8f",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "debug 4",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1580,
+    "y": 280,
+    "wires": []
+  },
+  {
+    "id": "ecd341bff9b0658e",
+    "type": "debug",
+    "z": "his-flow-main",
+    "name": "debug 5",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1600,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "a434f6b77452f6f4",
+    "type": "http response",
+    "z": "his-flow-main",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 1650,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "pb-flow-main",
+    "type": "tab",
+    "label": "Photo Booth",
+    "disabled": false,
+    "info": "Photo Booth — MQTT triggered capture"
+  },
+  {
+    "id": "pb-mqtt-trigger",
+    "type": "mqtt out",
+    "z": "pb-flow-main",
+    "name": "photobooth/trigger",
+    "topic": "home/photobooth/trigger",
+    "qos": "0",
+    "retain": "false",
+    "broker": "his-broker",
+    "x": 380,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "pb-mqtt-image",
+    "type": "mqtt in",
+    "z": "pb-flow-main",
+    "name": "home/photobooth/image",
+    "topic": "home/photobooth/image",
+    "qos": "0",
+    "datatype": "buffer",
+    "broker": "his-broker",
+    "nl": false,
+    "rap": false,
+    "inputs": 0,
+    "x": 160,
+    "y": 220,
+    "wires": [
+      [
+        "pb-fn-image-b64",
+        "pb-fn-ts"
+      ]
+    ]
+  },
+  {
+    "id": "pb-fn-image-b64",
+    "type": "function",
+    "z": "pb-flow-main",
+    "name": "JPEG → base64",
+    "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 380,
+    "y": 200,
+    "wires": [
+      [
+        "v2-tmpl-pb"
+      ]
+    ]
+  },
+  {
+    "id": "pb-fn-ts",
+    "type": "function",
+    "z": "pb-flow-main",
+    "name": "timestamp",
+    "func": "msg.payload = 'Last capture: ' + new Date().toLocaleTimeString();\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 360,
+    "y": 260,
+    "wires": [
+      [
+        "v2-text-pb-status"
+      ]
+    ]
+  },
+  {
+    "id": "v2-btn-capture",
+    "type": "ui-button",
+    "z": "pb-flow-main",
+    "group": "v2-grp-pb-cam",
+    "name": "Capture",
+    "label": "Capture",
+    "order": 1,
+    "width": "4",
+    "height": "1",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "camera_alt",
+    "iconPosition": "left",
+    "payload": "go",
+    "payloadType": "str",
+    "topic": "",
+    "topicType": "str",
+    "x": 160,
+    "y": 100,
+    "wires": [
+      [
+        "pb-mqtt-trigger"
+      ]
+    ]
+  },
+  {
+    "id": "v2-text-pb-status",
+    "type": "ui-text",
+    "z": "pb-flow-main",
+    "group": "v2-grp-pb-cam",
+    "order": 2,
+    "width": "8",
+    "height": "1",
+    "name": "Capture Status",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "row-left",
+    "style": false,
+    "className": "",
+    "x": 580,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "v2-tmpl-pb",
+    "type": "ui-template",
+    "z": "pb-flow-main",
+    "group": "v2-grp-pb-cam",
+    "name": "Snapshot",
+    "order": 3,
+    "width": "12",
+    "height": "9",
+    "format": "<template>\n  <img v-if=\"msg && msg.payload\"\n       :src=\"'data:image/jpeg;base64,' + msg.payload\"\n       style=\"max-width:100%;border-radius:4px\" />\n</template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "className": "",
+    "x": 620,
+    "y": 200,
+    "wires": [
+      []
+    ]
+  },
+  {
     "id": "gov-flow",
     "type": "tab",
     "label": "Govee Lights",
     "disabled": false,
-    "info": "Govee LAN API \u2014 4 bulbs"
+    "info": "Govee LAN API — 4 bulbs"
   },
   {
     "id": "gov-inject-scan",
@@ -172,7 +1598,7 @@
     "id": "gov-fn-mqtt-ctrl",
     "type": "function",
     "z": "gov-flow",
-    "name": "MQTT \u2192 Govee cmd",
+    "name": "MQTT → Govee cmd",
     "func": "node.warn('SRC:mqtt-ctrl retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\n// MQTT payload: {cmd, value|r,g,b|kelvin, devices:'all'|[ids]}\nvar p = msg.payload;\nvar gcmd;\nswitch (p.cmd) {\n    case 'turn':       gcmd = {cmd:'turn',       data:{value: p.value ? 1 : 0}}; break;\n    case 'brightness': gcmd = {cmd:'brightness',  data:{value: p.value}}; break;\n    case 'color':      gcmd = {cmd:'colorwc',     data:{color:{r:p.r||0,g:p.g||0,b:p.b||0}, colorTemInKelvin:0}}; break;\n    case 'colortemp':  gcmd = {cmd:'colorwc',     data:{color:{r:0,g:0,b:0}, colorTemInKelvin:p.kelvin||4000}}; break;\n    default: node.warn('Unknown Govee cmd: ' + p.cmd); return null;\n}\nmsg.govee_cmd     = gcmd;\nmsg.govee_targets = p.devices || 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -208,7 +1634,7 @@
     "id": "gov-fn-visitor",
     "type": "function",
     "z": "gov-flow",
-    "name": "visitor \u2192 warm white",
+    "name": "visitor → warm white",
     "func": "node.warn('SRC:visitor topic=' + msg.topic + ' retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\nif (!msg.payload || !msg.payload.trigger) { node.warn('visitor: no trigger field - discarded'); return null; }\nmsg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\nmsg.govee_targets = 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -244,7 +1670,7 @@
     "id": "gov-fn-alarm",
     "type": "function",
     "z": "gov-flow",
-    "name": "alarm \u2192 red / clear \u2192 white",
+    "name": "alarm → red / clear → white",
     "func": "if (msg.retain) return null;\nif (!msg.payload || typeof msg.payload !== 'object') return null;\n\nif (msg.payload.alert === true) {\n    flow.set('govee_alarm_active', true);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nif (msg.payload.alert === false) {\n    if (!flow.get('govee_alarm_active')) return null;  // not in alarm - ignore routine sensor readings\n    flow.set('govee_alarm_active', false);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nreturn null;  // no alert field - discard",
     "outputs": 1,
     "noerr": 0,
@@ -827,7 +2253,7 @@
     "id": "gov-fn-all-brightness",
     "type": "function",
     "z": "gov-flow",
-    "name": "brightness \u2192 all",
+    "name": "brightness → all",
     "func": "var current = flow.get('govee_current') || {};\ncurrent.brightness = msg.payload;\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'brightness',data:{value:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
@@ -844,7 +2270,7 @@
     "id": "gov-fn-all-colortemp",
     "type": "function",
     "z": "gov-flow",
-    "name": "colortemp \u2192 all",
+    "name": "colortemp → all",
     "func": "node.warn('SRC:colortemp-slider value=' + msg.payload);\nvar current = flow.get('govee_current') || {};\ncurrent.colortemp = msg.payload;\ncurrent.mode = 'white';\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
@@ -1003,315 +2429,181 @@
         "gov-fn-all-colortemp"
       ]
     ]
+  },
+  {
+    "id": "music-flow-create",
+    "type": "tab",
+    "label": "Music — Create",
+    "disabled": false,
+    "info": "",
+    "env": []
+  },
+  {
+    "id": "music-in-create",
+    "type": "mqtt in",
+    "z": "music-flow-create",
+    "name": "Create Playlist",
+    "topic": "home/music/playlists/create",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "mqtt-broker-music",
+    "nl": false,
+    "rap": false,
+    "rh": 0,
+    "x": 100,
+    "y": 100,
+    "wires": [
+      [
+        "music-fn-create"
+      ]
+    ]
+  },
+  {
+    "id": "music-fn-create",
+    "type": "function",
+    "z": "music-flow-create",
+    "name": "Parse & Validate",
+    "func": "if (!msg.payload.name || !Array.isArray(msg.payload.tracks)) {\n    node.error('Invalid playlist: missing name or tracks');\n    return null;\n}\nmsg.filename = `F:\\Music - Flac\\Playlists/${msg.payload.name}.json`;\nmsg.payload = JSON.stringify(msg.payload, null, 2);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 280,
+    "y": 100,
+    "wires": [
+      [
+        "music-file-write"
+      ]
+    ]
+  },
+  {
+    "id": "music-file-write",
+    "type": "file",
+    "z": "music-flow-create",
+    "name": "Save Playlist JSON",
+    "filename": "",
+    "appendNewline": false,
+    "createDir": true,
+    "overwriteFile": "true",
+    "encoding": "none",
+    "x": 480,
+    "y": 100,
+    "wires": [
+      [
+        "music-out-ack"
+      ]
+    ]
+  },
+  {
+    "id": "music-out-ack",
+    "type": "mqtt out",
+    "z": "music-flow-create",
+    "name": "Ack to Quest",
+    "topic": "home/music/playlists/created",
+    "qos": "0",
+    "retain": false,
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "mqtt-broker-music",
+    "x": 660,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "music-flow-play",
+    "type": "tab",
+    "label": "Music — Play",
+    "disabled": false,
+    "info": "",
+    "env": []
+  },
+  {
+    "id": "music-in-select",
+    "type": "mqtt in",
+    "z": "music-flow-play",
+    "name": "Select Playlist",
+    "topic": "home/music/playlists/select",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "mqtt-broker-music",
+    "nl": false,
+    "rap": false,
+    "rh": 0,
+    "x": 100,
+    "y": 180,
+    "wires": [
+      [
+        "music-fn-load"
+      ]
+    ]
+  },
+  {
+    "id": "music-fn-load",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Build Filepath",
+    "func": "msg.filename = `F:\\Music - Flac\\Playlists/${msg.payload.name}.json`;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 280,
+    "y": 180,
+    "wires": [
+      [
+        "music-file-read"
+      ]
+    ]
+  },
+  {
+    "id": "music-file-read",
+    "type": "file in",
+    "z": "music-flow-play",
+    "name": "Load Playlist JSON",
+    "filename": "",
+    "format": "utf8",
+    "chunk": false,
+    "sendError": true,
+    "encoding": "none",
+    "x": 480,
+    "y": 180,
+    "wires": [
+      [
+        "music-fn-format"
+      ]
+    ]
+  },
+  {
+    "id": "music-fn-format",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Format for Playback",
+    "func": "let playlist = JSON.parse(msg.payload);\nmsg.payload = {\n    playlist: playlist.name,\n    tracks: playlist.tracks.map((t, i) => ({\n        index: i,\n        uri: t.uri,\n        title: t.title,\n        album: t.album || ''\n    }))\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 680,
+    "y": 180,
+    "wires": [
+      [
+        "music-out-tracks"
+      ]
+    ]
+  },
+  {
+    "id": "music-out-tracks",
+    "type": "mqtt out",
+    "z": "music-flow-play",
+    "name": "Publish Tracks",
+    "topic": "home/music/playback/tracks",
+    "qos": "0",
+    "retain": false,
+    "respTopic": "",
+    "contentType": "application/json",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "mqtt-broker-music",
+    "x": 880,
+    "y": 180,
+    "wires": []
   }
-  ,{
-  "id": "music-flow-create",
-  "type": "tab",
-  "label": "Music — Create",
-  "disabled": false,
-  "info": "",
-  "env": []
-},
-{
-  "id": "music-in-create",
-  "type": "mqtt in",
-  "z": "music-flow-create",
-  "name": "Create Playlist",
-  "topic": "home/music/playlists/create",
-  "qos": "0",
-  "datatype": "json",
-  "broker": "nis-broker",
-  "nl": false,
-  "rap": false,
-  "rh": 0,
-  "x": 100,
-  "y": 100,
-  "wires": [["music-fn-create"]]
-},
-{
-  "id": "music-fn-create",
-  "type": "function",
-  "z": "music-flow-create",
-  "name": "Parse & Validate",
-  "func": "if (!msg.payload.name || !Array.isArray(msg.payload.tracks)) {\n    node.error('Invalid playlist: missing name or tracks');\n    return null;\n}\nmsg.filename = `F:\\Music - Flac\\Playlists/${msg.payload.name}.json`;\nmsg.payload = JSON.stringify(msg.payload, null, 2);\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 280,
-  "y": 100,
-  "wires": [["music-file-write"]]
-},
-{
-  "id": "music-file-write",
-  "type": "file",
-  "z": "music-flow-create",
-  "name": "Save Playlist JSON",
-  "filename": "",
-  "appendNewline": false,
-  "createDir": true,
-  "overwriteFile": "true",
-  "encoding": "none",
-  "x": 480,
-  "y": 100,
-  "wires": [["music-out-ack"]]
-},
-{
-  "id": "music-out-ack",
-  "type": "mqtt out",
-  "z": "music-flow-create",
-  "name": "Ack to Quest",
-  "topic": "home/music/playlists/created",
-  "qos": "0",
-  "retain": false,
-  "respTopic": "",
-  "contentType": "",
-  "userProps": "",
-  "correl": "",
-  "expiry": "",
-  "broker": "nis-broker",
-  "x": 660,
-  "y": 100,
-  "wires": []
-},
-{
-  "id": "music-flow-play",
-  "type": "tab",
-  "label": "Music — Play",
-  "disabled": false,
-  "info": "",
-  "env": []
-},
-{
-  "id": "music-in-select",
-  "type": "mqtt in",
-  "z": "music-flow-play",
-  "name": "Select Playlist",
-  "topic": "home/music/playlists/select",
-  "qos": "0",
-  "datatype": "json",
-  "broker": "nis-broker",
-  "nl": false,
-  "rap": false,
-  "rh": 0,
-  "x": 100,
-  "y": 180,
-  "wires": [["music-fn-load"]]
-},
-{
-  "id": "music-fn-load",
-  "type": "function",
-  "z": "music-flow-play",
-  "name": "Build Filepath",
-  "func": "msg.filename = `F:\\Music - Flac\\Playlists/${msg.payload.name}.json`;\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 280,
-  "y": 180,
-  "wires": [["music-file-read"]]
-},
-{
-  "id": "music-file-read",
-  "type": "file in",
-  "z": "music-flow-play",
-  "name": "Load Playlist JSON",
-  "filename": "",
-  "format": "utf8",
-  "chunk": false,
-  "sendError": true,
-  "encoding": "none",
-  "x": 480,
-  "y": 180,
-  "wires": [["music-fn-format"]]
-},
-{
-  "id": "music-fn-format",
-  "type": "function",
-  "z": "music-flow-play",
-  "name": "Format for Playback",
-  "func": "let playlist = JSON.parse(msg.payload);\nmsg.payload = {\n    playlist: playlist.name,\n    tracks: playlist.tracks.map((t, i) => ({\n        index: i,\n        uri: t.uri,\n        title: t.title,\n        album: t.album || ''\n    }))\n};\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 680,
-  "y": 180,
-  "wires": [["music-out-tracks"]]
-},
-{
-  "id": "music-out-tracks",
-  "type": "mqtt out",
-  "z": "music-flow-play",
-  "name": "Publish Tracks",
-  "topic": "home/music/playback/tracks",
-  "qos": "0",
-  "retain": false,
-  "respTopic": "",
-  "contentType": "application/json",
-  "userProps": "",
-  "correl": "",
-  "expiry": "",
-  "broker": "nis-broker",
-  "x": 880,
-  "y": 180,
-  "wires": []
-},
-{
-  "id": "mqtt-broker-music",
-  "type": "mqtt-broker",
-  "name": "Mosquitto Local",
-  "broker": "localhost",
-  "port": "1883",
-  "clientid": "nodered-musicbox",
-  "usetls": false,
-  "compatmode": true,
-  "keepalive": "60",
-  "cleansession": true,
-  "birthTopic": "",
-  "birthQos": "0",
-  "birthPayload": "",
-  "birthMsg": {},
-  "closeTopic": "",
-  "closeQos": "0",
-  "closePayload": "",
-  "closeMsg": {},
-  "willTopic": "",
-  "willQos": "0",
-  "willPayload": "",
-  "willMsg": {},
-  "userProps": "",
-  "sessionExpiry": ""
-},
-{
-  "id": "music-flow-create",
-  "type": "tab",
-  "label": "Music — Create",
-  "disabled": false,
-  "info": ""
-},
-{
-  "id": "music-in-create",
-  "type": "mqtt in",
-  "z": "music-flow-create",
-  "name": "Create Playlist",
-  "topic": "home/music/playlists/create",
-  "qos": "0",
-  "datatype": "json",
-  "broker": "mqtt-broker-music",
-  "nl": false,
-  "rap": false,
-  "rh": 0,
-  "x": 100,
-  "y": 100,
-  "wires": [["music-fn-create"]]
-},
-{
-  "id": "music-fn-create",
-  "type": "function",
-  "z": "music-flow-create",
-  "name": "Parse & Validate",
-  "func": "if (!msg.payload.name || !Array.isArray(msg.payload.tracks)) {\n    node.error('Invalid playlist: missing name or tracks');\n    return null;\n}\nmsg.filename = 'F:\\\\Music - Flac\\\\Playlists\\\\' + msg.payload.name + '.json';\nmsg.payload = JSON.stringify(msg.payload, null, 2);\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 280,
-  "y": 100,
-  "wires": [["music-file-write"]]
-},
-{
-  "id": "music-file-write",
-  "type": "file",
-  "z": "music-flow-create",
-  "name": "Save Playlist JSON",
-  "filename": "",
-  "appendNewline": false,
-  "createDir": true,
-  "overwriteFile": "true",
-  "encoding": "none",
-  "x": 480,
-  "y": 100,
-  "wires": [["music-out-ack"]]
-},
-{
-  "id": "music-out-ack",
-  "type": "mqtt out",
-  "z": "music-flow-create",
-  "name": "Ack to Quest",
-  "topic": "home/music/playlists/created",
-  "qos": "0",
-  "retain": false,
-  "broker": "mqtt-broker-music",
-  "x": 660,
-  "y": 100,
-  "wires": []
-},
-{
-  "id": "music-flow-play",
-  "type": "tab",
-  "label": "Music — Play",
-  "disabled": false,
-  "info": ""
-},
-{
-  "id": "music-in-select",
-  "type": "mqtt in",
-  "z": "music-flow-play",
-  "name": "Select Playlist",
-  "topic": "home/music/playlists/select",
-  "qos": "0",
-  "datatype": "json",
-  "broker": "mqtt-broker-music",
-  "nl": false,
-  "rap": false,
-  "rh": 0,
-  "x": 100,
-  "y": 180,
-  "wires": [["music-fn-load"]]
-},
-{
-  "id": "music-fn-load",
-  "type": "function",
-  "z": "music-flow-play",
-  "name": "Build Filepath",
-  "func": "msg.filename = 'F:\\\\Music - Flac\\\\Playlists\\\\' + msg.payload.name + '.json';\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 280,
-  "y": 180,
-  "wires": [["music-file-read"]]
-},
-{
-  "id": "music-file-read",
-  "type": "file in",
-  "z": "music-flow-play",
-  "name": "Load Playlist JSON",
-  "filename": "",
-  "format": "utf8",
-  "chunk": false,
-  "sendError": true,
-  "encoding": "none",
-  "x": 480,
-  "y": 180,
-  "wires": [["music-fn-format"]]
-},
-{
-  "id": "music-fn-format",
-  "type": "function",
-  "z": "music-flow-play",
-  "name": "Format for Playback",
-  "func": "let playlist = JSON.parse(msg.payload);\nmsg.payload = {\n    playlist: playlist.name,\n    tracks: playlist.tracks.map((t, i) => ({\n        index: i,\n        uri: t.uri,\n        title: t.title,\n        album: t.album || ''\n    }))\n};\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 680,
-  "y": 180,
-  "wires": [["music-out-tracks"]]
-},
-{
-  "id": "music-out-tracks",
-  "type": "mqtt out",
-  "z": "music-flow-play",
-  "name": "Publish Tracks",
-  "topic": "home/music/playback/tracks",
-  "qos": "0",
-  "retain": false,
-  "broker": "mqtt-broker-music",
-  "x": 880,
-  "y": 180,
-  "wires": []
-}
 ]
