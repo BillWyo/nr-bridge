@@ -2525,15 +2525,10 @@
     "name": "Music",
     "ui": "v2-ui-base",
     "path": "/music",
-    "icon": "mdi-music",
-    "layout": "flex",
+    "icon": "music_note",
+    "layout": "notebook",
     "theme": "8caffb684107c6b6",
-    "order": 6,
-    "groups": [
-      "v2-grp-music-main"
-    ],
-    "disabled": false,
-    "info": ""
+    "order": 6
   },
   {
     "id": "v2-grp-music-main",
@@ -2556,8 +2551,8 @@
     "y": 60,
     "wires": [
       [
-        "music-exec-discover",
-        "music-exec-list"
+        "music-fn-discover",
+        "music-fn-list-playlists"
       ]
     ],
     "props": [
@@ -2586,7 +2581,7 @@
     "y": 120,
     "wires": [
       [
-        "music-exec-list"
+        "music-fn-list-playlists"
       ]
     ],
     "props": [
@@ -2628,86 +2623,6 @@
     "payloadType": "date"
   },
   {
-    "id": "music-exec-discover",
-    "type": "exec",
-    "z": "music-flow-play",
-    "name": "Discover Renderers",
-    "x": 320,
-    "y": 60,
-    "wires": [
-      [
-        "music-fn-renderers"
-      ],
-      [],
-      []
-    ],
-    "command": "python \"C:\\\\Users\\\\johan\\\\Documents\\\\PlatformIO\\\\Projects\\\\NR_Bridge\\\\discover_renderers.py\"",
-    "addpay": false,
-    "append": "",
-    "useSpawn": false,
-    "timer": "10",
-    "winHide": false,
-    "oldrc": false
-  },
-  {
-    "id": "music-fn-renderers",
-    "type": "function",
-    "z": "music-flow-play",
-    "name": "Store Renderers",
-    "x": 540,
-    "y": 60,
-    "wires": [
-      [
-        "music-tmpl"
-      ]
-    ],
-    "func": "try { var list = JSON.parse(msg.payload); } catch(e) { return null; }\nflow.set('renderers', list);\nif (!flow.get('selectedRenderer') && list.length)\n    flow.set('selectedRenderer', list[0]);\nmsg.payload = { renderers: list };\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": ""
-  },
-  {
-    "id": "music-exec-list",
-    "type": "exec",
-    "z": "music-flow-play",
-    "name": "List Playlists",
-    "x": 320,
-    "y": 120,
-    "wires": [
-      [
-        "music-fn-playlists"
-      ],
-      [],
-      []
-    ],
-    "command": "python \"C:\\\\Users\\\\johan\\\\Documents\\\\PlatformIO\\\\Projects\\\\NR_Bridge\\\\list_playlists.py\"",
-    "addpay": false,
-    "append": "",
-    "useSpawn": false,
-    "timer": "10",
-    "winHide": false,
-    "oldrc": false
-  },
-  {
-    "id": "music-fn-playlists",
-    "type": "function",
-    "z": "music-flow-play",
-    "name": "Store Playlists",
-    "x": 540,
-    "y": 120,
-    "wires": [
-      [
-        "music-tmpl"
-      ]
-    ],
-    "func": "try { var list = JSON.parse(msg.payload); } catch(e) { return null; }\nflow.set('playlists', list);\nmsg.payload = { playlists: list };\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": ""
-  },
-  {
     "id": "music-tmpl",
     "type": "ui-template",
     "z": "music-flow-play",
@@ -2718,7 +2633,7 @@
     "order": 1,
     "width": "12",
     "height": "10",
-    "format": "<template>\n  <div class=\"music-panel\">\n    <div class=\"section\">\n      <div class=\"sec-title\">Renderer\n        <button class=\"icon-btn\" @click=\"doAction('refresh')\" title=\"Refresh\">&#x21BB;</button>\n      </div>\n      <div v-if=\"!renderers.length\" class=\"muted\">Scanning&hellip;</div>\n      <label v-for=\"r in renderers\" :key=\"r.avTransportUrl\" class=\"renderer-row\">\n        <input type=\"radio\" :value=\"r.avTransportUrl\" v-model=\"selectedUrl\"\n               @change=\"doAction('setRenderer', {renderer: r})\"> {{ r.name }}\n      </label>\n    </div>\n\n    <div class=\"section\">\n      <div class=\"sec-title\">Playlists</div>\n      <div v-if=\"!playlists.length\" class=\"muted\">No playlists saved</div>\n      <div v-for=\"pl in playlists\" :key=\"pl.name\" class=\"pl-row\">\n        <span class=\"pl-name\">{{ pl.name }}</span>\n        <span class=\"muted\">{{ pl.trackCount }}&thinsp;t</span>\n        <button class=\"btn-play\" @click=\"doPlay(pl.name)\" :disabled=\"!selectedUrl\">&#x25B6;</button>\n        <button class=\"btn-del\"  @click=\"doDel(pl.name)\">&#x2715;</button>\n      </div>\n    </div>\n\n    <div class=\"section now\" v-if=\"nowPlaying\">\n      <div class=\"sec-title\">Now Playing\n        <button class=\"btn-stop\" @click=\"doAction('stop')\">&#x25A0; Stop</button>\n      </div>\n      <div class=\"np-title\">{{ nowPlaying.title }}</div>\n      <div class=\"muted\">{{ nowPlaying.album }}</div>\n      <div class=\"muted\">Track {{ nowPlaying.index + 1 }} / {{ nowPlaying.total }} &mdash; {{ nowPlaying.playlist }}</div>\n    </div>\n  </div>\n</template>\n<script>\nexport default {\n  data() {\n    return { renderers: [], playlists: [], selectedUrl: null, nowPlaying: null };\n  },\n  watch: {\n    msg(v) {\n      if (!v || !v.payload) return;\n      const p = v.payload;\n      if (p.renderers  !== undefined) this.renderers  = p.renderers;\n      if (p.playlists  !== undefined) this.playlists  = p.playlists;\n      if (p.nowPlaying !== undefined) this.nowPlaying = p.nowPlaying;\n      if (this.renderers.length && !this.selectedUrl)\n        this.selectedUrl = this.renderers[0].avTransportUrl;\n    }\n  },\n  methods: {\n    doAction(action, extra) {\n      const renderer = this.renderers.find(r => r.avTransportUrl === this.selectedUrl) || null;\n      this.send({ payload: { action, renderer, ...(extra || {}) } });\n    },\n    doPlay(name) { this.doAction('play', { name }); },\n    doDel(name)  {\n      if (!confirm('Delete \"' + name + '\"?')) return;\n      this.doAction('delete', { name });\n    }\n  }\n}\n</script>\n<style scoped>\n.music-panel { padding: 8px; font-size: 14px; }\n.section { margin-bottom: 14px; }\n.sec-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 3px; margin-bottom: 6px; }\n.renderer-row { display: block; margin: 3px 0; cursor: pointer; }\n.pl-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid #2a2a2a; }\n.pl-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.btn-play { background: #1e5e1e; border: none; color: #ddd; padding: 2px 8px; border-radius: 3px; cursor: pointer; }\n.btn-play:disabled { background: #333; color: #666; cursor: not-allowed; }\n.btn-del  { background: #5e1e1e; border: none; color: #ddd; padding: 2px 6px; border-radius: 3px; cursor: pointer; }\n.btn-stop { background: #5e1e1e; border: none; color: #ddd; padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 8px; }\n.icon-btn { background: none; border: none; color: #888; cursor: pointer; font-size: 15px; margin-left: 6px; }\n.now { background: #111d11; padding: 8px; border-radius: 4px; }\n.np-title { font-size: 15px; font-weight: bold; margin-bottom: 2px; }\n.muted { color: #888; font-size: 12px; }\n</style>",
+    "format": "<template>\n  <div class=\"music-panel\">\n    <div class=\"section\">\n      <div class=\"sec-title\">Renderer\n        <button class=\"icon-btn\" @click=\"doAction('refresh')\" title=\"Refresh\">&#x21BB;</button>\n      </div>\n      <div v-if=\"!renderers.length\" class=\"muted\">Scanning&hellip;</div>\n      <label v-for=\"r in renderers\" :key=\"r.avTransportUrl\" class=\"renderer-row\">\n        <input type=\"radio\" :value=\"r.avTransportUrl\" v-model=\"selectedUrl\"\n               @change=\"doAction('setRenderer', {renderer: r})\"> {{ r.name }}\n      </label>\n    </div>\n\n    <div class=\"section\">\n      <div class=\"sec-title\">Playlists</div>\n      <div v-if=\"!playlists.length\" class=\"muted\">No playlists saved</div>\n      <div v-for=\"pl in playlists\" :key=\"pl.name\" class=\"pl-row\">\n        <span class=\"pl-name\">{{ pl.name }}</span>\n        <span class=\"muted\">{{ pl.trackCount }}&thinsp;t</span>\n        <button class=\"btn-play\" @click=\"doPlay(pl)\" :disabled=\"!selectedUrl\">&#x25B6;</button>\n        <button class=\"btn-del\"  @click=\"doDel(pl.name)\">&#x2715;</button>\n      </div>\n    </div>\n\n    <div class=\"section now\" v-if=\"nowPlaying\">\n      <div class=\"sec-title\">Now Playing\n        <button class=\"btn-stop\" @click=\"doAction('stop')\">&#x25A0; Stop</button>\n      </div>\n      <div class=\"np-title\">{{ nowPlaying.title }}</div>\n      <div class=\"muted\">{{ nowPlaying.album }}</div>\n      <div class=\"muted\">Track {{ nowPlaying.index + 1 }} / {{ nowPlaying.total }} &mdash; {{ nowPlaying.playlist }}</div>\n    </div>\n  </div>\n</template>\n<script>\nexport default {\n  data() {\n    return { renderers: [], playlists: [], selectedUrl: null, nowPlaying: null };\n  },\n  watch: {\n    msg(v) {\n      if (!v || !v.payload) return;\n      const p = v.payload;\n      if (p.renderers  !== undefined) this.renderers  = p.renderers;\n      if (p.playlists  !== undefined) this.playlists  = p.playlists;\n      if (p.nowPlaying !== undefined) this.nowPlaying = p.nowPlaying;\n      if (this.renderers.length && !this.selectedUrl)\n        this.selectedUrl = this.renderers[0].avTransportUrl;\n    }\n  },\n  methods: {\n    doAction(action, extra) {\n      const renderer = this.renderers.find(r => r.avTransportUrl === this.selectedUrl) || null;\n      this.send({ payload: { action, renderer, ...(extra || {}) } });\n    },\n    doPlay(pl)   { this.doAction('play', { name: pl.name, filename: pl.filename }); },\n    doDel(name)  {\n      if (!confirm('Delete \"' + name + '\"?')) return;\n      this.doAction('delete', { name });\n    }\n  }\n}\n</script>\n<style scoped>\n.music-panel { padding: 8px; font-size: 14px; }\n.section { margin-bottom: 14px; }\n.sec-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 3px; margin-bottom: 6px; }\n.renderer-row { display: block; margin: 3px 0; cursor: pointer; }\n.pl-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid #2a2a2a; }\n.pl-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.btn-play { background: #1e5e1e; border: none; color: #ddd; padding: 2px 8px; border-radius: 3px; cursor: pointer; }\n.btn-play:disabled { background: #333; color: #666; cursor: not-allowed; }\n.btn-del  { background: #5e1e1e; border: none; color: #ddd; padding: 2px 6px; border-radius: 3px; cursor: pointer; }\n.btn-stop { background: #5e1e1e; border: none; color: #ddd; padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 8px; }\n.icon-btn { background: none; border: none; color: #888; cursor: pointer; font-size: 15px; margin-left: 6px; }\n.now { background: #111d11; padding: 8px; border-radius: 4px; }\n.np-title { font-size: 15px; font-weight: bold; margin-bottom: 2px; }\n.muted { color: #888; font-size: 12px; }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
@@ -2744,13 +2659,13 @@
         "music-fn-build-play"
       ],
       [
-        "music-fn-build-delete"
+        "music-fn-delete"
       ],
       [
         "music-fn-build-stop"
       ],
       [
-        "music-exec-discover"
+        "music-fn-discover"
       ],
       [
         "music-fn-set-renderer"
@@ -2774,11 +2689,17 @@
         "music-file-read-play"
       ]
     ],
-    "func": "var renderer = msg.payload.renderer || flow.get('selectedRenderer');\nflow.set('selectedRenderer', renderer);\nmsg._renderer = renderer;\nmsg.filename = 'F:\\\\Music - Flac\\\\Playlists\\\\' + msg.payload.name + '.json';\nreturn msg;",
+    "func": "const dir = 'F:\\Music - Flac\\Playlists';\nconst fn = msg.payload.filename || msg.payload.name + '.json';\nmsg.filename = path.join(dir, fn);\nmsg._renderer = msg.payload.renderer;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
-    "finalize": ""
+    "finalize": "",
+    "libs": [
+      {
+        "var": "path",
+        "module": "path"
+      }
+    ]
   },
   {
     "id": "music-file-read-play",
@@ -2810,7 +2731,7 @@
         "music-http-set-uri"
       ]
     ],
-    "func": "var data = JSON.parse(msg.payload);\nvar renderer = msg._renderer || flow.get('selectedRenderer');\nflow.set('queue', { playlist: data.name, tracks: data.tracks, index: 0, renderer: renderer });\nvar t = data.tracks[0];\nmsg.url     = renderer.avTransportUrl;\nmsg.method  = 'POST';\nmsg.headers = { 'Content-Type': 'text/xml; charset=utf-8',\n                'SOAPACTION': '\"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"' };\nmsg.payload = '<?xml version=\"1.0\" encoding=\"utf-8\"?>'\n  + '<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">'\n  + '<s:Body><u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">'\n  + '<InstanceID>0</InstanceID>'\n  + '<CurrentURI>' + t.uri + '</CurrentURI>'\n  + '<CurrentURIMetaData></CurrentURIMetaData>'\n  + '</u:SetAVTransportURI></s:Body></s:Envelope>';\nreturn msg;",
+    "func": "if (msg.error) { node.error('file read failed: ' + msg.error.message); return null; }\nvar data = JSON.parse(msg.payload);\nvar renderer = msg._renderer || flow.get('selectedRenderer');\nflow.set('queue', { playlist: data.name, tracks: data.tracks, index: 0, renderer: renderer });\nvar t = data.tracks[0];\nmsg.url     = renderer.avTransportUrl;\nmsg.method  = 'POST';\nmsg.headers = { 'Content-Type': 'text/xml; charset=utf-8',\n                'SOAPACTION': '\"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"' };\nmsg.payload = '<?xml version=\"1.0\" encoding=\"utf-8\"?>'\n  + '<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">'\n  + '<s:Body><u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">'\n  + '<InstanceID>0</InstanceID>'\n  + '<CurrentURI>' + t.uri + '</CurrentURI>'\n  + '<CurrentURIMetaData></CurrentURIMetaData>'\n  + '</u:SetAVTransportURI></s:Body></s:Envelope>';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -2940,46 +2861,6 @@
     "finalize": ""
   },
   {
-    "id": "music-fn-build-delete",
-    "type": "function",
-    "z": "music-flow-play",
-    "name": "Build Delete Cmd",
-    "x": 320,
-    "y": 460,
-    "wires": [
-      [
-        "music-exec-delete"
-      ]
-    ],
-    "func": "var name = msg.payload.name;\nmsg.kill = false;\nmsg.payload = 'python \"C:\\\\Users\\\\johan\\\\Documents\\\\PlatformIO\\\\Projects\\\\NR_Bridge\\\\delete_playlist.py\" \"' + name.replace(/\"/g, '') + '\"';\nreturn msg;",
-    "outputs": 1,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": ""
-  },
-  {
-    "id": "music-exec-delete",
-    "type": "exec",
-    "z": "music-flow-play",
-    "name": "Delete Playlist",
-    "x": 540,
-    "y": 460,
-    "wires": [
-      [
-        "music-exec-list"
-      ],
-      [],
-      []
-    ],
-    "command": "",
-    "addpay": true,
-    "append": "",
-    "useSpawn": false,
-    "timer": "10",
-    "winHide": false,
-    "oldrc": false
-  },
-  {
     "id": "music-fn-set-renderer",
     "type": "function",
     "z": "music-flow-play",
@@ -3045,10 +2926,90 @@
         "music-tmpl"
       ]
     ],
-    "func": "var q = flow.get('queue');\nif (!q) return [null, null];\nvar xml = typeof msg.payload === 'string' ? msg.payload : JSON.stringify(msg.payload);\nvar m = xml.match(/<CurrentTransportState[^>]*>([^<]+)<\\/CurrentTransportState>/);\nvar state = m ? m[1].trim() : '';\nif (state !== 'STOPPED') return [null, null];\n// track ended — advance\nvar nextIdx = q.index + 1;\nif (nextIdx >= q.tracks.length) {\n    flow.set('queue', null);\n    msg.payload = { nowPlaying: null };\n    return [null, msg];\n}\nq.index = nextIdx;\nflow.set('queue', q);\nvar t = q.tracks[nextIdx];\n// update display first, then trigger set-uri\nvar displayMsg = { payload: { nowPlaying: { title: t.title, album: t.album || '',\n    index: q.index, total: q.tracks.length, playlist: q.playlist } } };\nmsg.url     = q.renderer.avTransportUrl;\nmsg.method  = 'POST';\nmsg.headers = { 'Content-Type': 'text/xml; charset=utf-8',\n                'SOAPACTION': '\"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"' };\nmsg.payload = '<?xml version=\"1.0\" encoding=\"utf-8\"?>'\n  + '<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">'\n  + '<s:Body><u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">'\n  + '<InstanceID>0</InstanceID>'\n  + '<CurrentURI>' + t.uri + '</CurrentURI>'\n  + '<CurrentURIMetaData></CurrentURIMetaData>'\n  + '</u:SetAVTransportURI></s:Body></s:Envelope>';\nreturn [msg, displayMsg];",
+    "func": "var q = flow.get('queue');\nif (!q) return [null, null];\nvar xml = typeof msg.payload === 'string' ? msg.payload : JSON.stringify(msg.payload);\nvar m = xml.match(/<CurrentTransportState[^>]*>([^<]+)<\\/CurrentTransportState>/);\nvar state = m ? m[1].trim() : '(no match)';\nif (state !== 'STOPPED') return [null, null];\n// track ended — advance\nvar nextIdx = q.index + 1;\nif (nextIdx >= q.tracks.length) {\n    flow.set('queue', null);\n    msg.payload = { nowPlaying: null };\n    return [null, msg];\n}\nq.index = nextIdx;\nflow.set('queue', q);\nvar t = q.tracks[nextIdx];\n// update display first, then trigger set-uri\nvar displayMsg = { payload: { nowPlaying: { title: t.title, album: t.album || '',\n    index: q.index, total: q.tracks.length, playlist: q.playlist } } };\nmsg.url     = q.renderer.avTransportUrl;\nmsg.method  = 'POST';\nmsg.headers = { 'Content-Type': 'text/xml; charset=utf-8',\n                'SOAPACTION': '\"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"' };\nmsg.payload = '<?xml version=\"1.0\" encoding=\"utf-8\"?>'\n  + '<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">'\n  + '<s:Body><u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">'\n  + '<InstanceID>0</InstanceID>'\n  + '<CurrentURI>' + t.uri + '</CurrentURI>'\n  + '<CurrentURIMetaData></CurrentURIMetaData>'\n  + '</u:SetAVTransportURI></s:Body></s:Envelope>';\nreturn [msg, displayMsg];",
     "outputs": 2,
     "noerr": 0,
     "initialize": "",
     "finalize": ""
+  },
+  {
+    "id": "music-fn-discover",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Discover Renderers",
+    "func": "const FIIO_IP   = '192.168.1.17';\nconst FIIO_UUID = '460e4d1d-709d-44da-9532-ec9934249a07';\nconst SAMSUNG   = {\n    name: 'Samsung CU7000 55', model: 'UN55CU7000DXZA', ip: '192.168.1.6',\n    avTransportUrl: 'http://192.168.1.6:9197/upnp/control/AVTransport1',\n    location: 'http://192.168.1.6:9197/dmr'\n};\n\nfunction ping(url) {\n    return new Promise(resolve => {\n        const req = http.get(url, {timeout:2000}, res => { res.resume(); resolve(res.statusCode < 500); });\n        req.on('error', () => resolve(false));\n        req.on('timeout', () => { req.destroy(); resolve(false); });\n    });\n}\n\n(async () => {\n        const renderers = [];\n\n    if (await ping(SAMSUNG.location)) renderers.push(SAMSUNG);\n\n    const lastPort = flow.get('fiioPort') || 58650;\n    const ports = [lastPort];\n    for (let d = 1; d <= 50; d++) { ports.push(lastPort + d); ports.push(lastPort - d); }\n\n    const fiioPort = await new Promise(resolve => {\n        let done = false;\n        let remaining = 0;\n        for (const port of ports) {\n            if (port < 1 || port > 65535) continue;\n            remaining++;\n            const descUrl = 'http://' + FIIO_IP + ':' + port + '/dev/' + FIIO_UUID + '/desc.xml';\n            ping(descUrl).then(ok => {\n                remaining--;\n                if (ok && !done) { done = true; resolve(port); }\n                else if (remaining === 0 && !done) { resolve(null); }\n            });\n        }\n        if (remaining === 0) resolve(null);\n    });\n\n    if (fiioPort !== null) {\n        flow.set('fiioPort', fiioPort);\n        renderers.push({\n            name: 'BubbleUPnP (FiiO M11 Plus)', model: 'BubbleUPnP Media Renderer',\n            ip: FIIO_IP,\n            avTransportUrl: 'http://' + FIIO_IP + ':' + fiioPort +\n                '/dev/' + FIIO_UUID + '/svc/upnp-org/AVTransport/action',\n            location: 'http://' + FIIO_IP + ':' + fiioPort + '/dev/' + FIIO_UUID + '/desc.xml'\n        });\n    }\n\n    renderers.sort((a,b) => a.name.localeCompare(b.name));\n    flow.set('renderers', renderers);\n    if (!flow.get('selectedRenderer') && renderers.length)\n        flow.set('selectedRenderer', renderers[0]);\n    node.send({ payload: { renderers } });\n})();\n\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "x": 320,
+    "y": 60,
+    "wires": [
+      [
+        "music-tmpl"
+      ]
+    ],
+    "libs": [
+      {
+        "var": "http",
+        "module": "http"
+      }
+    ]
+  },
+  {
+    "id": "music-fn-list-playlists",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "List Playlists",
+    "func": "const dir = 'F:\\Music - Flac\\Playlists';\ntry {\n    if (!fs.existsSync(dir)) { msg.payload = { playlists: [] }; return msg; }\n    const files = fs.readdirSync(dir).filter(f => f.endsWith('.json')).sort();\n    const result = [];\n    for (const f of files) {\n        try {\n            const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));\n            result.push({ name: data.name || f.slice(0, -5),\n                          trackCount: (data.tracks || []).length,\n                          filename: f });\n        } catch(e) {}\n    }\n    flow.set('playlists', result);\n    msg.payload = { playlists: result };\n    return msg;\n} catch(e) {\n    node.error(e.message);\n    return null;\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "x": 320,
+    "y": 120,
+    "wires": [
+      [
+        "music-tmpl"
+      ]
+    ],
+    "libs": [
+      {
+        "var": "fs",
+        "module": "fs"
+      },
+      {
+        "var": "path",
+        "module": "path"
+      }
+    ]
+  },
+  {
+    "id": "music-fn-delete",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Delete Playlist",
+    "func": "const dir  = 'F:\\Music - Flac\\Playlists';\nconst name = msg.payload.name;\ntry { fs.unlinkSync(path.join(dir, name + '.json')); }\ncatch(e) { node.warn('delete: ' + e.message); }\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "x": 320,
+    "y": 460,
+    "wires": [
+      [
+        "music-fn-list-playlists"
+      ]
+    ],
+    "libs": [
+      {
+        "var": "fs",
+        "module": "fs"
+      },
+      {
+        "var": "path",
+        "module": "path"
+      }
+    ]
   }
 ]
