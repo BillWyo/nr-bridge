@@ -194,7 +194,7 @@
   {
     "id": "v2-grp-temp",
     "type": "ui-group",
-    "name": "Temperature (°F)",
+    "name": "Temperature (\u00b0F)",
     "page": "v2-page-pth",
     "width": "12",
     "height": "1",
@@ -348,7 +348,7 @@
     "type": "tab",
     "label": "HIS Main",
     "disabled": false,
-    "info": "Home Information System — main flow"
+    "info": "Home Information System \u2014 main flow"
   },
   {
     "id": "his-mqtt-pth",
@@ -392,7 +392,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "P differences",
-    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='→ stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='↑ +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='↓ '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='± '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
+    "func": "var STALE_MS=300000,N_CONF_MIN=16,WIN=60,TREND_WIN=30,TREND_THRESH=0.003;\nvar nodeId=msg._nodeId||msg.topic.replace(/-c$/,'');\nvar latest=flow.get('p_latest')||{};\nlatest[nodeId]={v:msg.payload,t:Date.now()};\nflow.set('p_latest',latest);\nvar nodes=['bills-office','mud-room','garage'];\nif(!nodes.every(function(n){return latest[n];}))return null;\nvar stats=flow.get('p_diff_stats')||{'BO-MR':{win:[],mean:0,std:0},'BO-GA':{win:[],mean:0,std:0},'MR-GA':{win:[],mean:0,std:0}};\nvar pairs={'BO-MR':latest['bills-office'].v-latest['mud-room'].v,'BO-GA':latest['bills-office'].v-latest['garage'].v,'MR-GA':latest['mud-room'].v-latest['garage'].v};\nObject.keys(pairs).forEach(function(k){var d=pairs[k],s=stats[k];s.win.push(d);if(s.win.length>WIN)s.win.shift();var n=s.win.length;s.mean=s.win.reduce(function(a,b){return a+b;},0)/n;s.std=n>1?Math.sqrt(s.win.reduce(function(a,b){return a+Math.pow(b-s.mean,2);},0)/(n-1)):0;});\nflow.set('p_diff_stats',stats);\nvar now=Date.now();\nvar primary=null,primaryNode=null;\nfor(var i=0;i<nodes.length;i++){var e=latest[nodes[i]];if(e&&(now-e.t)<STALE_MS){primary=e.v;primaryNode=nodes[i];break;}}\nif(primary===null)return null;\nvar tb=flow.get('p_trend_buf')||[];\ntb.push({v:primary,t:now});if(tb.length>TREND_WIN)tb.shift();\nflow.set('p_trend_buf',tb);\nvar trendStr='\u2192 stable';\nif(tb.length>=2){var dt=(tb[tb.length-1].t-tb[0].t)/3600000;var dv=tb[tb.length-1].v-tb[0].v;var rate=dt>0?dv/dt:0;if(rate>TREND_THRESH)trendStr='\u2191 +'+rate.toFixed(3)+' PSI/hr';else if(rate<-TREND_THRESH)trendStr='\u2193 '+rate.toFixed(3)+' PSI/hr';}\nvar minN=Math.min.apply(null,Object.keys(stats).map(function(k){return stats[k].win.length;}));\nvar confStr='calibrating (N='+minN+'/16)';\nif(minN>=N_CONF_MIN){var maxStd=Math.max.apply(null,Object.keys(stats).map(function(k){return stats[k].std;}));var pct=(3*maxStd/primary)*100;confStr='\u00b1 '+pct.toFixed(2)+'%';}\nmsg.payload={pressure:primary.toFixed(3),source:primaryNode,trend:trendStr,conf:confStr};\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 620,
@@ -428,7 +428,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "format door",
-    "func": "var icon = msg.payload.state === 'open' ? 'ὑ3 OPEN' : 'ὑ2 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "func": "var icon = msg.payload.state === 'open' ? '\u1f513 OPEN' : '\u1f512 closed';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
@@ -464,7 +464,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "format motion",
-    "func": "var icon = msg.payload.state === 'detected' ? 'Ὢ8 DETECTED' : '✅ clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
+    "func": "var icon = msg.payload.state === 'detected' ? '\u1f6a8 DETECTED' : '\u2705 clear';\nmsg.topic = msg.payload.device;\nmsg.payload = icon + '  (' + msg.topic + ')';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
@@ -517,7 +517,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "alert if true",
-    "func": "if (msg.payload.alert === true) {\n    msg.payload = 'Ὢ8 ALARM: ' + msg.payload.type.toUpperCase() + ' — node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
+    "func": "if (msg.payload.alert === true) {\n    msg.payload = '\u1f6a8 ALARM: ' + msg.payload.type.toUpperCase() + ' \u2014 node: ' + msg.payload.device;\n    return msg;\n}\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "x": 380,
@@ -553,7 +553,7 @@
     "type": "function",
     "z": "his-flow-main",
     "name": "visitor label",
-    "func": "var trig = msg.payload.trigger === 'button' ? 'ὑ4 Doorbell' : '὆4 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
+    "func": "var trig = msg.payload.trigger === 'button' ? '\u1f514 Doorbell' : '\u1f464 Motion';\nvar ts = new Date().toLocaleTimeString();\nmsg.payload = trig + '  @ ' + ts;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 420,
@@ -588,7 +588,7 @@
     "id": "his-fn-image-b64",
     "type": "function",
     "z": "his-flow-main",
-    "name": "JPEG → base64 img",
+    "name": "JPEG \u2192 base64 img",
     "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -788,7 +788,7 @@
     "z": "his-flow-main",
     "group": "v2-grp-temp",
     "name": "Temperature",
-    "label": "Temperature (°F)",
+    "label": "Temperature (\u00b0F)",
     "order": 1,
     "chartType": "line",
     "category": "topic",
@@ -932,7 +932,7 @@
     "order": 1,
     "width": "6",
     "height": "4",
-    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0–4095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
+    "format": "<template>\n  <div v-if=\"msg !== undefined\" class=\"gw\">\n    <div class=\"gv\" :style=\"{color: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\">\n      {{ msg.payload || 0 }}\n    </div>\n    <div class=\"gl\">Smoke ADC (0\u20134095)</div>\n    <div class=\"gb\">\n      <div class=\"gf\" :style=\"{width: Math.min(100,(msg.payload||0)/4095*100)+'%',\n        background: (msg.payload||0) > 2500 ? '#e60000' : (msg.payload||0) > 1500 ? '#e6e600' : '#00b500'}\"></div>\n    </div>\n  </div>\n</template>\n<style scoped>\n.gw { font-family: monospace; padding: 10px }\n.gv { font-size: 3em; font-weight: bold; text-align: center }\n.gl { text-align: center; color: #aaa; font-size: 0.9em; margin: 4px 0 8px }\n.gb { background: #333; border-radius: 4px; height: 20px; overflow: hidden }\n.gf { height: 100%; transition: width 0.3s, background 0.3s }\n</style>",
     "storeOutMessages": true,
     "passthru": false,
     "resendOnRefresh": true,
@@ -953,7 +953,7 @@
     "width": "12",
     "height": "1",
     "name": "Alarm Banner",
-    "label": "⚠ Alert",
+    "label": "\u26a0 Alert",
     "format": "{{msg.payload}}",
     "layout": "row-left",
     "style": false,
@@ -1082,7 +1082,7 @@
     "fieldType": "msg",
     "format": "handlebars",
     "syntax": "mustache",
-    "template": "<!DOCTYPE html>\n<html>\n<head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Voice to Node-RED</title>\n    <style>\n        body { font-family: sans-serif; padding: 30px; background: #1a1a2e; color: white; max-width: 500px; margin: 0 auto; }\n        h2 { text-align: center; margin-bottom: 30px; }\n        textarea { width: 100%; font-size: 18px; padding: 15px; border-radius: 10px; border: none; min-height: 120px; box-sizing: border-box; background: #16213e; color: white; }\n        button { width: 100%; margin-top: 15px; font-size: 22px; padding: 20px; border-radius: 50px; background: #e94560; color: white; border: none; }\n        #status { text-align: center; margin-top: 20px; font-size: 16px; color: #aaa; min-height: 24px; }\n    </style>\n</head>\n<body>\n    <h2>Voice to Node-RED</h2>\n    <textarea id=\"txt\" placeholder=\"Tap the mic on your keyboard and speak...\"></textarea>\n    <button onclick=\"send()\">Send</button>\n    <div id=\"status\"></div>\n    <script>\n        function send() {\n            var text = document.getElementById('txt').value.trim();\n            if (!text) return;\n            document.getElementById('status').textContent = 'Sending...';\n            fetch('/voice', {\n                method: 'POST',\n                headers: { 'Content-Type': 'application/json' },\n                body: JSON.stringify({ text: text })\n            }).then(function() {\n                document.getElementById('status').textContent = 'Sent!';\n                document.getElementById('txt').value = '';\n            }).catch(function() {\n                document.getElementById('status').textContent = 'Error â€” check Node-RED';\n            });\n        }\n    </script>\n</body>\n</html>\n",
+    "template": "<!DOCTYPE html>\n<html>\n<head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Voice to Node-RED</title>\n    <style>\n        body { font-family: sans-serif; padding: 30px; background: #1a1a2e; color: white; max-width: 500px; margin: 0 auto; }\n        h2 { text-align: center; margin-bottom: 30px; }\n        textarea { width: 100%; font-size: 18px; padding: 15px; border-radius: 10px; border: none; min-height: 120px; box-sizing: border-box; background: #16213e; color: white; }\n        button { width: 100%; margin-top: 15px; font-size: 22px; padding: 20px; border-radius: 50px; background: #e94560; color: white; border: none; }\n        #status { text-align: center; margin-top: 20px; font-size: 16px; color: #aaa; min-height: 24px; }\n    </style>\n</head>\n<body>\n    <h2>Voice to Node-RED</h2>\n    <textarea id=\"txt\" placeholder=\"Tap the mic on your keyboard and speak...\"></textarea>\n    <button onclick=\"send()\">Send</button>\n    <div id=\"status\"></div>\n    <script>\n        function send() {\n            var text = document.getElementById('txt').value.trim();\n            if (!text) return;\n            document.getElementById('status').textContent = 'Sending...';\n            fetch('/voice', {\n                method: 'POST',\n                headers: { 'Content-Type': 'application/json' },\n                body: JSON.stringify({ text: text })\n            }).then(function() {\n                document.getElementById('status').textContent = 'Sent!';\n                document.getElementById('txt').value = '';\n            }).catch(function() {\n                document.getElementById('status').textContent = 'Error \u00e2\u20ac\u201d check Node-RED';\n            });\n        }\n    </script>\n</body>\n</html>\n",
     "output": "str",
     "x": 1260,
     "y": 400,
@@ -1290,7 +1290,7 @@
     "type": "tab",
     "label": "Photo Booth",
     "disabled": false,
-    "info": "Photo Booth — MQTT triggered capture"
+    "info": "Photo Booth \u2014 MQTT triggered capture"
   },
   {
     "id": "pb-mqtt-trigger",
@@ -1330,7 +1330,7 @@
     "id": "pb-fn-image-b64",
     "type": "function",
     "z": "pb-flow-main",
-    "name": "JPEG → base64",
+    "name": "JPEG \u2192 base64",
     "func": "msg.payload = msg.payload.toString('base64');\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -1430,7 +1430,7 @@
     "type": "tab",
     "label": "Govee Lights",
     "disabled": false,
-    "info": "Govee LAN API — 4 bulbs"
+    "info": "Govee LAN API \u2014 4 bulbs"
   },
   {
     "id": "gov-inject-scan",
@@ -1598,7 +1598,7 @@
     "id": "gov-fn-mqtt-ctrl",
     "type": "function",
     "z": "gov-flow",
-    "name": "MQTT → Govee cmd",
+    "name": "MQTT \u2192 Govee cmd",
     "func": "node.warn('SRC:mqtt-ctrl retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\n// MQTT payload: {cmd, value|r,g,b|kelvin, devices:'all'|[ids]}\nvar p = msg.payload;\nvar gcmd;\nswitch (p.cmd) {\n    case 'turn':       gcmd = {cmd:'turn',       data:{value: p.value ? 1 : 0}}; break;\n    case 'brightness': gcmd = {cmd:'brightness',  data:{value: p.value}}; break;\n    case 'color':      gcmd = {cmd:'colorwc',     data:{color:{r:p.r||0,g:p.g||0,b:p.b||0}, colorTemInKelvin:0}}; break;\n    case 'colortemp':  gcmd = {cmd:'colorwc',     data:{color:{r:0,g:0,b:0}, colorTemInKelvin:p.kelvin||4000}}; break;\n    default: node.warn('Unknown Govee cmd: ' + p.cmd); return null;\n}\nmsg.govee_cmd     = gcmd;\nmsg.govee_targets = p.devices || 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -1634,7 +1634,7 @@
     "id": "gov-fn-visitor",
     "type": "function",
     "z": "gov-flow",
-    "name": "visitor → warm white",
+    "name": "visitor \u2192 warm white",
     "func": "node.warn('SRC:visitor topic=' + msg.topic + ' retain=' + msg.retain + ' payload=' + JSON.stringify(msg.payload));\nif (msg.retain) return null;\nif (!msg.payload || !msg.payload.trigger) { node.warn('visitor: no trigger field - discarded'); return null; }\nmsg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\nmsg.govee_targets = 'all';\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -1670,7 +1670,7 @@
     "id": "gov-fn-alarm",
     "type": "function",
     "z": "gov-flow",
-    "name": "alarm → red / clear → white",
+    "name": "alarm \u2192 red / clear \u2192 white",
     "func": "if (msg.retain) return null;\nif (!msg.payload || typeof msg.payload !== 'object') return null;\n\nif (msg.payload.alert === true) {\n    flow.set('govee_alarm_active', true);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:255,g:0,b:0}, colorTemInKelvin:0}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nif (msg.payload.alert === false) {\n    if (!flow.get('govee_alarm_active')) return null;  // not in alarm - ignore routine sensor readings\n    flow.set('govee_alarm_active', false);\n    msg.govee_cmd     = {cmd:'colorwc', data:{color:{r:0,g:0,b:0}, colorTemInKelvin:3000}};\n    msg.govee_targets = 'all';\n    return msg;\n}\n\nreturn null;  // no alert field - discard",
     "outputs": 1,
     "noerr": 0,
@@ -2253,7 +2253,7 @@
     "id": "gov-fn-all-brightness",
     "type": "function",
     "z": "gov-flow",
-    "name": "brightness → all",
+    "name": "brightness \u2192 all",
     "func": "var current = flow.get('govee_current') || {};\ncurrent.brightness = msg.payload;\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'brightness',data:{value:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
@@ -2270,7 +2270,7 @@
     "id": "gov-fn-all-colortemp",
     "type": "function",
     "z": "gov-flow",
-    "name": "colortemp → all",
+    "name": "colortemp \u2192 all",
     "func": "node.warn('SRC:colortemp-slider value=' + msg.payload);\nvar current = flow.get('govee_current') || {};\ncurrent.colortemp = msg.payload;\ncurrent.mode = 'white';\nflow.set('govee_current', current);\nvar devs = flow.get('govee_devices') || {};\nvar msgs = Object.values(devs).map(function(d) {\n    return {payload:JSON.stringify({msg:{cmd:'colorwc',data:{color:{r:0,g:0,b:0},colorTemInKelvin:msg.payload}}}), ip:d.ip, port:4003};\n});\nreturn [msgs];",
     "outputs": 1,
     "noerr": 0,
@@ -2433,7 +2433,7 @@
   {
     "id": "music-flow-create",
     "type": "tab",
-    "label": "Music — Create",
+    "label": "Music \u2014 Create",
     "disabled": false,
     "info": "",
     "env": []
@@ -2514,7 +2514,7 @@
   {
     "id": "music-flow-play",
     "type": "tab",
-    "label": "Music — Play",
+    "label": "Music \u2014 Play",
     "disabled": false,
     "info": "",
     "env": []
@@ -2926,7 +2926,7 @@
         "music-tmpl"
       ]
     ],
-    "func": "var q = flow.get('queue');\nif (!q) return [null, null];\nvar xml = typeof msg.payload === 'string' ? msg.payload : JSON.stringify(msg.payload);\nvar m = xml.match(/<CurrentTransportState[^>]*>([^<]+)<\\/CurrentTransportState>/);\nvar state = m ? m[1].trim() : '(no match)';\nif (state !== 'STOPPED') return [null, null];\n// track ended — advance\nvar nextIdx = q.index + 1;\nif (nextIdx >= q.tracks.length) {\n    flow.set('queue', null);\n    msg.payload = { nowPlaying: null };\n    return [null, msg];\n}\nq.index = nextIdx;\nflow.set('queue', q);\nvar t = q.tracks[nextIdx];\n// update display first, then trigger set-uri\nvar displayMsg = { payload: { nowPlaying: { title: t.title, album: t.album || '',\n    index: q.index, total: q.tracks.length, playlist: q.playlist } } };\nmsg.url     = q.renderer.avTransportUrl;\nmsg.method  = 'POST';\nmsg.headers = { 'Content-Type': 'text/xml; charset=utf-8',\n                'SOAPACTION': '\"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"' };\nmsg.payload = '<?xml version=\"1.0\" encoding=\"utf-8\"?>'\n  + '<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">'\n  + '<s:Body><u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">'\n  + '<InstanceID>0</InstanceID>'\n  + '<CurrentURI>' + t.uri + '</CurrentURI>'\n  + '<CurrentURIMetaData></CurrentURIMetaData>'\n  + '</u:SetAVTransportURI></s:Body></s:Envelope>';\nreturn [msg, displayMsg];",
+    "func": "var q = flow.get('queue');\nif (!q) return [null, null];\nvar xml = typeof msg.payload === 'string' ? msg.payload : JSON.stringify(msg.payload);\nvar m = xml.match(/<CurrentTransportState[^>]*>([^<]+)<\\/CurrentTransportState>/);\nvar state = m ? m[1].trim() : '(no match)';\nif (state !== 'STOPPED') return [null, null];\n// track ended \u2014 advance\nvar nextIdx = q.index + 1;\nif (nextIdx >= q.tracks.length) {\n    flow.set('queue', null);\n    msg.payload = { nowPlaying: null };\n    return [null, msg];\n}\nq.index = nextIdx;\nflow.set('queue', q);\nvar t = q.tracks[nextIdx];\n// update display first, then trigger set-uri\nvar displayMsg = { payload: { nowPlaying: { title: t.title, album: t.album || '',\n    index: q.index, total: q.tracks.length, playlist: q.playlist } } };\nmsg.url     = q.renderer.avTransportUrl;\nmsg.method  = 'POST';\nmsg.headers = { 'Content-Type': 'text/xml; charset=utf-8',\n                'SOAPACTION': '\"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"' };\nmsg.payload = '<?xml version=\"1.0\" encoding=\"utf-8\"?>'\n  + '<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">'\n  + '<s:Body><u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\">'\n  + '<InstanceID>0</InstanceID>'\n  + '<CurrentURI>' + t.uri + '</CurrentURI>'\n  + '<CurrentURIMetaData></CurrentURIMetaData>'\n  + '</u:SetAVTransportURI></s:Body></s:Envelope>';\nreturn [msg, displayMsg];",
     "outputs": 2,
     "noerr": 0,
     "initialize": "",
@@ -2937,7 +2937,7 @@
     "type": "function",
     "z": "music-flow-play",
     "name": "Discover Renderers",
-    "func": "const FIIO_IP   = '192.168.1.17';\nconst FIIO_UUID = '460e4d1d-709d-44da-9532-ec9934249a07';\nconst SAMSUNG   = {\n    name: 'Samsung CU7000 55', model: 'UN55CU7000DXZA', ip: '192.168.1.12',\n    avTransportUrl: 'http://192.168.1.12:9197/upnp/control/AVTransport1',\n    location: 'http://192.168.1.12:9197/dmr'\n};\n\nfunction ping(url) {\n    return new Promise(resolve => {\n        const req = http.get(url, {timeout:2000}, res => { res.resume(); resolve(res.statusCode < 500); });\n        req.on('error', () => resolve(false));\n        req.on('timeout', () => { req.destroy(); resolve(false); });\n    });\n}\n\n(async () => {\n        const renderers = [];\n\n    if (await ping(SAMSUNG.location)) renderers.push(SAMSUNG);\n\n    const lastPort = flow.get('fiioPort') || 58650;\n    const ports = [lastPort];\n    for (let d = 1; d <= 50; d++) { ports.push(lastPort + d); ports.push(lastPort - d); }\n\n    const fiioPort = await new Promise(resolve => {\n        let done = false;\n        let remaining = 0;\n        for (const port of ports) {\n            if (port < 1 || port > 65535) continue;\n            remaining++;\n            const descUrl = 'http://' + FIIO_IP + ':' + port + '/dev/' + FIIO_UUID + '/desc.xml';\n            ping(descUrl).then(ok => {\n                remaining--;\n                if (ok && !done) { done = true; resolve(port); }\n                else if (remaining === 0 && !done) { resolve(null); }\n            });\n        }\n        if (remaining === 0) resolve(null);\n    });\n\n    if (fiioPort !== null) {\n        flow.set('fiioPort', fiioPort);\n        renderers.push({\n            name: 'BubbleUPnP (FiiO M11 Plus)', model: 'BubbleUPnP Media Renderer',\n            ip: FIIO_IP,\n            avTransportUrl: 'http://' + FIIO_IP + ':' + fiioPort +\n                '/dev/' + FIIO_UUID + '/svc/upnp-org/AVTransport/action',\n            location: 'http://' + FIIO_IP + ':' + fiioPort + '/dev/' + FIIO_UUID + '/desc.xml'\n        });\n    }\n\n    renderers.sort((a,b) => a.name.localeCompare(b.name));\n    flow.set('renderers', renderers);\n    if (!flow.get('selectedRenderer') && renderers.length)\n        flow.set('selectedRenderer', renderers[0]);\n    node.send({ payload: { renderers } });\n})();\n\nreturn null;",
+    "func": "const cfg = flow.get('musicConfig') || {};\nconst FIIO_IP = cfg.fiioIp || '192.168.1.17';\nconst FIIO_UUID = cfg.fiioUuid || '460e4d1d-709d-44da-9532-ec9934249a07';\nconst SAMSUNG_IP = cfg.samsungIp || '192.168.1.12';\nconst SAMSUNG_PORT = cfg.samsungPort || 9197;\nconst SAMSUNG = {\n    name: 'Samsung CU7000 55', model: 'UN55CU7000DXZA', ip: SAMSUNG_IP,\n    avTransportUrl: 'http://' + SAMSUNG_IP + ':' + SAMSUNG_PORT + '/upnp/control/AVTransport1',\n    location: 'http://' + SAMSUNG_IP + ':' + SAMSUNG_PORT + '/dmr'\n};\n\nfunction ping(url) {\n    return new Promise(resolve => {\n        const req = http.get(url, {timeout:2000}, res => { res.resume(); resolve(res.statusCode < 500); });\n        req.on('error', () => resolve(false));\n        req.on('timeout', () => { req.destroy(); resolve(false); });\n    });\n}\n\n(async () => {\n        const renderers = [];\n\n    if (await ping(SAMSUNG.location)) renderers.push(SAMSUNG);\n\n    const lastPort = flow.get('fiioPort') || 58650;\n    const ports = [lastPort];\n    for (let d = 1; d <= 50; d++) { ports.push(lastPort + d); ports.push(lastPort - d); }\n\n    const fiioPort = await new Promise(resolve => {\n        let done = false;\n        let remaining = 0;\n        for (const port of ports) {\n            if (port < 1 || port > 65535) continue;\n            remaining++;\n            const descUrl = 'http://' + FIIO_IP + ':' + port + '/dev/' + FIIO_UUID + '/desc.xml';\n            ping(descUrl).then(ok => {\n                remaining--;\n                if (ok && !done) { done = true; resolve(port); }\n                else if (remaining === 0 && !done) { resolve(null); }\n            });\n        }\n        if (remaining === 0) resolve(null);\n    });\n\n    if (fiioPort !== null) {\n        flow.set('fiioPort', fiioPort);\n        renderers.push({\n            name: 'BubbleUPnP (FiiO M11 Plus)', model: 'BubbleUPnP Media Renderer',\n            ip: FIIO_IP,\n            avTransportUrl: 'http://' + FIIO_IP + ':' + fiioPort +\n                '/dev/' + FIIO_UUID + '/svc/upnp-org/AVTransport/action',\n            location: 'http://' + FIIO_IP + ':' + fiioPort + '/dev/' + FIIO_UUID + '/desc.xml'\n        });\n    }\n\n    renderers.sort((a,b) => a.name.localeCompare(b.name));\n    flow.set('renderers', renderers);\n    if (!flow.get('selectedRenderer') && renderers.length)\n        flow.set('selectedRenderer', renderers[0]);\n    node.send({ payload: { renderers } });\n})();\n\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -3010,6 +3010,54 @@
         "var": "path",
         "module": "path"
       }
+    ]
+  },
+  {
+    "id": "music-fn-config-init",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Config - Initialize",
+    "func": "if (!flow.get('musicConfig')) {\n    flow.set('musicConfig', {\n        fiioIp: '192.168.1.17',\n        fiioUuid: '460e4d1d-709d-44da-9532-ec9934249a07',\n        samsungIp: '192.168.1.12',\n        samsungPort: 9197\n    });\n    node.send({payload: 'Config initialized'});\n} else {\n    node.send({payload: 'Config already exists'});\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "x": 100,
+    "y": 40,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "music-fn-config-get",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Config - Get Current",
+    "func": "const cfg = flow.get('musicConfig') || {};\nmsg.payload = cfg;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "x": 280,
+    "y": 40,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "music-fn-config-set",
+    "type": "function",
+    "z": "music-flow-play",
+    "name": "Config - Save",
+    "func": "const cfg = msg.payload;\nflow.set('musicConfig', cfg);\nnode.send({payload: 'Config saved: ' + JSON.stringify(cfg)});",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "x": 280,
+    "y": 100,
+    "wires": [
+      []
     ]
   }
 ]
